@@ -1,0 +1,3 @@
+To create a conditions dB table, use the following utility:
+
+> python $CONDB_DIR/bin/create_table.py
