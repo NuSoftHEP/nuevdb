@@ -6,12 +6,9 @@
 #include <cctype>
 #include <algorithm>
 #include <ctime>
-#include <sys/types.h>
-#include <sys/sysinfo.h>
 
 #include <libpq-fe.h>
 
-//#include <boost/tokenizer.hpp>
 #include <boost/algorithm/string.hpp>
 #include <boost/algorithm/string/case_conv.hpp>
 #include <boost/date_time/posix_time/posix_time.hpp>
@@ -368,7 +365,7 @@ namespace nutools {
 
     //************************************************************
 
-    void Table::SetRecordTime(float t)
+    void Table::SetRecordTime(uint64_t t)
     {
       fRecordTime = t;
       fHasRecordTime = true;
@@ -1618,14 +1615,14 @@ namespace nutools {
 	  if (i == chanIdx) {
 	    uint64_t chan = strtoull(ss,NULL,10);
 	    fRow[ioff+irow].SetChannel(chan);
-	    continue;
+	    //	    continue;
 	  }
 	  else if (i == tvIdx) {
-	    float t1 = strtof(ss,NULL);
+	    uint64_t t1 = strtoull(ss,NULL,10);
 	    fRow[ioff+irow].SetVldTime(t1);
 	  }
 	  else if (i == tvEndIdx) {
-	    float t1 = strtof(ss,NULL);
+	    uint64_t t1 = strtoull(ss,NULL,10);
 	    fRow[ioff+irow].SetVldTimeEnd(t1);	    
 	  }
 	  else {
@@ -1860,7 +1857,7 @@ namespace nutools {
     {
       nutools::dbi::Row* row;
       uint64_t chan;
-      float tv;
+      uint64_t tv;
       fChanRowMap.clear();
 
       for (int i=0; i<this->NRow(); ++i) {
@@ -1902,12 +1899,12 @@ namespace nutools {
 
     //************************************************************
 
-    nutools::dbi::Row* Table::GetVldRow(uint64_t channel, float t)
+    nutools::dbi::Row* Table::GetVldRow(uint64_t channel, uint64_t t)
     {      
       std::vector<nutools::dbi::Row*>& rlist = fChanRowMap[channel];
       if (rlist.empty()) return 0;
       int irow=-1;
-      float tv;
+      uint64_t tv;
       // fChanRowMap is time-ordered, so this simplifies things
       unsigned int i=0;
       for ( ; i<rlist.size(); ++i) {

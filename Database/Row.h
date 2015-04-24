@@ -53,13 +53,13 @@ namespace nutools {
       Column& Col(int i) {return fCol[i]; }
 
       uint64_t Channel() { return fChannel; }
-      float    VldTime() { return fVldTime; }
-      float    VldTimeEnd() { return fVldTimeEnd; }
+      uint64_t VldTime() { return fVldTime; }
+      uint64_t VldTimeEnd() { return fVldTimeEnd; }
       bool     IsVldRow() { return fIsVldRow; }
 
       bool    SetChannel(uint64_t ch) { fIsVldRow=true; return (fChannel=ch); }
-      bool    SetVldTime(float t) { fIsVldRow=true; return (fVldTime=t); }
-      bool    SetVldTimeEnd(float t) { fIsVldRow=true; return (fVldTime=t); }
+      bool    SetVldTime(uint64_t t) { fIsVldRow=true; return (fVldTime=t); }
+      bool    SetVldTimeEnd(uint64_t t) { fIsVldRow=true; return (fVldTime=t); }
       
       //      bool operator==(const Row& other) const;
 
@@ -71,8 +71,8 @@ namespace nutools {
       bool                fIsVldRow;
       int                 fNModified;
       uint64_t            fChannel;
-      float               fVldTime;
-      float               fVldTimeEnd;
+      uint64_t            fVldTime;
+      uint64_t            fVldTimeEnd;
       std::vector<Column> fCol;
 
     }; // class end

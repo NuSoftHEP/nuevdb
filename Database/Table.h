@@ -265,11 +265,11 @@ namespace nutools {
 
       friend std::ostream& operator<< (std::ostream& stream, const Table& t);
 
-      void SetMinTSVld(float t) { fMinTSVld = t;}
-      void SetMaxTSVld(float t) { fMaxTSVld = t;}
+      void SetMinTSVld(uint64_t t) { fMinTSVld = t;}
+      void SetMaxTSVld(uint64_t t) { fMaxTSVld = t;}
 
-      float GetMaxTSVld() const {return fMaxTSVld; }
-      float GetMinTSVld() const {return fMinTSVld; }
+      uint64_t GetMaxTSVld() const {return fMaxTSVld; }
+      uint64_t GetMinTSVld() const {return fMinTSVld; }
 
       void SetTag(std::string s) { fTag = s; }
       std::string GetTag() { return fTag; }
@@ -284,10 +284,10 @@ namespace nutools {
       int  NVldChannels() { return fChanRowMap.size(); }
       std::vector<uint64_t> VldChannels() { return fChannelVec; }
 
-      nutools::dbi::Row* GetVldRow(uint64_t channel, float t);
+      nutools::dbi::Row* GetVldRow(uint64_t channel, uint64_t t);
       std::vector<nutools::dbi::Row*> GetVldRows(uint64_t channel);
 
-      void SetRecordTime(float t);
+      void SetRecordTime(uint64_t t);
       void ClearRecordTime() { fHasRecordTime = false;}
 
       void EnableFlushCache() { fFlushCache = true; }
@@ -391,9 +391,9 @@ namespace nutools {
 
       //      static boost::mutex _xsdLock;
 
-      float  fMaxTSVld;
-      float  fMinTSVld;
-      float  fRecordTime;
+      uint64_t  fMaxTSVld;
+      uint64_t  fMinTSVld;
+      uint64_t  fRecordTime;
 
 
     }; // class end
