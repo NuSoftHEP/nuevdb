@@ -75,6 +75,8 @@ art_make( EventGeneratorBasetest
                         ${ROOT_REFLEX}
                         ${ROOTSYS}/lib/libEGPythia6.so
                         ${ROOT_GUI}
+			${Boost_FILESYSTEM_LIBRARY}
+			${Boost_SYSTEM_LIBRARY}
  	                )
 
 install_headers()

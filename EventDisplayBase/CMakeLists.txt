@@ -16,6 +16,7 @@ set( EVD_LIBS ${ART_FRAMEWORK_SERVICES_REGISTRY}
               ${MF_UTILITIES}
               ${FHICLCPP}
               ${CETLIB}
+	      ${Boost_SYSTEM_LIBRARY}
 	      ${ROOT_EVE}
  	      ${ROOT_EG}
 	      ${ROOT_GX11}
@@ -46,7 +47,7 @@ art_make_library( LIBRARY_NAME ${PACKAGE}
         	  SOURCE ${src_files} ${CMAKE_CURRENT_BINARY_DIR}/${PACKAGE}Cint.cc
         	  LIBRARIES SimulationBase ${EVD_LIBS} )
 
-set( EVD_SERVICE_LIBS ${PACKAGE} ${EVD_LIBS} )
+set( EVD_SERVICE_LIBS ${PACKAGE} ${EVD_LIBS} ${Boost_FILESYSTEM_LIBRARY} )
 simple_plugin( EventDisplay service ${EVD_SERVICE_LIBS} BASENAME_ONLY )
 simple_plugin( ScanOptions  service ${EVD_SERVICE_LIBS} BASENAME_ONLY )
 simple_plugin( Colors       service ${EVD_SERVICE_LIBS} BASENAME_ONLY )

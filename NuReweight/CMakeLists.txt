@@ -63,6 +63,8 @@ art_make( LIBRARY_NAME NuReweight
 			${ROOT_PHYSICS}
 			${ROOT_MATHCORE}
 			${ROOT_THREAD}
+			${Boost_FILESYSTEM_LIBRARY}
+			${Boost_SYSTEM_LIBRARY}
 			)
  
 install_headers()
