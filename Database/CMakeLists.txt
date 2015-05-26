@@ -53,8 +53,6 @@ simple_plugin( DBI "service"
                ${MF_UTILITIES}
                ${FHICLCPP}
                ${CETLIB}
-	       ${Boost_FILESYSTEM_LIBRARY}
-	       ${Boost_SYSTEM_LIBRARY}
              )
 
 install_headers()
