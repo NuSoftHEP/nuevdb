@@ -150,10 +150,10 @@ include_directories ( $ENV{LOG4CPP_INC} )
 include_directories ( /opt/X11/include )
 
 # source
-add_subdirectory (Database)
 add_subdirectory (EventDisplayBase)
 add_subdirectory (EventGeneratorBase)
 add_subdirectory (G4Base)
+add_subdirectory (IFDatabase)
 add_subdirectory (MagneticField)
 add_subdirectory (NuBeamWeights)
 add_subdirectory (NuReweight)

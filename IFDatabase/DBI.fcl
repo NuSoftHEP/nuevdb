@@ -1,0 +1,14 @@
+
+BEGIN_PROLOG
+
+standard_dbi:
+{
+  WebServiceURL: ""
+  QueryEngineURL: ""
+  DBUser: ""  
+  TimeQueries: false
+  TimeParsing: false
+  Verbosity: 0
+}
+
+END_PROLOG
