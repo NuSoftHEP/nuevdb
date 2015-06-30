@@ -55,4 +55,6 @@ simple_plugin( DBI "service"
                ${CETLIB}
              )
 
-install_source(LIST ${src_files})
+install_headers()
+install_fhicl()
+install_source()
