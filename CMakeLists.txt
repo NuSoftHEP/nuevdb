@@ -46,12 +46,10 @@ find_ups_product( postgresql v9_1_0 )
 find_ups_product( cetbuildtools v4_09_00 )
 
 message(STATUS "ROOTSYS is ${ROOTSYS}")
-set( ROOT_INC ${ROOTSYS}/include )
-message(STATUS "ROOT_INC is ${ROOT_INC}")
 
 ## find_library directives
 # geant4 libraries
-cet_find_library( XERCESC NAMES xerces-c PATHS $ENV{XERCESCROOT}/lib NO_DEFAULT_PATH  )
+cet_find_library( XERCESC NAMES xerces-c PATHS ENV XERCES_C_LIB NO_DEFAULT_PATH  )
 cet_find_library( G4FR NAMES G4FR PATHS ENV G4LIB NO_DEFAULT_PATH )
 cet_find_library( G4GMOCREN NAMES G4GMocren PATHS ENV G4LIB NO_DEFAULT_PATH )
 cet_find_library( G4OPENGL NAMES G4OpenGL PATHS ENV G4LIB NO_DEFAULT_PATH )
@@ -85,10 +83,10 @@ cet_find_library( G4VIS_MANAGEMENT NAMES G4vis_management PATHS ENV G4LIB NO_DEF
 cet_find_library( G4ZLIB  NAMES G4zlib PATHS ENV G4LIB NO_DEFAULT_PATH )
 # other dependencies
 cet_find_library( PYTHIA6 NAMES Pythia6 PATHS ENV PYLIB NO_DEFAULT_PATH )
-cet_find_library( LHAPDF NAMES LHAPDF PATHS $ENV{LHAPDF_FQ_DIR}/lib NO_DEFAULT_PATH )
-cet_find_library( LOG4CPP NAMES log4cpp PATHS $ENV{LOG4CPP_FQ_DIR}/lib NO_DEFAULT_PATH )
+cet_find_library( LHAPDF NAMES LHAPDF PATHS ENV LHAPDF_LIB NO_DEFAULT_PATH )
+cet_find_library( LOG4CPP NAMES log4cpp PATHS ENV LOG4CPP_LIB NO_DEFAULT_PATH )
 cet_find_library( XML2 NAMES xml2 PATHS $ENV{LIBXML2_FQ_DIR}/lib NO_DEFAULT_PATH )
-cet_find_library( CRY NAMES CRY PATHS $ENV{CRYHOME}/lib NO_DEFAULT_PATH )
+cet_find_library( CRY NAMES CRY PATHS ENV CRY_LIB NO_DEFAULT_PATH )
 # genie
 cet_find_library( GALGORITHM NAMES GAlgorithm PATHS ENV GENIE_LIB NO_DEFAULT_PATH )
 cet_find_library( GBARYONRESONANCE NAMES GBaryonResonance PATHS ENV GENIE_LIB NO_DEFAULT_PATH )
@@ -141,8 +139,8 @@ include(CetRootCint)
 # include search path
 include_directories ( ${CMAKE_SOURCE_DIR} )
 include_directories ( $ENV{GENIE_INC}/GENIE )
-include_directories ( $ENV{LIBXML2_FQ_DIR}/include/libxml2 )
-include_directories ( $ENV{GEANT4_FQ_DIR}/include )
+include_directories ( $ENV{LIBXML2_INC} )
+include_directories ( $ENV{G4INCLUDE} )
 include_directories ( $ENV{XERCES_C_INC} )
 include_directories ( $ENV{CRYHOME}/src )
 include_directories ( $ENV{LOG4CPP_INC} )
