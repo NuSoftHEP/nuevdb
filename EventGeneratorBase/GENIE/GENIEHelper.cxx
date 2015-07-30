@@ -1895,7 +1895,7 @@ namespace evgb {
       TMath::Sort((int)nfiles,order,indices,false);
       
       long long int sumBytes = 0; // accumulated size in bytes
-      long long int maxBytes = fMaxFluxFileMB * 1024 * 1024;
+      long long int maxBytes = (long long int)fMaxFluxFileMB * 1024ll * 1024ll;
 
       FileStat_t fstat;
       for (int i=0; i<nfiles; ++i) {
@@ -1912,7 +1912,7 @@ namespace evgb {
         flisttext << "[" << setw(3) << i << "] "
                   << "=> g[" << setw(3) << indx << "] " 
                   << ((keep)?"keep":"skip") << " " 
-                  << setw(6) << (sumBytes/(1024*1024)) << " "
+                  << setw(6) << (sumBytes/(1024ll*1024ll)) << " "
                   << afile << "\n";
 
         if ( keep ) fSelectedFluxFiles.push_back(afile);
@@ -2093,7 +2093,7 @@ namespace evgb {
       TMath::Sort((int)nfiles,order,indices,false);
       
       long long int sumBytes = 0; // accumulated size in bytes
-      long long int maxBytes = fMaxFluxFileMB * 1024 * 1024;
+      long long int maxBytes = (long long int)fMaxFluxFileMB * 1024ll * 1024ll;
 
       for (size_t i=0; i<nfiles; ++i) {
         int indx = indices[i];
@@ -2108,7 +2108,7 @@ namespace evgb {
         selectedtext << "\n[" << setw(3) << i << "] "
                      << "=> [" << setw(3) << indx << "] " 
                      << ((keep)?"keep":"SKIP") << " " 
-                     << std::setw(6) << (sumBytes/(1024*1024)) << " MB "
+                     << std::setw(6) << (sumBytes/(1024ll*1024ll)) << " MB "
                      << p.first;
 
         if ( keep ) selectedlist.push_back(p);
