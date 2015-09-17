@@ -81,20 +81,21 @@ namespace simb{
 
   /// Neutrino interaction categories
   enum int_type_{
-    kQE                        = 0,
-    kRes                       = 1,
-    kDIS		                   = 2,
-    kCoh		                   = 3,
-    kCohElastic                = 4,
-    kElectronScattering        = 5,
-    kIMDAnnihilation           = 6,
-    kInverseBetaDecay          = 7,
-    kGlashowResonance          = 8,
-    kAMNuGamma                 = 9,
-    kMEC                       = 10,
-    kDiffractive               = 11,
-    kEM                        = 12,
-    kWeakMix                   = 13,
+    kUnknownInteraction        = 0,
+    kQE                        = 1,
+    kRes                       = 2,
+    kDIS		                   = 3,
+    kCoh		                   = 4,
+    kCohElastic                = 5,
+    kElectronScattering        = 6,
+    kIMDAnnihilation           = 7,
+    kInverseBetaDecay          = 8,
+    kGlashowResonance          = 9,
+    kAMNuGamma                 = 10,
+    kMEC                       = 11,
+    kDiffractive               = 12,
+    kEM                        = 13,
+    kWeakMix                   = 14,
     kNuanceOffset              = 1000,                ///< offset to account for adding in Nuance codes to this enum
     kCCQE                      = kNuanceOffset + 1,   ///< charged current quasi-elastic	      	
     kNCQE                      = kNuanceOffset + 2,   ///< neutral current quasi-elastic	      	
