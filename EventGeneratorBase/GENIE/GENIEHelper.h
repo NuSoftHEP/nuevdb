@@ -55,8 +55,8 @@ namespace evgb{
     void                   Initialize();
     bool                   Stop();
     bool                   Sample(simb::MCTruth &truth, 
-				  simb::MCFlux  &flux,
-				  simb::GTruth  &gtruth);
+                                  simb::MCFlux  &flux,
+                                  simb::GTruth  &gtruth);
      
     double                 TotalHistFlux();
     double                 TotalExposure()    const { return fTotalExposure;  }

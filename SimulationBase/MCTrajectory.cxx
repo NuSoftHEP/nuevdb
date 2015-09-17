@@ -74,10 +74,9 @@ namespace simb {
 
     // Write each trajectory point on a separate line.
     MCTrajectory::size_type nTrajectory = 0;
-    for ( MCTrajectory::const_iterator trajectory = list.begin(); trajectory != list.end(); ++trajectory, ++nTrajectory )
-      {
-	output.width( numberOfDigits );
-	output << nTrajectory << ": " 
+    for ( MCTrajectory::const_iterator trajectory = list.begin(); trajectory != list.end(); ++trajectory, ++nTrajectory ){
+        output.width( numberOfDigits );
+        output << nTrajectory << ": "
 	       << "< (" << (*trajectory).first.X() 
 	       << "," << (*trajectory).first.Y() 
 	       << "," << (*trajectory).first.Z() 
@@ -125,7 +124,7 @@ namespace simb {
 
       // Should never have been given a degenerate range
       if(hiIdx < loIdx+2)
-	throw cet::exception("MCTrajectory") << "Degnerate range in Sparsify method";
+        throw cet::exception("MCTrajectory") << "Degnerate range in Sparsify method";
 
       const TVector3 loVec = at(loIdx).first.Vect();
       const TVector3 hiVec = at(hiIdx).first.Vect();
@@ -135,12 +134,12 @@ namespace simb {
       // Are all the points in between close enough?
       bool ok = true;
       for(int i = loIdx+1; i < hiIdx; ++i){
-	const TVector3 toHere = at(i).first.Vect()-loVec;
-	// Perpendicular distance^2 from the line joining loVec to hiVec
-	const double impact = (toHere-dir.Dot(toHere)*dir).Mag2();
-	if(impact > margin){ok = false; break;}
+        const TVector3 toHere = at(i).first.Vect()-loVec;
+          // Perpendicular distance^2 from the line joining loVec to hiVec
+        const double impact = (toHere-dir.Dot(toHere)*dir).Mag2();
+        if(impact > margin){ok = false; break;}
       }
-
+      
       if(ok){
         // These points adequately represent this range
         done.push_back(loIdx);
@@ -150,9 +149,9 @@ namespace simb {
         const int midIdx = (loIdx+hiIdx)/2;
         // Should never have a range this small
         if(midIdx == loIdx)
-	  throw cet::exception("MCTrajectory") << "Midpoint in sparsification is same as lowpoint";
+          throw cet::exception("MCTrajectory") << "Midpoint in sparsification is same as lowpoint";
         if(midIdx == hiIdx)
-	  throw cet::exception("MCTrajectory") << "Midpoint in sparsification is same as hipoint";
+          throw cet::exception("MCTrajectory") << "Midpoint in sparsification is same as hipoint";
 
         // The range can be small enough that upon splitting, the new ranges
         // are degenerate, and should just be written out straight away. Check

@@ -39,17 +39,17 @@ namespace simb {
   public:
 
     MCNeutrino(simb::MCParticle &nu, 
-	       simb::MCParticle &lep, 
-	       int CCNC, 
-	       int mode, 
-	       int interactionType,
-	       int target, 
-	       int nucleon,
-	       int quark, 
-	       double w, 
-	       double x, 
-	       double y, 
-	       double qsqr);
+               simb::MCParticle &lep,
+               int CCNC,
+               int mode,
+               int interactionType,
+               int target,
+               int nucleon,
+               int quark,
+               double w,
+               double x,
+               double y, 
+               double qsqr);
 
     const  simb::MCParticle& Nu()              const;
     const  simb::MCParticle& Lepton()          const;
@@ -83,8 +83,18 @@ namespace simb{
   enum int_type_{
     kQE                        = 0,
     kRes                       = 1,
-    kDIS		       = 2,
-    kCoh		       = 3,
+    kDIS		                   = 2,
+    kCoh		                   = 3,
+    kCohElastic                = 4,
+    kElectronScattering        = 5,
+    kIMDAnnihilation           = 6,
+    kInverseBetaDecay          = 7,
+    kGlashowResonance          = 8,
+    kAMNuGamma                 = 9,
+    kMEC                       = 10,
+    kDiffractive               = 11,
+    kEM                        = 12,
+    kWeakMix                   = 13,
     kNuanceOffset              = 1000,                ///< offset to account for adding in Nuance codes to this enum
     kCCQE                      = kNuanceOffset + 1,   ///< charged current quasi-elastic	      	
     kNCQE                      = kNuanceOffset + 2,   ///< neutral current quasi-elastic	      	
@@ -136,17 +146,17 @@ namespace simb{
 }
 
 inline const  simb::MCParticle& simb::MCNeutrino::Nu()              const { return fNu;              }
-inline const  simb::MCParticle& simb::MCNeutrino::Lepton()   	    const { return fLepton;  	     }
-inline        int               simb::MCNeutrino::CCNC()     	    const { return fCCNC;    	     }
-inline        int         	simb::MCNeutrino::Mode()     	    const { return fMode;    	     }
-inline        int         	simb::MCNeutrino::InteractionType() const { return fInteractionType; }
-inline        int         	simb::MCNeutrino::Target()          const { return fTarget;          }
-inline        int         	simb::MCNeutrino::HitNuc()   	    const { return fHitNuc;  	     }  
-inline        int         	simb::MCNeutrino::HitQuark()        const { return fHitQuark;	     }  
-inline        double      	simb::MCNeutrino::W()               const { return fW;       	     }  
-inline        double      	simb::MCNeutrino::X()               const { return fX;       	     }  
-inline        double      	simb::MCNeutrino::Y()               const { return fY;       	     }  
-inline        double      	simb::MCNeutrino::QSqr()            const { return fQSqr;    	     }  
+inline const  simb::MCParticle& simb::MCNeutrino::Lepton()   	      const { return fLepton;  	       }
+inline        int               simb::MCNeutrino::CCNC()     	      const { return fCCNC;    	       }
+inline        int         	    simb::MCNeutrino::Mode()     	      const { return fMode;    	       }
+inline        int         	    simb::MCNeutrino::InteractionType() const { return fInteractionType; }
+inline        int         	    simb::MCNeutrino::Target()          const { return fTarget;          }
+inline        int         	    simb::MCNeutrino::HitNuc()   	      const { return fHitNuc;  	       }
+inline        int         	    simb::MCNeutrino::HitQuark()        const { return fHitQuark;	       }
+inline        double      	    simb::MCNeutrino::W()               const { return fW;       	       }
+inline        double      	    simb::MCNeutrino::X()               const { return fX;       	       }
+inline        double      	    simb::MCNeutrino::Y()               const { return fY;       	       }
+inline        double      	    simb::MCNeutrino::QSqr()            const { return fQSqr;    	       }
 #endif
 
 #endif //SIMB_MCNEUTRINO_H

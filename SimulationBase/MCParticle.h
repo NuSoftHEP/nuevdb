@@ -58,11 +58,11 @@ namespace simb {
     // status code = 1 means the particle is to be tracked, default it to be tracked
     // mother = -1 means that this particle has no mother
     MCParticle(const int trackId, 
-	       const int pdg, 
-	       const std::string process,
-	       const int mother  = -1, 
-	       const double mass = s_uninitialized,
-	       const int status  = 1);
+               const int pdg,
+               const std::string process,
+               const int mother  = -1,
+               const double mass = s_uninitialized,
+               const int status  = 1);
 
 
     // our own copy and assignment constructors.
@@ -120,30 +120,30 @@ namespace simb {
     // vertex.
     const TLorentzVector& Position( const int i = 0 ) const;
     double                Vx(const int i = 0)         const;
-    double 		  Vy(const int i = 0) 	      const;
-    double 		  Vz(const int i = 0) 	      const;
-    double 		   T(const int i = 0) 	      const;
+    double 		            Vy(const int i = 0) 	      const;
+    double 		            Vz(const int i = 0) 	      const;
+    double 		            T(const int i = 0) 	      const;
 				                                                     
     const TLorentzVector& EndPosition() const;
     double                EndX()        const;
-    double          	  EndY()        const;
-    double          	  EndZ()        const;
-    double          	  EndT()        const;
+    double          	    EndY()        const;
+    double          	    EndZ()        const;
+    double          	    EndT()        const;
 
     const TLorentzVector& Momentum( const int i = 0 ) const;
     double                Px(const int i = 0)         const;
-    double          	  Py(const int i = 0) 	      const;
-    double          	  Pz(const int i = 0) 	      const;
-    double          	   E(const int i = 0) 	      const;
-    double          	   P(const int i = 0) 	      const;
-    double          	  Pt(const int i = 0) 	      const;
-    double          	  Mass()                      const;
+    double          	    Py(const int i = 0) 	      const;
+    double          	    Pz(const int i = 0) 	      const;
+    double          	    E(const int i = 0) 	      const;
+    double          	    P(const int i = 0) 	      const;
+    double          	    Pt(const int i = 0) 	      const;
+    double          	    Mass()                      const;
 
     const TLorentzVector& EndMomentum() const;
     double                EndPx()       const;
-    double          	  EndPy()       const;
-    double          	  EndPz()       const;
-    double          	   EndE()       const;
+    double          	    EndPy()       const;
+    double          	    EndPz()       const;
+    double          	    EndE()       const;
 
     // Getters and setters for the generator vertex
     //These are for setting the generator vertex.  In the case of genie
@@ -152,18 +152,18 @@ namespace simb {
     //After genie generates the event, a cooridnate transformation is done 
     //to place the event in the detector cooridnate system.  These variables 
     //store the vertex before that cooridnate transformation happens.
-    void           SetGvtx(double *v);				 
+    void     SetGvtx(double *v);
     void 	   SetGvtx(float *v);				 
     void 	   SetGvtx(TLorentzVector v);			 
     void 	   SetGvtx(double x, 
-			   double y, 
-			   double z, 
-			   double t);
+                     double y,
+                     double z,
+                     double t);
     TLorentzVector GetGvtx() const;
-    double 	   Gvx() const;
-    double 	   Gvy() const;
-    double 	   Gvz() const;
-    double 	   Gvt() const;
+    double 	       Gvx()     const;
+    double 	       Gvy()     const;
+    double 	       Gvz()     const;
+    double 	       Gvt()     const;
 
     //Getters and setters for first and last daughter data members
     int FirstDaughter() const;
@@ -179,7 +179,7 @@ namespace simb {
     // Make it easier to add a (position,momentum) point to the
     // trajectory. You must add this information for every point you wish to keep
     void AddTrajectoryPoint( const TLorentzVector& position, 
-			     const TLorentzVector& momentum );
+                            const TLorentzVector& momentum );
 
     // methods for giving/accessing a weight to this particle for use
     // in studies of rare processes, etc
@@ -209,17 +209,17 @@ namespace simb {
 #include <math.h>
 
 // methods to access data members and other information
-inline       int             simb::MCParticle::TrackId()                const { return ftrackId;                           }
-inline 	     int             simb::MCParticle::StatusCode()    	    	const { return fstatus;            		   }
-inline 	     int             simb::MCParticle::PdgCode()       	    	const { return fpdgCode;           		   }
-inline 	     int             simb::MCParticle::Mother()        	    	const { return fmother;            		   }
-inline const TVector3&       simb::MCParticle::Polarization()  	    	const { return fpolarization;      		   }
-inline       std::string     simb::MCParticle::Process()       	    	const { return fprocess;           		   }
-inline       std::string     simb::MCParticle::EndProcess()       	const { return fendprocess;           		   }
-inline       int             simb::MCParticle::NumberDaughters() 	const { return fdaughters.size();  		   }
+inline       int             simb::MCParticle::TrackId()                const { return ftrackId;                 }
+inline 	     int             simb::MCParticle::StatusCode()    	    	  const { return fstatus;            		   }
+inline 	     int             simb::MCParticle::PdgCode()       	    	  const { return fpdgCode;           		   }
+inline 	     int             simb::MCParticle::Mother()        	    	  const { return fmother;            		   }
+inline const TVector3&       simb::MCParticle::Polarization()  	    	  const { return fpolarization;      		   }
+inline       std::string     simb::MCParticle::Process()       	    	  const { return fprocess;           		   }
+inline       std::string     simb::MCParticle::EndProcess()       	    const { return fendprocess;           	 }
+inline       int             simb::MCParticle::NumberDaughters() 	      const { return fdaughters.size();  		   }
 inline       unsigned int    simb::MCParticle::NumberTrajectoryPoints() const { return ftrajectory.size(); 		   }
-inline const TLorentzVector& simb::MCParticle::Position( const int i )  const { return ftrajectory.Position(i);            }
-inline const TLorentzVector& simb::MCParticle::Momentum( const int i )  const { return ftrajectory.Momentum(i);            }
+inline const TLorentzVector& simb::MCParticle::Position( const int i )  const { return ftrajectory.Position(i);  }
+inline const TLorentzVector& simb::MCParticle::Momentum( const int i )  const { return ftrajectory.Momentum(i);  }
 inline       double          simb::MCParticle::Vx(const int i)          const { return Position(i).X();    		   }
 inline       double          simb::MCParticle::Vy(const int i)          const { return Position(i).Y();    		   }
 inline       double          simb::MCParticle::Vz(const int i)          const { return Position(i).Z();    		   }
@@ -234,12 +234,12 @@ inline       double          simb::MCParticle::Py(const int i)          const { 
 inline       double          simb::MCParticle::Pz(const int i)          const { return Momentum(i).Pz();    	           }
 inline       double          simb::MCParticle::E(const int i)           const { return Momentum(i).E();     	           }
 inline       double          simb::MCParticle::P(const int i)           const { return std::sqrt(std::pow(Momentum(i).E(),
-       											      2.)  
-       										     - std::pow(fmass,2.));                }
+                                                                                                          2.)
+                                                                                                 - std::pow(fmass,2.));  }
 inline       double          simb::MCParticle::Pt(const int i)          const { return std::sqrt(std::pow(Momentum(i).Px(),
-       											      2.) 
-       										     + std::pow(Momentum(i).Py(),
-       												2.));                      }
+                                                                                                          2.)
+                                                                                                 + std::pow(Momentum(i).Py(),
+                                                                                                            2.));          }
 inline       double          simb::MCParticle::Mass()                   const { return fmass;                              }
 inline const TLorentzVector& simb::MCParticle::EndMomentum()            const { return Momentum(ftrajectory.size()-1);     }
 inline       double          simb::MCParticle::EndPx()                  const { return Momentum(ftrajectory.size()-1).X(); }
@@ -259,7 +259,7 @@ inline       double          simb::MCParticle::Weight()                 const { 
 
 // methods to set information
 inline       void            simb::MCParticle::AddTrajectoryPoint(const TLorentzVector& position, 
-								  const TLorentzVector& momentum )
+                                                                  const TLorentzVector& momentum )
                                                                                   { ftrajectory.Add( position, momentum ); }
 inline       void            simb::MCParticle::SparsifyTrajectory()               { ftrajectory.Sparsify();                }
 inline       void            simb::MCParticle::AddDaughter(const int trackID)     { fdaughters.insert(trackID); 	   }

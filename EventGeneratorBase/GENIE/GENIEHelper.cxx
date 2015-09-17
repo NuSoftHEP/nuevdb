@@ -1434,7 +1434,7 @@ namespace evgb {
 
   //--------------------------------------------------
   void GENIEHelper::PackMCTruth(genie::EventRecord *record,
-				simb::MCTruth &truth)
+                                simb::MCTruth &truth)
   {
     
     TLorentzVector *vertex = record->Vertex();
@@ -1466,11 +1466,11 @@ namespace evgb {
     while( (part = dynamic_cast<genie::GHepParticle *>(partitr.Next())) ){
     
       simb::MCParticle tpart(trackid, 
-			     part->Pdg(), 
-			     primary, 
-			     part->FirstMother(), 
-			     part->Mass(), 
-			     part->Status());
+                             part->Pdg(),
+                             primary,
+                             part->FirstMother(),
+                             part->Mass(), 
+                             part->Status());
       double vtx[4] = {part->Vx(), part->Vy(), part->Vz(), part->Vt()};
       tpart.SetGvtx(vtx);
       tpart.SetRescatter(part->RescatterCode());
@@ -1478,18 +1478,18 @@ namespace evgb {
       // set the vertex location for the neutrino, nucleus and everything
       // that is to be tracked.  vertex returns values in meters.
       if(part->Status() == 0 || part->Status() == 1){
-	vtx[0] = 100.*(part->Vx()*1.e-15 + vertex->X());
-	vtx[1] = 100.*(part->Vy()*1.e-15 + vertex->Y());
-	vtx[2] = 100.*(part->Vz()*1.e-15 + vertex->Z());
-	vtx[3] = part->Vt() + spillTime;
+        vtx[0] = 100.*(part->Vx()*1.e-15 + vertex->X());
+        vtx[1] = 100.*(part->Vy()*1.e-15 + vertex->Y());
+        vtx[2] = 100.*(part->Vz()*1.e-15 + vertex->Z());
+        vtx[3] = part->Vt() + spillTime;
       }
       TLorentzVector pos(vtx[0], vtx[1], vtx[2], vtx[3]);
       TLorentzVector mom(part->Px(), part->Py(), part->Pz(), part->E());
       tpart.AddTrajectoryPoint(pos,mom);
       if(part->PolzIsSet()) {
-	TVector3 polz; 
-	part->GetPolarization(polz);
-	tpart.SetPolarization(polz);
+        TVector3 polz;
+        part->GetPolarization(polz);
+        tpart.SetPolarization(polz);
       }
       truth.Add(tpart);
 
@@ -1502,9 +1502,21 @@ namespace evgb {
 
     // what is the interaction type
     int mode = simb::kQE;
-    if(procInfo.IsDeepInelastic()) mode = simb::kDIS;
-    else if(procInfo.IsResonant()) mode = simb::kRes;
-    else if(procInfo.IsCoherent()) mode = simb::kCoh;
+    if     (procInfo.IsDeepInelastic()      ) mode = simb::kDIS;
+    else if(procInfo.IsResonant()           ) mode = simb::kRes;
+    else if(procInfo.IsCoherent()           ) mode = simb::kCoh;
+    else if(procInfo.IsCoherentElas()       ) mode = simb::kCohElastic;
+    else if(procInfo.IsElectronScattering() ) mode = simb::kElectronScattering;
+    else if(procInfo.IsNuElectronElastic()  ) mode = simb::kNuElectronElastic;
+    else if(procInfo.IsInverseMuDecay()     ) mode = simb::kInverseMuDecay;
+    else if(procInfo.IsIMDAnnihilation()    ) mode = simb::kIMDAnnihilation;
+    else if(procInfo.IsInverseBetaDecay()   ) mode = simb::kInverseBetaDecay;
+    else if(procInfo.IsGlashowResonance()   ) mode = simb::kGlashowResonance;
+    else if(procInfo.IsAMNuGamma()          ) mode = simb::kAMNuGamma;
+    else if(procInfo.IsMEC()                ) mode = simb::kMEC;
+    else if(procInfo.IsDiffractive()        ) mode = simb::kDiffractive;
+    else if(procInfo.IsEM()                 ) mode = simb::kEM;
+    else if(procInfo.IsWeakMix()            ) mode = simb::kWeakMix;
     
     int itype = simb::kNuanceOffset + genie::utils::ghep::NuanceReactionCode(record);
    
@@ -1529,19 +1541,24 @@ namespace evgb {
     double x  = (hitnucl) ? 0.5*Q2/(M*v)     : -1; // Bjorken x
     double y  = (hitnucl) ? v/k1.Energy()    : -1; // Inelasticity, y = q*P1/k1*P1
     double W2 = (hitnucl) ? M*M + 2*M*v - Q2 : -1; // Hadronic Invariant mass ^ 2
-    double W  = (hitnucl) ? std::sqrt(W2)  : -1; 
+    double W  = (hitnucl) ? std::sqrt(W2)    : -1;
     
-    truth.SetNeutrino(CCNC, mode, itype,
-		      initState.Tgt().Pdg(), 
-		      initState.Tgt().HitNucPdg(), 
-		      initState.Tgt().HitQrkPdg(),
-		      W, x, y, Q2);
+    truth.SetNeutrino(CCNC,
+                      mode,
+                      itype,
+                      initState.Tgt().Pdg(),
+                      initState.Tgt().HitNucPdg(),
+                      initState.Tgt().HitQrkPdg(),
+                      W,
+                      x,
+                      y,
+                      Q2);
     return;
   }
   
   //--------------------------------------------------
   void GENIEHelper::PackGTruth(genie::EventRecord *record, 
-			       simb::GTruth &truth) {
+                               simb::GTruth &truth) {
     
     //interactions info
     genie::Interaction *inter = record->Summary();

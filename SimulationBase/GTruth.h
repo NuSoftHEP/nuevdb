@@ -21,23 +21,23 @@ namespace simb {
     GTruth();
 
     //interactions info
-    int            fGint;         ///< interaction code
-    int            fGscatter;     ///< neutrino scattering code
+    int           fGint;         ///< interaction code
+    int           fGscatter;     ///< neutrino scattering code
 
     //Event info
-    double         fweight;       ///< event interaction weight (genie internal)
-    double 	   fprobability;  ///< interaction probability			
-    double 	   fXsec;         ///< cross section of interaction		
-    double 	   fDiffXsec;     ///< differential cross section of interaction
+    double        fweight;       ///< event interaction weight (genie internal)
+    double 	      fprobability;  ///< interaction probability
+    double 	      fXsec;         ///< cross section of interaction
+    double 	      fDiffXsec;     ///< differential cross section of interaction
 
     //genie::XclsTag info
-    int            fNumPiPlus;    ///< number of pi pluses in the final state	    
-    int  	   fNumPiMinus;   ///< number of pi minuses in the final state	    
-    int  	   fNumPi0;       ///< number of pi0 in the final state		    
-    int  	   fNumProton;    ///< number of protons in the final state	    
-    int  	   fNumNeutron;   ///< number of neutrons in the final state	    
-    bool 	   fIsCharm;      ///< did the interaction produce a charmed hadron 
-    int  	   fResNum;       ///< resonance number                             
+    int           fNumPiPlus;    ///< number of pi pluses in the final state
+    int  	        fNumPiMinus;   ///< number of pi minuses in the final state
+    int  	        fNumPi0;       ///< number of pi0 in the final state
+    int  	        fNumProton;    ///< number of protons in the final state
+    int  	        fNumNeutron;   ///< number of neutrons in the final state
+    bool 	        fIsCharm;      ///< did the interaction produce a charmed hadron
+    int  	        fResNum;       ///< resonance number
 
     //kinematics info
     ///<these are for the interal (on shell) genie kinematics

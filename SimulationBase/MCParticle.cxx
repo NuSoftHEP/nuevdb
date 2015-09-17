@@ -75,7 +75,7 @@ namespace simb {
       // not a major error; Geant4 has an internal particle coding
       // scheme for nuclei that ROOT doesn't recognize.
       if ( definition != 0 ){
-	fmass = definition->Mass();
+        fmass = definition->Mass();
       }
     }
     else fmass = mass;

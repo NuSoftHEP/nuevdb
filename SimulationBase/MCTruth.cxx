@@ -28,15 +28,15 @@ namespace simb{
 
   //......................................................................
   void MCTruth::SetNeutrino(int CCNC, 
-			    int mode, 
-			    int interactionType,
-			    int target, 
-			    int nucleon,
-			    int quark, 
-			    double w, 
-			    double x, 
-			    double y, 
-			    double qsqr)
+                            int mode,
+                            int interactionType,
+                            int target,
+                            int nucleon,
+                            int quark,
+                            double w, 
+                            double x, 
+                            double y, 
+                            double qsqr)
   {
     if( !fNeutrinoSet ){
       fNeutrinoSet = true;
@@ -48,18 +48,18 @@ namespace simb{
 
       // start at i = 1 because i = 0 is the incoming neutrino
       for(unsigned int i = 1; i < fPartList.size(); ++i){
-	if(fPartList[i].Mother() == nu.TrackId() &&
-	   (fPartList[i].PdgCode()  == nu.PdgCode() ||
-	    abs(fPartList[i].PdgCode()) == abs(nu.PdgCode())-1) ){
-	  lep = fPartList[i];
-	  break;
-	}
+        if(fPartList[i].Mother() == nu.TrackId() &&
+           (fPartList[i].PdgCode()  == nu.PdgCode() ||
+            abs(fPartList[i].PdgCode()) == abs(nu.PdgCode())-1) ){
+             lep = fPartList[i];
+             break;
+           }
       }//done looping over particles
     
       fMCNeutrino = simb::MCNeutrino(nu, lep, 
-				     CCNC, mode, interactionType,
-				     target, nucleon, quark, 
-				     w, x, y, qsqr);
+                                     CCNC, mode, interactionType,
+                                     target, nucleon, quark,
+                                     w, x, y, qsqr);
     } // end if MCNeutrino is not already set
     else
       mf::LogWarning("MCTruth") << "MCTruth - attempt to set neutrino when already set";

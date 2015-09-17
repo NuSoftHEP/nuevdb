@@ -138,7 +138,7 @@ namespace simb {
 
 #ifndef __GCCXML__
 
-inline double                 simb::MCTrajectory::X ( const size_type i ) const { return Position(i).X();      }
+inline double           simb::MCTrajectory::X ( const size_type i ) const { return Position(i).X();      }
 inline double 		      simb::MCTrajectory::Y ( const size_type i ) const { return Position(i).Y();      }
 inline double 		      simb::MCTrajectory::Z ( const size_type i ) const { return Position(i).Z();      }
 inline double 		      simb::MCTrajectory::T ( const size_type i ) const { return Position(i).T();      }
@@ -147,7 +147,7 @@ inline double 		      simb::MCTrajectory::Py( const size_type i ) const { return
 inline double 		      simb::MCTrajectory::Pz( const size_type i ) const { return Momentum(i).Pz();     }
 inline double 		      simb::MCTrajectory::E ( const size_type i ) const { return Momentum(i).E();      }
 
-inline simb::MCTrajectory::iterator               simb::MCTrajectory::begin()                   { return ftrajectory.begin();  }
+inline simb::MCTrajectory::iterator               simb::MCTrajectory::begin()             { return ftrajectory.begin();  }
 inline simb::MCTrajectory::const_iterator         simb::MCTrajectory::begin()  		  const { return ftrajectory.begin();  }
 inline simb::MCTrajectory::iterator               simb::MCTrajectory::end()    		        { return ftrajectory.end();    }
 inline simb::MCTrajectory::const_iterator         simb::MCTrajectory::end()    		  const { return ftrajectory.end();    }
@@ -157,7 +157,7 @@ inline simb::MCTrajectory::reverse_iterator       simb::MCTrajectory::rend()   	
 inline simb::MCTrajectory::const_reverse_iterator simb::MCTrajectory::rend()   		  const { return ftrajectory.rend();   }
 inline simb::MCTrajectory::size_type              simb::MCTrajectory::size()   		  const { return ftrajectory.size();   }
 inline bool                                       simb::MCTrajectory::empty()  		  const { return ftrajectory.empty();  }
-inline void                                       simb::MCTrajectory::clear()                   { ftrajectory.clear();         }
+inline void                                       simb::MCTrajectory::clear()             { ftrajectory.clear();         }
 inline void                                       simb::MCTrajectory::swap(simb::MCTrajectory& other) 
 { ftrajectory.swap( other.ftrajectory ); }
 

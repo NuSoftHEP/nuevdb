@@ -15,17 +15,17 @@ namespace simb{
 
   //......................................................................
   MCNeutrino::MCNeutrino()
-    : fNu()
-    , fLepton()
+    : fNu             ()
+    , fLepton         ()
     , fMode           (std::numeric_limits<int>::min())
     , fInteractionType(std::numeric_limits<int>::min())
     , fCCNC           (std::numeric_limits<int>::min())
     , fTarget         (std::numeric_limits<int>::min())
-    , fHitNuc	      (std::numeric_limits<int>::min())
+    , fHitNuc	        (std::numeric_limits<int>::min())
     , fHitQuark       (std::numeric_limits<int>::min())
     , fW              (std::numeric_limits<double>::min())
-    , fX	      (std::numeric_limits<double>::min())
-    , fY	      (std::numeric_limits<double>::min())
+    , fX	            (std::numeric_limits<double>::min())
+    , fY	            (std::numeric_limits<double>::min())
     , fQSqr           (std::numeric_limits<double>::min())
   {
   }

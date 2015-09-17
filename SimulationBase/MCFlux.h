@@ -114,22 +114,22 @@ namespace simb{
     
     void Reset();
     double Flux(int pdgcode, 
-		int which=0) const;
+                int which=0) const;
     void SetFluxPos(double nue,  double nuebar,
-		    double numu, double numubar,
-		    double nutau,double nutaubar);
+                    double numu, double numubar,
+                    double nutau,double nutaubar);
     void SetFluxNeg(double nue,  double nuebar,
-		    double numu, double numubar,
-		    double nutau,double nutaubar);
+                    double numu, double numubar,
+                    double nutau,double nutaubar);
     void SetFluxGen(double nue,  double nuebar,
-		    double numu, double numubar,
-		    double nutau,double nutaubar);
-
+                    double numu, double numubar,
+                    double nutau,double nutaubar);
+    
     void ReDecay(double &newE, 
-		 double &newW, 
-		 double x, 
-		 double y, 
-		 double z);
+                 double &newW, 
+                 double x, 
+                 double y, 
+                 double z);
 
     friend std::ostream& operator<< (std::ostream& output, const simb::MCFlux &mcflux);
     

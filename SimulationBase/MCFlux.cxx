@@ -191,8 +191,8 @@ namespace simb{
   //......................................................................
 
   void MCFlux::SetFluxPos(double nue,  double nuebar,
-			  double numu, double numubar,
-			  double nutau,double nutaubar)
+                          double numu, double numubar,
+                          double nutau,double nutaubar)
   {
     fFluxPos[0] = nue;   fFluxPos[1] = nuebar;
     fFluxPos[2] = numu;  fFluxPos[3] = numubar;
@@ -212,8 +212,8 @@ namespace simb{
 
   //......................................................................
   void MCFlux::SetFluxGen(double nue,  double nuebar,
-			  double numu, double numubar,
-			  double nutau,double nutaubar)
+                          double numu, double numubar,
+                          double nutau,double nutaubar)
   {
     fFluxGen[0] = nue;   fFluxGen[1] = nuebar;
     fFluxGen[2] = numu;  fFluxGen[3] = numubar;
@@ -276,10 +276,10 @@ namespace simb{
     //do some checking of the calculation
     if(std::abs(costhetan)>1){
       if(costhetan>0){
-	costhetan = 1;
+        costhetan = 1;
       }
       else{
-	costhetan=-1;
+        costhetan=-1;
       }
     }
 
@@ -351,27 +351,27 @@ namespace simb{
       //calc new  decay angle w.r.t. (anti)spin direction
       double costhn  = 0.;
       if(P_dcm_nun[3]!=0&&P_pcm_mp[3]!=0){
-	costhn = ( P_dcm_nun[0]*P_pcm_mp[0]+
-		   P_dcm_nun[1]*P_pcm_mp[1]+
-		   P_dcm_nun[2]*P_pcm_mp[2])/(P_dcm_nun[3]*P_pcm_mp[3]);
+        costhn = ( P_dcm_nun[0]*P_pcm_mp[0]+
+                  P_dcm_nun[1]*P_pcm_mp[1]+
+                  P_dcm_nun[2]*P_pcm_mp[2])/(P_dcm_nun[3]*P_pcm_mp[3]);
       }
     
       if(std::abs(costhn)>1){
-	if(costhn>0){
-	  costhn = 1;
-	}
-	else{
-	  costhn=-1;
-	}
+        if(costhn>0){
+          costhn = 1;
+        }
+        else{
+          costhn=-1;
+        }
       }
     
       double wt_ration;
       if(fntype==14||fntype==-14){
-	double xnu = 2.*fnecm/mass;
-	wt_ration = ( (3.-2.*xnu) - (1.-2.*xnu)*costhn ) / (3.-2.*xnu);
+        double xnu = 2.*fnecm/mass;
+        wt_ration = ( (3.-2.*xnu) - (1.-2.*xnu)*costhn ) / (3.-2.*xnu);
       }
       else{
-	wt_ration=1.-costhn;
+        wt_ration=1.-costhn;
       }
   
       newW*=wt_ration;

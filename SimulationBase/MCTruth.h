@@ -50,15 +50,15 @@ namespace simb {
     void             Add(simb::MCParticle& part);           
     void             SetOrigin(simb::Origin_t origin);
     void             SetNeutrino(int CCNC, 
-				 int mode, 
-				 int interactionType,
-				 int target, 
-				 int nucleon,
-				 int quark, 
-				 double w, 
-				 double x, 
-				 double y, 
-				 double qsqr);                      
+                                 int mode,
+                                 int interactionType,
+                                 int target,
+                                 int nucleon,
+                                 int quark, 
+                                 double w, 
+                                 double x, 
+                                 double y, 
+                                 double qsqr);                      
  
     friend std::ostream&  operator<< (std::ostream& o, simb::MCTruth const& a);
 #endif
