@@ -33,17 +33,17 @@ namespace simb{
   //......................................................................
   ///nu is the incoming neutrino and lep is the outgoing lepton
   MCNeutrino::MCNeutrino(MCParticle &nu, 
-			 MCParticle &lep, 
-			 int CCNC, 
-			 int mode, 
-			 int interactionType,
-			 int target, 
-			 int nucleon,
-			 int quark, 
-			 double w, 
-			 double x, 
-			 double y, 
-			 double qsqr)
+                         MCParticle &lep,
+                         int CCNC,
+                         int mode,
+                         int interactionType,
+                         int target,
+                         int nucleon,
+                         int quark, 
+                         double w, 
+                         double x, 
+                         double y, 
+                         double qsqr)
     : fNu(nu)
     , fLepton(lep)
     , fMode(mode)
