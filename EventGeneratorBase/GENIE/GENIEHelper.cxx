@@ -1501,9 +1501,8 @@ namespace evgb {
     if(procInfo.IsWeakNC()) CCNC = simb::kNC;
 
     // what is the interaction type
-    int mode = simb::kUnknownInteraction;
-    if     (procInfo.IsQuasiElastic()       ) mode = simb::kQE;
-    else if(procInfo.IsDeepInelastic()      ) mode = simb::kDIS;
+    int mode = simb::kQE;
+    if     (procInfo.IsDeepInelastic()      ) mode = simb::kDIS;
     else if(procInfo.IsResonant()           ) mode = simb::kRes;
     else if(procInfo.IsCoherent()           ) mode = simb::kCoh;
     else if(procInfo.IsCoherentElas()       ) mode = simb::kCohElastic;
