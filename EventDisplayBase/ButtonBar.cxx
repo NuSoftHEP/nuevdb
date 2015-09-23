@@ -97,25 +97,21 @@ namespace evdb{
     fGoTo = new TGTextButton(fButtonBar, "Go");
     fGoTo->SetToolTipText("Go to event");
     fGoTo->Connect("Clicked()", "evdb::ButtonBar", this, "GoTo()");
-    fButtonBar->AddFrame(fGoTo, new TGLayoutHints(kLHintsTop|kLHintsRight, 
-						  2, 0, 2, 2));
+    fButtonBar->AddFrame(fGoTo, new TGLayoutHints(kLHintsTop|kLHintsRight, 2, 0, 2, 2));
 
     // Go to event text entry
     fEventTextEntry = new TGTextEntry(fButtonBar, new TGTextBuffer(128));
     fEventTextEntry->Connect("ReturnPressed()","evdb::ButtonBar",this,"GoTo()");
     fEventTextEntry->Resize(75,20);
-    fButtonBar->AddFrame(fEventTextEntry, 
-			 new TGLayoutHints(kLHintsTop|kLHintsRight,2,0,2,2));
+    fButtonBar->AddFrame(fEventTextEntry, new TGLayoutHints(kLHintsTop|kLHintsRight,2,0,2,2));
 
     fRunTextEntry = new TGTextEntry(fButtonBar, new TGTextBuffer(128));
     fRunTextEntry->Connect("ReturnPressed()","evdb::ButtonBar",this,"GoTo()");
     fRunTextEntry->Resize(50,20);
-    fButtonBar->AddFrame(fRunTextEntry, 
-			 new TGLayoutHints(kLHintsCenterY|kLHintsRight,2,0,2,2));
+    fButtonBar->AddFrame(fRunTextEntry, new TGLayoutHints(kLHintsCenterY|kLHintsRight,2,0,2,2));
 
     fRunEvtLabel = new TGLabel(fButtonBar, new TGHotString("[Run/Event]="));
-    fButtonBar->AddFrame(fRunEvtLabel, 
-			 new TGLayoutHints(kLHintsCenterY|kLHintsRight,2,0,2,2));
+    fButtonBar->AddFrame(fRunEvtLabel, new TGLayoutHints(kLHintsCenterY|kLHintsRight,2,0,2,2));
 
     // Add button bar to frame
     frame->AddFrame(fButtonBar, fLayout);
