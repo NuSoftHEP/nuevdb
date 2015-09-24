@@ -94,10 +94,10 @@ namespace evdb{
   /// Register a display canvas for use in creating windows
   ///
   void DisplayWindow::Register(const char* name,
-			       const char* description,
-			       unsigned int h,
-			       unsigned int w,
-			       CanvasCreator_t creator)
+                               const char* description,
+                               unsigned int h,
+                               unsigned int w,
+                               CanvasCreator_t creator)
   {
     gsName.push_back(std::string(name));
     gsDescription.push_back(std::string(description));

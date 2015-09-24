@@ -81,6 +81,7 @@ namespace simb{
 
   /// Neutrino interaction categories
   enum int_type_{
+    kUnknownInteraction        = -1,
     kQE                        = 0,
     kRes                       = 1,
     kDIS		                   = 2,

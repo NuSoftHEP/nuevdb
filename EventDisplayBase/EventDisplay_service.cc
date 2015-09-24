@@ -69,8 +69,8 @@ namespace evdb
   //......................................................................
 
   EventDisplay::EventDisplay(fhicl::ParameterSet const& pset,
-			     art::ActivityRegistry& reg) :
-    fAutoPrintCount(0)
+                             art::ActivityRegistry& reg) :
+  fAutoPrintCount(0)
   {
     //   evdb::DisplayWindow::Register("Test1","Test display #1",600,900,mk_canvas1);
     //   evdb::DisplayWindow::OpenWindow(0);
@@ -110,16 +110,16 @@ namespace evdb
       std::string extension;
       idx = fEchoPrintFile.rfind('.');
       if(idx != std::string::npos) {
-	  extension = fEchoPrintFile.substr(idx);
-	  fEchoPrintTempFile = std::string(*w) + ".tmp" + extension;
+        extension = fEchoPrintFile.substr(idx);
+        fEchoPrintTempFile = std::string(*w) + ".tmp" + extension;
       } else {
-	// No extension found, can't do this
-	fEchoPrint = false;
-	fEchoPrintTempFile = "";
-	mf::LogWarning("EventDisplayBase") 
-	  << "No file extension given to EchoPrintFile "
-	  << fEchoPrintFile 
-	  << " so cannot determine file format, disabling EchoPrint\n";
+        // No extension found, can't do this
+        fEchoPrint = false;
+        fEchoPrintTempFile = "";
+        mf::LogWarning("EventDisplayBase")
+        << "No file extension given to EchoPrintFile "
+        << fEchoPrintFile
+        << " so cannot determine file format, disabling EchoPrint\n";
       }
       wordfree(&p);
     } else {
@@ -180,16 +180,16 @@ namespace evdb
       ++fAutoPrintCount;
       std::map<std::string, Printable*>& ps = Printable::GetPrintables();
       for(std::map<std::string,Printable*>::iterator it = ps.begin(); it != ps.end(); ++it){
-	Printable* p = it->second;
-	// Ensure the format string is well-formed
-	if(fAutoPrintPattern.find("%s") == std::string::npos)
-	  throw cet::exception("EventDisplay") << "Cannot find AutoPrintPattern"
-					       << " format for %s";
-	if(fAutoPrintPattern.find("%d") == std::string::npos)
-	  throw cet::exception("EventDisplay") << "Cannot find AutoPrintPattern"
-					       << " format for %d";
-	// png doesn't seem to work for some reason
-	p->Print(TString::Format(fAutoPrintPattern.c_str(), p->PrintTag(), evt.event()));
+        Printable* p = it->second;
+          // Ensure the format string is well-formed
+        if(fAutoPrintPattern.find("%s") == std::string::npos)
+          throw cet::exception("EventDisplay") << "Cannot find AutoPrintPattern"
+          << " format for %s";
+        if(fAutoPrintPattern.find("%d") == std::string::npos)
+          throw cet::exception("EventDisplay") << "Cannot find AutoPrintPattern"
+          << " format for %d";
+          // png doesn't seem to work for some reason
+        p->Print(TString::Format(fAutoPrintPattern.c_str(), p->PrintTag(), evt.event()));
       }
       if(fAutoPrintCount >= fAutoPrintMax) exit(0);
     }
@@ -198,22 +198,22 @@ namespace evdb
     if (fEchoPrint){
       std::map<std::string, Printable*>& ps = Printable::GetPrintables();
       for(std::map<std::string,Printable*>::iterator it = ps.begin(); it != ps.end(); ++it){
-	Printable* p = it->second;
-	// lack of more parameters to Print() call means use the file format
-	// that's specified by the file name extension
-	p->Print(fEchoPrintTempFile.c_str());
+        Printable* p = it->second;
+          // lack of more parameters to Print() call means use the file format
+          // that's specified by the file name extension
+        p->Print(fEchoPrintTempFile.c_str());
       }
-      // move temporary file to final file.  This makes the creation of the
-      // newly printed file close to atomic
+        // move temporary file to final file.  This makes the creation of the
+        // newly printed file close to atomic
       int result;
       result=rename(fEchoPrintTempFile.c_str(),fEchoPrintFile.c_str());
       if (result==0)
-	LOG_DEBUG("EventDisplayBase") << fEchoPrintTempFile
-				      << " tempfile successfully renamed to "
-				      << fEchoPrintFile;  
+        LOG_DEBUG("EventDisplayBase") << fEchoPrintTempFile
+        << " tempfile successfully renamed to "
+        << fEchoPrintFile;
       else
-	mf::LogWarning("EventDisplayBase") << "Error renaming file "
-					   << fEchoPrintTempFile 
+        mf::LogWarning("EventDisplayBase") << "Error renaming file "
+					   << fEchoPrintTempFile
 					   << " to " << fEchoPrintFile
 					   << " " << strerror(errno) <<"\n";
     }
@@ -223,8 +223,8 @@ namespace evdb
     if(!rootInput && NavState::Which() != kSEQUENTIAL_ONLY){
       NavState::Set(kSEQUENTIAL_ONLY);
       mf::LogWarning("EventDisplayBase")
-	<< "Random access for the EventDisplay requires a RootInput source for proper operation.\n"
-	<< "You do not have a RootInput source so only sequential access works.\n";
+      << "Random access for the EventDisplay requires a RootInput source for proper operation.\n"
+      << "You do not have a RootInput source so only sequential access works.\n";
     }
 
 
@@ -251,23 +251,23 @@ namespace evdb
     case kGOTO_EVENT: {
       art::EventID id(art::SubRunID::invalidSubRun(art::RunID(NavState::TargetRun())), NavState::TargetEvent());
       if(rootInput){
-	if (!rootInput->seekToEvent(id)) { // Couldn't find event
-	  mf::LogWarning("EventDisplayBase") << "Unable to find "
+        if (!rootInput->seekToEvent(id)) { // Couldn't find event
+          mf::LogWarning("EventDisplayBase") << "Unable to find "
 					     << id
 					     << " -- reloading current event.";
-	  // Reload current event.
-	  rootInput->seekToEvent(evt.id());
-	}
+            // Reload current event.
+          rootInput->seekToEvent(evt.id());
+        }
       }// end if not a RootInput
       break;
     }
     default: {
       throw art::Exception(art::errors::LogicError)
-	<< "EvengtDisplay in unhandled state "
-	<< NavState::Which()
-	<< ".\n";
+      << "EvengtDisplay in unhandled state "
+      << NavState::Which()
+      << ".\n";
     }
-    }
+    } // end switch statement
 
   }
 
