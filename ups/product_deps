@@ -1,6 +1,6 @@
 # The parent line must be the first non-comment line in the file
 # This line defines the product name and version
-parent nutools  v1_14_04
+parent nutools  v1_15_00
 defaultqual     e7
 
 # These optional lines define the installed directories where
@@ -18,32 +18,32 @@ bindir      fq_dir      bin
 # note that art -q nu: depends, via root, on geant4 and more
 # this means that we only need to list art, cry, and genie as a dependencies
 product         version
-art             v1_15_02
-genie           v2_8_6c
-geant4          v4_9_6_p04b
-cry             v1_7d
-ifdhc		v1_8_6
+art             v1_16_00
+genie           v2_8_6d
+geant4          v4_9_6_p04c
+cry             v1_7e
+ifdhc		v1_8_7
 libwda          v2_21_1
 
-cetbuildtools   v4_13_00        -        only_for_build
+cetbuildtools   v4_14_01        -        only_for_build
 end_product_list
 
 
 # -nq- here means there is no qualifier
 # a - here means the dependent product is not required by the parent and will not be setup
 qualifier        art             genie       cry         geant4    libwda  ifdhc         notes
-e7:debug         nu:e7:debug     e7:debug    e7:debug    e7:debug  -nq-    e7:p279:debug -std=c++11
-e7:opt           nu:e7:opt       e7:opt      e7:opt      e7:opt    -nq-    e7:p279:opt   -std=c++11
-e7:prof          nu:e7:prof      e7:prof     e7:prof     e7:prof   -nq-    e7:p279:prof  -std=c++11
-e6:debug         nu:e6:debug     e6:debug    e6:debug    e6:debug  -nq-    e6:p279:debug -std=c++1y
-e6:opt           nu:e6:opt       e6:opt      e6:opt      e6:opt    -nq-    e6:p279:opt   -std=c++1y
-e6:prof          nu:e6:prof      e6:prof     e6:prof     e6:prof   -nq-    e6:p279:prof  -std=c++1y
-e7:noifdh:debug  nu:e7:debug     e7:debug    e7:debug    e7:debug  -nq-    -             -std=c++11
-e7:noifdh:opt    nu:e7:opt       e7:opt      e7:opt      e7:opt    -nq-    -             -std=c++11
-e7:noifdh:prof   nu:e7:prof      e7:prof     e7:prof     e7:prof   -nq-    -             -std=c++11
-e6:noifdh:debug  nu:e6:debug     e6:debug    e6:debug    e6:debug  -nq-    -             -std=c++1y
-e6:noifdh:opt    nu:e6:opt       e6:opt      e6:opt      e6:opt    -nq-    -             -std=c++1y
-e6:noifdh:prof   nu:e6:prof      e6:prof     e6:prof     e6:prof   -nq-    -             -std=c++1y
+e9:debug         nu:e9:debug     e9:debug    e9:debug    e9:debug  -nq-    e9:p2710:debug 
+e9:opt           nu:e9:opt       e9:opt      e9:opt      e9:opt    -nq-    e9:p2710:opt   
+e9:prof          nu:e9:prof      e9:prof     e9:prof     e9:prof   -nq-    e9:p2710:prof  
+e9:noifdh:debug  nu:e9:debug     e9:debug    e9:debug    e9:debug  -nq-    -             
+e9:noifdh:opt    nu:e9:opt       e9:opt      e9:opt      e9:opt    -nq-    -             
+e9:noifdh:prof   nu:e9:prof      e9:prof     e9:prof     e9:prof   -nq-    -             
+e7:debug         nu:e7:debug     e7:debug    e7:debug    e7:debug  -nq-    e7:p2710:debug 
+e7:opt           nu:e7:opt       e7:opt      e7:opt      e7:opt    -nq-    e7:p2710:opt   
+e7:prof          nu:e7:prof      e7:prof     e7:prof     e7:prof   -nq-    e7:p2710:prof  
+e7:noifdh:debug  nu:e7:debug     e7:debug    e7:debug    e7:debug  -nq-    -             
+e7:noifdh:opt    nu:e7:opt       e7:opt      e7:opt      e7:opt    -nq-    -             
+e7:noifdh:prof   nu:e7:prof      e7:prof     e7:prof     e7:prof   -nq-    -             
 end_qualifier_list
 
 # Preserve tabs and formatting in emacs and vi / vim:

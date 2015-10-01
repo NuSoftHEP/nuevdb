@@ -669,7 +669,7 @@ ParameterSetEditFrame::ParameterSetEditFrame(TGCompositeFrame* mother,
   //
   const ServiceTable& st = ServiceTable::Instance();
   const fhicl::ParameterSet& pset = st.GetParameterSet(psetid);
-  std::vector<std::string>   key  = pset.get_keys();
+  std::vector<std::string>   key  = pset.get_names();
   unsigned int               nkey = key.size();
   
   //
