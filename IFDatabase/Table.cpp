@@ -124,20 +124,23 @@ namespace nutools {
       }
 
       if (!dbname.empty()) SetDBName(dbname);
+      /*
       if (DBName() == "") {
         errStr = "Table::Table(): missing database name!";
         throw std::runtime_error(errStr);
       }
-
+      */
       if (!dbhost.empty()) SetDBHost(dbhost);
+      /*
       if (DBHost() == "") {
         errStr = "Table::Table(): missing database host!";
         throw std::runtime_error(errStr);
       }
+      */
 
       if (!dbport.empty()) SetDBPort(dbport);
       if (!dbuser.empty()) SetUser(dbuser);
-
+      
       this->SetTableName(tableName);
       fSchema = std::string(schemaName);
       boost::to_lower(fSchema);
@@ -149,7 +152,7 @@ namespace nutools {
         errStr = "Table::Table(): table \'" + stName + "\' not found in database!";
         throw std::runtime_error(errStr);
       }
-
+      
       Reset();
       fCol.clear();
 
@@ -191,59 +194,7 @@ namespace nutools {
       PQclear(res);
 
       // now get names and types of all columns
-      cmd = "SELECT column_name, data_type from information_schema.columns where table_name = \'" + std::string(tableName) + "\' and table_schema=\'" + fSchema + "\'";
-      res = PQexec(fConnection,cmd.c_str());
-
-      if (PQresultStatus(res) != PGRES_TUPLES_OK) {
-        errStr = "Table::Table() command failed: " + std::string(PQerrorMessage(fConnection));
-        if (fVerbosity > 0)
-          std::cerr << errStr << std::endl;
-        PQclear(res);
-        fExistsInDB = false;  // set this to false just in case
-        CloseConnection();
-        throw std::runtime_error(errStr);
-      }
-
-      nRow = PQntuples(res);
-
-      for (int i=0; i<nRow; ++i) {
-        std::string cname = std::string(PQgetvalue(res,i,0));
-        std::string ctype = std::string(PQgetvalue(res,i,1));
-        if (ctype == "smallint") ctype="short";
-        else if (ctype == "double precision") ctype="double";
-        else if (ctype == "boolean") ctype="bool";
-        else if (ctype == "timestamp without time zone") ctype="timestamp";
-        else if (ctype.substr(0,7) == "varchar")
-          ctype = "varchar" + ctype.substr(8,ctype.find(')')-1);
-
-        // check if this column is "auto_incr"
-        if (ctype == "integer") {
-          cmd = "SELECT pg_get_serial_sequence(\'" + stName +
-            "\',\'" + cname + "\')";
-          PGresult* res2 = PQexec(fConnection,cmd.c_str());
-          int nRow2 = PQntuples(res2);
-          for (int j=0; j<nRow2; ++j) {
-            std::string tStr = std::string(PQgetvalue(res2,j,0));
-            if (tStr != "") ctype = "auto_incr";
-          }
-          PQclear(res2);
-        }
-
-        // now create Column based on this info
-	ColumnDef cdef(cname,ctype);
-
-        if (find(pkeyList.begin(),pkeyList.end(),cname) != pkeyList.end()) {
-	  cdef.SetCanBeNull(false);
-        }
-        fCol.insert(fCol.begin(),cdef);
-
-        if (cname == "inserttime") addInsertTime = true;
-        if (cname == "insertuser") addInsertUser = true;
-        if (cname == "updatetime") addUpdateTime = true;
-        if (cname == "updateuser") addUpdateUser = true;
-      }
-
-      PQclear(res);
+      this->GetColsFromDB(pkeyList);
 
       if (!hasConn) CloseConnection();
 
@@ -272,6 +223,112 @@ namespace nutools {
       if (fHasConnection) CloseConnection();
     }
 
+    //************************************************************
+
+    bool Table::GetColsFromDB(std::vector<std::string> pkeyList)
+    {
+      bool hasConn = fHasConnection;
+      if (! fHasConnection) {
+        GetConnection();
+        hasConn = false;
+      }
+      
+      // now get names and types of all columns
+      std::string cmd = "SELECT column_name, data_type from information_schema.columns where table_name = \'" + std::string(fTableName);
+      if (fTableType == kConditionsTable)
+	cmd += "_update";
+      cmd += "\' and table_schema=\'" + fSchema + "\'";
+
+      PGresult* res = PQexec(fConnection,cmd.c_str());
+
+      if (PQresultStatus(res) != PGRES_TUPLES_OK) {
+	std::string errStr = "Table::Table() command failed: " + std::string(PQerrorMessage(fConnection));
+        if (fVerbosity > 0)
+          std::cerr << errStr << std::endl;
+        PQclear(res);
+        fExistsInDB = false;  // set this to false just in case
+        CloseConnection();
+        throw std::runtime_error(errStr);
+      }
+
+      int nRow = PQntuples(res);
+
+      for (int i=0; i<nRow; ++i) {	
+        std::string cname = std::string(PQgetvalue(res,i,0));
+        std::string ctype = std::string(PQgetvalue(res,i,1));
+
+	if (fTableType == kConditionsTable) {	  
+	  if (cname == "__snapshot_id") continue;
+	  if (cname == "__tr") continue;
+	  if (cname == "__channel") continue; //cname = "channel";
+	  if (cname == "__tv") continue; //cname = "tv";
+	}
+	
+	if (ctype == "smallint") ctype="short";
+        else if (ctype == "double precision") ctype="double";
+        else if (ctype == "boolean") ctype="bool";
+        else if (ctype == "timestamp without time zone") ctype="timestamp";
+        else if (ctype.substr(0,7) == "varchar")
+          ctype = "varchar" + ctype.substr(8,ctype.find(')')-1);
+
+        // check if this column is "auto_incr", only if !conditions table
+        if (fTableType != kConditionsTable && ctype == "integer") {
+	  std::string stName = fSchema + std::string(".") + std::string(fTableName);
+          cmd = "SELECT pg_get_serial_sequence(\'" + stName +
+            "\',\'" + cname + "\')";
+          PGresult* res2 = PQexec(fConnection,cmd.c_str());
+          int nRow2 = PQntuples(res2);
+          for (int j=0; j<nRow2; ++j) {
+            std::string tStr = std::string(PQgetvalue(res2,j,0));
+            if (tStr != "") ctype = "auto_incr";
+          }
+          PQclear(res2);
+        }
+	
+        // now create Column based on this info
+	ColumnDef cdef(cname,ctype);
+
+        if (find(pkeyList.begin(),pkeyList.end(),cname) != pkeyList.end()) {
+	  cdef.SetCanBeNull(false);
+        }
+        fCol.insert(fCol.begin(),cdef);
+
+        if (cname == "inserttime") addInsertTime = true;
+        if (cname == "insertuser") addInsertUser = true;
+        if (cname == "updatetime") addUpdateTime = true;
+        if (cname == "updateuser") addUpdateUser = true;
+      }
+
+      PQclear(res);
+
+      if (!hasConn) CloseConnection();
+
+      return true;
+    }
+    
+    //************************************************************
+
+    int Table::AddCol(std::string cname, std::string ctype)
+    {
+      for (size_t i=0; i<fCol.size(); ++i) {
+	if (fCol[i].Name() == cname) {
+	  std::cerr << "Table::AddCol: column \'" << cname << "\' already exists!  Fatal, aborting..." << std::endl;
+	  abort();
+	}
+      }
+
+      ColumnDef cdef(cname,ctype);
+      
+      fCol.push_back(cdef);
+      
+      if (cname == "inserttime") addInsertTime = true;
+      if (cname == "insertuser") addInsertUser = true;
+      if (cname == "updatetime") addUpdateTime = true;
+      if (cname == "updateuser") addUpdateUser = true;
+      
+      return fCol.size()-1;
+    }
+    
     //************************************************************
 
     void Table::AddRow(const Row* row)
@@ -1218,25 +1275,29 @@ namespace nutools {
     //************************************************************
     bool Table::LoadFromCSV(std::string fname)
     {
-      std::string tname;
       std::cout << "Reading " << fname << std::endl;
 
       std::ifstream fin;
-      fin.open(tname.c_str());
-      if (!fin.is_open() || !fin.good()) {
-        std::cerr << "Could not open " << tname << std::endl;
+      fin.open(fname.c_str());
+      if (!fin.is_open()) {
+        std::cerr << "Could not open " << fname << std::endl;
         return false;
       }
-
+      if (!fin.good()) {
+	std::cerr << "Stream not good " << fname << std::endl;
+	return false;
+      }
+      
       std::string s;
-
+      
       char buff[256];
       std::string value;
 
       int colMap[fCol.size()];
-      for (unsigned int i=0; i<fCol.size(); ++i)
+      for (unsigned int i=0; i<fCol.size(); ++i) {
         colMap[i] = i;
-
+      }
+      
       bool hasColNames = true;
       bool hasTols = true;
 
@@ -1262,6 +1323,7 @@ namespace nutools {
           buff[k] = '\0';
           value = buff;
 
+	  boost::algorithm::trim(value);
 	  if (value == "channel") { chanIdx=j; ++joff;}
 	  else if (value == "tv") { tvIdx=j; ++joff;}
 	  else if (value == "tvend") { tvEndIdx=j; ++joff;}

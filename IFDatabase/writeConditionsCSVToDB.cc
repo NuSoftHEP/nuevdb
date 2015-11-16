@@ -13,16 +13,12 @@ int main(int argc, char *argv[])
     exit(1);
   }
 
-  nutools::dbi::Table* t;
-
-  try {
-    t = new nutools::dbi::Table(argv[1],argv[3],nutools::dbi::kConditionsTable);
-  }
-  catch (std::runtime_error& e) {
-    std::cerr << e.what() << "  Exiting..." << std::endl;
-    exit(2);
-  }
-
+  nutools::dbi::Table* t = new nutools::dbi::Table();
+  t->SetDetector(argv[1]);
+  t->SetTableName(argv[3]);
+  t->SetTableType(nutools::dbi::kConditionsTable);
+  t->GetColsFromDB();
+  
   std::string dt = argv[2];
   if (dt == "data") 
     t->SetDataTypeMask(nutools::dbi::kDataOnly);
@@ -30,6 +26,8 @@ int main(int argc, char *argv[])
     t->SetDataTypeMask(nutools::dbi::kMCOnly);
   else if (dt == "datamc") 
     t->SetDataTypeMask(nutools::dbi::kDataOnly|nutools::dbi::kMCOnly);
+
+  t->SetVerbosity(100);
   
   if (t->LoadFromCSV(argv[4]))
     t->Write();
