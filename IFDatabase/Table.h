@@ -114,8 +114,10 @@ namespace nutools {
 
       void AddRow(const Row* row);
       void AddRow(const Row& row);
-      void AddEmptyRows(unsigned int nrow);
+      int  AddCol(std::string cname, std::string ctype);
 
+      void AddEmptyRows(unsigned int nrow);
+      
       bool RemoveRow(int i); ///< note, this will only delete a row from
                              ///< memory, it will not delete an existing
                              ///< row in a dB!
@@ -312,6 +314,8 @@ namespace nutools {
       void PrintVMUsed();
       void PrintPMUsed();
 
+      bool GetColsFromDB(std::vector<std::string> pkeyList = {});
+      
     private:
 
       bool LoadConditionsTable();
