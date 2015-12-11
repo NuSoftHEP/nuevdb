@@ -25,6 +25,7 @@ namespace nutools {
     enum DBTableType {
       kGenericTable,
       kConditionsTable,
+      kUnstructuredConditionsTable,
       kHardwareTable,
       kNTableType
     };
@@ -315,10 +316,14 @@ namespace nutools {
       void PrintPMUsed();
 
       bool GetColsFromDB(std::vector<std::string> pkeyList = {});
+
+      void SetFolder(std::string f) { fFolder = f; }
+      std::string Folder() { return fFolder; }
       
     private:
 
       bool LoadConditionsTable();
+      bool LoadUnstructuredConditionsTable();
       bool LoadNonConditionsTable();
       bool GetDataFromWebService(Dataset&, std::string);
 
@@ -372,9 +377,11 @@ namespace nutools {
       std::string fPassword;
       std::string fValiditySQL;
       std::string fDetector;
-
+      std::string fFolder;
+      
       std::string fTag;
       std::string fWSURL;
+      std::string fUConDBURL;
       std::string fQEURL;
 
       std::vector<nutools::dbi::ColumnDef> fCol;
