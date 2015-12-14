@@ -9,7 +9,7 @@
 #include "SimulationBase/MCParticle.h"
 #include "SimulationBase/MCNeutrino.h"
 
-#include "messagefacility/MessageLogger/MessageLogger.h"
+#include "art/Utilities/Exception.h"
 
 #include "TDatabasePDG.h"
 
@@ -62,8 +62,7 @@ namespace simb{
                                      w, x, y, qsqr);
     } // end if MCNeutrino is not already set
     else
-      mf::LogWarning("MCTruth") << "MCTruth - attempt to set neutrino when already set";
-      
+      throw art::Exception(art::errors::LogicError) <<  "MCTruth - attempt to set neutrino when already set";
     return;
   }
 

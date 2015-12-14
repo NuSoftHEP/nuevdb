@@ -6,8 +6,6 @@ set( SIMB_LIBS ${ART_FRAMEWORK_SERVICES_REGISTRY}
                ${ART_FRAMEWORK_PRINCIPAL}
                ${ART_PERSISTENCY_PROVENANCE}
                ${ART_UTILITIES}
-               ${MF_MESSAGELOGGER}
-               ${MF_UTILITIES}
                ${FHICLCPP}
                ${CETLIB}
 	       ${ROOT_EG}
