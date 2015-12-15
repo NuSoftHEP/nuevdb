@@ -9,8 +9,6 @@
 
 #include "SimulationBase/GTruth.h"
 
-#include "messagefacility/MessageLogger/MessageLogger.h"
-
 #include <vector>
 #include <iostream>
 #include <string>
@@ -44,8 +42,6 @@ namespace simb {
     , ftgtPDG(0)
     , fProbePDG(-1)
   {
-    LOG_DEBUG("GTruth") << "Creating GTruth";
-
     fFShadSystP4.SetXYZT(0, 0, 0, 0);
     fHitNucP4.SetXYZT(0, 0, 0, 0);
     fProbeP4.SetXYZT(0, 0, 0, 0);

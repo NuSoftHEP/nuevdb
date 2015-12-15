@@ -2,6 +2,8 @@
 art_make( LIBRARY_NAME G4Base
           LIB_LIBRARIES SimulationBase
 	                MagneticField_service
+			${MF_MESSAGELOGGER}
+			${MF_UTILITIES}
 	                ${G4FR}
 	                ${G4GMOCREN}
 	                ${G4RAYTRACER}

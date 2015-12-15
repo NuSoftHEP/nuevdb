@@ -2,6 +2,8 @@
 art_make( LIBRARY_NAME EventGeneratorBaseCRY
           LIB_LIBRARIES SimulationBase
 	                ${CRY}
+			${MF_MESSAGELOGGER}
+			${MF_UTILITIES}
 	                ${CETLIB}
 	                ${ROOT_GEOM}
 	                ${ROOT_GEOMPAINTER}
