@@ -235,7 +235,7 @@ namespace nutools {
 
     bool Table::GetColsFromDB(std::vector<std::string> pkeyList)
     {
-      if (fTableType == kUnstructedConditionsTable) {
+      if (fTableType == kUnstructuredConditionsTable) {
 	std::cerr << "Table::GetColsFromDB() currently disabled for unstructured conditions tables." << std::endl;
 	abort();
       }
@@ -1845,7 +1845,7 @@ namespace nutools {
         return false;
       }
 
-      if (fUConDBURL = "") {
+      if (fUConDBURL == "") {
         std::cerr << "Table::LoadConditionsTable: Web Service URL is not set!" << std::endl;
         return false;
       }
@@ -1856,7 +1856,7 @@ namespace nutools {
 	  fUConDBURL = interactiveURL;
       }
 
-      int ncol = this->NCol();
+      //      int ncol = this->NCol();
 
       std::stringstream myss;
 
