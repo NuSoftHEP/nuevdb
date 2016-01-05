@@ -8,7 +8,10 @@
 /// \update 2013-04-24 rhatcher adapt to R-2_8_0 interface; subset flux files
 ////////////////////////////////////////////////////////////////////////
 
-//NuTools includes
+// GENIE includes
+#include "EVGCore/EventRecord.h"
+
+// NuTools includes
 #include "EventGeneratorBase/evgenbase.h"
 #include "EventGeneratorBase/GiBUU/GiBUUHelper.h"
 #include "SimulationBase/MCTruth.h"
@@ -48,8 +51,8 @@ namespace evgb {
 			   TGeoManager*               geoManager,
 			   std::string         const& rootFile,
 			   double              const& detectorMass)
-    : GiBUUHelper(pset, geoManager, rootFile, detectorMass),
-      fGIBUUEventRecord(0)
+    : GENIEHelper(pset, geoManager, rootFile, detectorMass),
+      fGiBUUEventRecord(0)
   {
   }
 
@@ -57,7 +60,7 @@ namespace evgb {
   GiBUUHelper::~GiBUUHelper()
   {
     // clean up owned genie object (other genie obj are ref ptrs)
-    delete fGIBUUEventRecord;
+    delete fGiBUUEventRecord;
 
   }
 
