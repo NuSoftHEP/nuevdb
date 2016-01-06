@@ -22,7 +22,7 @@ art             v1_17_05
 genie           v2_8_6d
 geant4          v4_9_6_p04c
 cry             v1_7e
-ifdhc		v1_8_7
+ifdhc		v1_8_8
 libwda          v2_22_1
 
 cetbuildtools   v4_18_01        -        only_for_build
