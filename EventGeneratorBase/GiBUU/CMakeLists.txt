@@ -9,8 +9,9 @@ else()
   SET(IFDH "")
 endif()
 
-art_make( LIBRARY_NAME EventGeneratorBaseGENIE
-          LIB_LIBRARIES SimulationBase
+art_make( LIBRARY_NAME EventGeneratorBaseGiBUU
+          LIB_LIBRARIES EventGeneratorBaseGENIE
+			SimulationBase
 			${ART_UTILITIES}
 			${MF_MESSAGELOGGER}
 			${MF_UTILITIES}
@@ -64,7 +65,7 @@ art_make( LIBRARY_NAME EventGeneratorBaseGENIE
 			${IFDH}
 			${ROOT_GEOM}
 			${ROOT_GEOMPAINTER}
-			${ROOT_BASIC_LIB_LIST} )
+		 	${ROOT_BASIC_LIB_LIST} )
 
 install_headers()
 install_fhicl()

@@ -53,7 +53,8 @@ namespace nutools {
       fTimeParsing = true;
       fMinChannel = 0;
       fMaxChannel = 0;
-
+      fFolder = "";
+      
       Reset();
 
       srandom(time(0));
@@ -74,6 +75,11 @@ namespace nutools {
       fWSURL = "";
       const char* wsHost = getenv("DBIWSURL");
       if (wsHost) fWSURL = std::string(wsHost);
+
+      fUConDBURL = "";      
+      const char* ucondbHost = getenv("DBIUCONDBURL");
+      if (ucondbHost) fUConDBURL = std::string(ucondbHost);
+
       fQEURL = "";
       const char* qeHost = getenv("DBIQEURL");
       if (qeHost) fQEURL = std::string(qeHost);
@@ -103,6 +109,8 @@ namespace nutools {
       fMinChannel = 0;
       fMaxChannel = 0;
 
+      fFolder = "";
+      
       fDataSource = kUnknownSource;
 
       fVerbosity=0;
@@ -227,6 +235,11 @@ namespace nutools {
 
     bool Table::GetColsFromDB(std::vector<std::string> pkeyList)
     {
+      if (fTableType == kUnstructuredConditionsTable) {
+	std::cerr << "Table::GetColsFromDB() currently disabled for unstructured conditions tables." << std::endl;
+	abort();
+      }
+      
       bool hasConn = fHasConnection;
       if (! fHasConnection) {
         GetConnection();
@@ -268,9 +281,9 @@ namespace nutools {
         else if (ctype == "double precision") ctype="double";
         else if (ctype == "boolean") ctype="bool";
         else if (ctype == "timestamp without time zone") ctype="timestamp";
-        else if (ctype.substr(0,7) == "varchar")
-          ctype = "varchar" + ctype.substr(8,ctype.find(')')-1);
-
+        else if (ctype.substr(0,7) == "varchar" || ctype == "text")
+          ctype = "text"; //varchar" + ctype.substr(8,ctype.find(')')-1);
+	
         // check if this column is "auto_incr", only if !conditions table
         if (fTableType != kConditionsTable && ctype == "integer") {
 	  std::string stName = fSchema + std::string(".") + std::string(fTableName);
@@ -1473,8 +1486,14 @@ namespace nutools {
 		catch (...) {
 		  // simply let "value" remain unchanged
 		}
-	      }
+	      }	      
 	    } // if (hasX)
+	    if (fCol[j-joff].Type() == "text") {
+	      	  boost::algorithm::trim(value);
+		  if ((value[0] == '"' && value[value.length()-1] == '"') ||
+		      (value[0] == '\'' && value[value.length()-1] == '\''))
+		    value = value.substr(1,value.length()-2);
+	    }
 	    fRow[ioff+irow].Col(colMap[j-joff]).FastSet(value);
 	  } // else not a validity channel or time
 	}
@@ -1819,20 +1838,50 @@ namespace nutools {
 
     //************************************************************
 
+    bool Table::LoadUnstructuredConditionsTable()
+    {
+      if (fMinTSVld == 0 || fMaxTSVld == 0) {
+        std::cerr << "Table::LoadUnstructuredConditionsTable: No validity time is set!" << std::endl;
+        return false;
+      }
+
+      if (fUConDBURL == "") {
+        std::cerr << "Table::LoadConditionsTable: Web Service URL is not set!" << std::endl;
+        return false;
+      }
+
+      if (!Util::RunningOnGrid()) {
+	std::string interactiveURL = getenv("DBIUCONDBURLINT");
+	if (!interactiveURL.empty())
+	  fUConDBURL = interactiveURL;
+      }
+
+      //      int ncol = this->NCol();
+
+      std::stringstream myss;
+
+      myss << fUConDBURL << "get?folder=" << Folder() << "." << Name() << "&";
+
+      
+      return false;
+    }
+    
+    //************************************************************
+
     bool Table::LoadConditionsTable()
     {
       if (fDataTypeMask == 0) {
-        std::cerr << "Table::Load: Data type mask is not set!" << std::endl;
+        std::cerr << "Table::LoadConditionsTable: Data type mask is not set!" << std::endl;
         return false;
       }
 
       if (fMinTSVld == 0 || fMaxTSVld == 0) {
-        std::cerr << "Table::Load: No validity time is set!" << std::endl;
+        std::cerr << "Table::LoadConditionsTable: No validity time is set!" << std::endl;
         return false;
       }
 
       if (fWSURL == "") {
-        std::cerr << "Table::Load: Web Service URL is not set!" << std::endl;
+        std::cerr << "Table::LoadConditionsTable: Web Service URL is not set!" << std::endl;
         return false;
       }
 
@@ -1909,7 +1958,9 @@ namespace nutools {
       }
       if (fTableType==kConditionsTable) 
 	return LoadConditionsTable();
-      else 
+      else if (fTableType==kUnstructuredConditionsTable) 
+	return LoadUnstructuredConditionsTable();
+      else
 	return LoadNonConditionsTable();
     }
 
