@@ -24,8 +24,8 @@ IF (NOT CETBUILDTOOLS_VERSION)
 ENDIF()
 
 set(CMAKE_MODULE_PATH $ENV{ART_DIR}/Modules
-		      $ENV{CETBUILDTOOLS_DIR}/Modules
-		      ${CMAKE_MODULE_PATH})
+                      $ENV{CETBUILDTOOLS_DIR}/Modules
+                      ${CMAKE_MODULE_PATH})
 
 include(CetCMakeEnv)
 cet_cmake_env()
@@ -124,17 +124,15 @@ cet_find_library( GRES NAMES GRES PATHS ENV GENIE_LIB NO_DEFAULT_PATH )
 cet_find_library( GREGISTRY NAMES GRegistry PATHS ENV GENIE_LIB NO_DEFAULT_PATH )
 
 # prior to GENIE R-2_9_0 Sehgal's name was spelled incorrectly
-# so if minor version # is 8 
-#cet_find_library( GREINSEHGAL NAMES GReinSeghal PATHS ENV GENIE_LIB NO_DEFAULT_PATH )
-#cet_find_library( GREINSEHGAL NAMES GReinSehgal PATHS ENV GENIE_LIB NO_DEFAULT_PATH )
-execute_process(COMMAND ${CMAKE_COMMAND} -E echo ${GENIE_VERSION} | cut -d'_' -f2 OUTPUT_VARIABLE GENIEMINOR)
-set ( GREINSEHGALSPELLING GReinSehgal )
-if ( ${GENIEMINOR} LESS 9 ) 
-  set ( GREINSEHGALSPELLING GReinSeghal )
-endif ( ${GENIEMINOR} LESS 9 )
-message(STATUS "GENIE version ${GENIE_VERSION} minor ${GENIEMINOR} ${GREINSEHGALSPELLING}")
-cet_find_library( GREINSEHGAL NAMES ${GREINSEHGALSPELLING} PATHS ENV GENIE_LIB NO_DEFAULT_PATH )
+# so if minor version # is 8 or less use GReinSeghal, otherwise GReinSehgal 
 
+execute_process(COMMAND ${CMAKE_COMMAND} -E echo ${GENIE_VERSION} | cut -d'_' -f2 OUTPUT_VARIABLE GENIEMINOR)
+set ( GRSSPELLING GReinSehgal )
+if ( ${GENIEMINOR} LESS 9 ) 
+  set ( GRSSPELLING GReinSeghal )
+endif ( ${GENIEMINOR} LESS 9 )
+message(STATUS "GENIE version ${GENIE_VERSION} minor ${GENIEMINOR} ${GRSSPELLING}")
+cet_find_library( GREINSEHGAL NAMES ${GRSSPELLING} PATHS ENV GENIE_LIB NO_DEFAULT_PATH )
 
 cet_find_library( GUTILS NAMES GUtils PATHS ENV GENIE_LIB NO_DEFAULT_PATH )
 cet_find_library( GGEO NAMES GGeo PATHS ENV GENIE_LIB NO_DEFAULT_PATH )

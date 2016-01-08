@@ -1,9 +1,9 @@
 
 set( NURW_LIBS ${ART_FRAMEWORK_SERVICES_REGISTRY}
                ${ART_FRAMEWORK_SERVICES_OPTIONAL}
-	       ${ART_FRAMEWORK_SERVICES_OPTIONAL_TFILESERVICE_SERVICE}
+               ${ART_FRAMEWORK_SERVICES_OPTIONAL_TFILESERVICE_SERVICE}
                ${ART_FRAMEWORK_CORE}
-	       ${ART_PERSISTENCY_COMMON}
+               ${ART_PERSISTENCY_COMMON}
                ${ART_FRAMEWORK_IO_SOURCES}
                ${ART_FRAMEWORK_IO_ROOT}
                ${ART_FRAMEWORK_IO_ROOT_ROOTINPUT_SOURCE}
@@ -14,51 +14,51 @@ set( NURW_LIBS ${ART_FRAMEWORK_SERVICES_REGISTRY}
                ${MF_UTILITIES}
                ${FHICLCPP}
                ${CETLIB}
-	       ${LOG4CPP}
-	       ${XML2}
-	       ${PYTHIA6}
-	       ${LHAPDF}
-	       ${GALGORITHM}
-	       ${GBARYONRESONANCE}
-	       ${GBASE}
-	       ${GBODEKYANG}
-	       ${GCHARM}
-	       ${GCOH}
-	       ${GDFRC}
-	       ${GDIS}
-	       ${GCROSSSECTIONS}
-	       ${GDECAY}
-	       ${GELAS}
-	       ${GELFF}
-	       ${GHEP}
-	       ${GEVGCORE}
-	       ${GEVGMODULES}
-	       ${GEVGDRIVERS}
-	       ${GGIBUU}
-	       ${GHADRONTRANSP}
-	       ${GFRAGMENTATION}
-	       ${GINTERACTION}
-	       ${GLLEWELLYNSMITH}
-	       ${GMEC}
-	       ${GMESSENGER}
-	       ${GNUGAMMA}
-	       ${GNUE}
-	       ${GNTUPLE}
-	       ${GNUCLEAR}
-	       ${GNUMERICAL}
-	       ${GQPM}
-	       ${GPDG}
-	       ${GPDF}
-	       ${GQEL}
-	       ${GRES}
-	       ${GREGISTRY}
-	       ${GREINSEGHAL}
-	       ${GUTILS}
-	       ${GGEO}
-	       ${GFLUXDRIVERS}
-	       ${GMUELOSS}
-	       ${GREWEIGHT}
-	       ${GNUCLEONDECAY}
+               ${LOG4CPP}
+               ${XML2}
+               ${PYTHIA6}
+               ${LHAPDF}
+               ${GALGORITHM}
+               ${GBARYONRESONANCE}
+               ${GBASE}
+               ${GBODEKYANG}
+               ${GCHARM}
+               ${GCOH}
+               ${GDFRC}
+               ${GDIS}
+               ${GCROSSSECTIONS}
+               ${GDECAY}
+               ${GELAS}
+               ${GELFF}
+               ${GHEP}
+               ${GEVGCORE}
+               ${GEVGMODULES}
+               ${GEVGDRIVERS}
+               ${GGIBUU}
+               ${GHADRONTRANSP}
+               ${GFRAGMENTATION}
+               ${GINTERACTION}
+               ${GLLEWELLYNSMITH}
+               ${GMEC}
+               ${GMESSENGER}
+               ${GNUGAMMA}
+               ${GNUE}
+               ${GNTUPLE}
+               ${GNUCLEAR}
+               ${GNUMERICAL}
+               ${GQPM}
+               ${GPDG}
+               ${GPDF}
+               ${GQEL}
+               ${GRES}
+               ${GREGISTRY}
+               ${GREINSEHGAL}
+               ${GUTILS}
+               ${GGEO}
+               ${GFLUXDRIVERS}
+               ${GMUELOSS}
+               ${GREWEIGHT}
+               ${GNUCLEONDECAY}
                ${ROOT_CORE}
                ${ROOT_CINT} 
                ${ROOT_RIO}
@@ -84,15 +84,15 @@ set( NURW_LIBS ${ART_FRAMEWORK_SERVICES_REGISTRY}
 
 art_make_library( LIBRARY_NAME NuReweightArt
                   SOURCE NuReweight.cxx
-        	  LIBRARIES SimulationBase
-	                    NuReweight 
-        		    ${NURW_LIBS} )
+                  LIBRARIES SimulationBase
+                            NuReweight 
+                            ${NURW_LIBS} )
 
 simple_plugin( ReweightAna module NuReweightArt
-	                          NuReweight 
+                                  NuReweight 
                                   SimulationBase
                                  ${NURW_LIBS} 
-	       BASENAME_ONLY )
+               BASENAME_ONLY )
 
 install_headers()
 install_fhicl()
