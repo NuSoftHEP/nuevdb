@@ -66,7 +66,7 @@ namespace g4b{
       break;
     case mag::kConstantBFieldMode: {
       // Define the basic field
-      G4UniformMagField* magField = new G4UniformMagField( bField->FieldAtPoint() * tesla );
+      G4UniformMagField* magField = new G4UniformMagField( bField->FieldAtPoint() * CLHEP::tesla );
       fFieldMgr = G4TransportationManager::GetTransportationManager()->GetFieldManager();
       fFieldMgr->SetDetectorField(magField);
       fFieldMgr->CreateChordFinder(magField);

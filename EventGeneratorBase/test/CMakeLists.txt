@@ -1,13 +1,13 @@
 
 art_make( EventGeneratorBasetest
-          MODULE_LIBRARIES SimulationBase  
-	                   EventGeneratorBaseCRY 
-			   EventGeneratorBaseGENIE
-	                ${ART_FRAMEWORK_SERVICES_OPTIONAL_RANDOMNUMBERGENERATOR_SERVICE}
-        		${MF_MESSAGELOGGER}
-        		${MF_UTILITIES}
-        		${FHICLCPP}
-        		${CETLIB}
+          MODULE_LIBRARIES SimulationBase
+                           EventGeneratorBaseCRY
+                           EventGeneratorBaseGENIE
+                        ${ART_FRAMEWORK_SERVICES_OPTIONAL_RANDOMNUMBERGENERATOR_SERVICE}
+                        ${MF_MESSAGELOGGER}
+                        ${MF_UTILITIES}
+                        ${FHICLCPP}
+                        ${CETLIB}
                         ${LOG4CPP}
                         ${XML2}
                         ${PYTHIA6}
@@ -46,19 +46,19 @@ art_make( EventGeneratorBasetest
                         ${GQEL}
                         ${GRES}
                         ${GREGISTRY}
-                        ${GREINSEGHAL}
+                        ${GREINSEHGAL}
                         ${GUTILS}
                         ${GGEO}
                         ${GFLUXDRIVERS}
                         ${GMUELOSS}
                         ${GREWEIGHT}
                         ${GNUCLEONDECAY}
-			${CRY}
+                        ${CRY}
                         ${ROOT_CORE}
-                        ${ROOT_CINT} 
+                        ${ROOT_CINT}
                         ${ROOT_RIO}
                         ${ROOT_NET}
-                        ${ROOT_HIST} 
+                        ${ROOT_HIST}
                         ${ROOT_GRAF}
                         ${ROOT_GRAF3D}
                         ${ROOT_GPAD}
@@ -70,12 +70,12 @@ art_make( EventGeneratorBasetest
                         ${ROOT_MATHCORE}
                         ${ROOT_THREAD}
                         ${ROOT_EG}
-                        ${ROOT_TREEPLAYER} 
+                        ${ROOT_TREEPLAYER}
                         ${ROOT_FFTW}
                         ${ROOT_REFLEX}
                         ${ROOTSYS}/lib/libEGPythia6.so
                         ${ROOT_GUI}
- 	                )
+                        )
 
 install_headers()
 install_fhicl()

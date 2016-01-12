@@ -41,19 +41,24 @@
 //----------------------------------------------------------------------------
 //
 
+#include "Geant4/G4Version.hh"
 #include "G4Base/G4PhysListFactorySingleton.hh"
 
-#include "Geant4/CHIPS.hh"
-PHYSLISTREG(CHIPS)
+#if G4VERSION_NUMBER < 1000
+  #include "Geant4/CHIPS.hh"
+  PHYSLISTREG(CHIPS)
+#endif
 
 #include "Geant4/FTFP_BERT.hh"
 PHYSLISTREG(FTFP_BERT)
 
-#include "Geant4/FTFP_BERT_EMV.hh"
-PHYSLISTREG(FTFP_BERT_EMV)
+#if G4VERSION_NUMBER < 1000
+  #include "Geant4/FTFP_BERT_EMV.hh"
+  PHYSLISTREG(FTFP_BERT_EMV)
 
-#include "Geant4/FTFP_BERT_EMX.hh"
-PHYSLISTREG(FTFP_BERT_EMX)
+  #include "Geant4/FTFP_BERT_EMX.hh"
+  PHYSLISTREG(FTFP_BERT_EMX)
+#endif
 
 #include "Geant4/FTFP_BERT_TRV.hh"
 PHYSLISTREG(FTFP_BERT_TRV)
@@ -64,47 +69,57 @@ PHYSLISTREG(FTF_BIC)
 #include "Geant4/LBE.hh"
 PHYSLISTREG(LBE)
 
-#include "Geant4/LHEP.hh"
-PHYSLISTREG(LHEP)
+#if G4VERSION_NUMBER < 1000
+  #include "Geant4/LHEP.hh"
+  PHYSLISTREG(LHEP)
 
-#include "Geant4/LHEP_EMV.hh"
-PHYSLISTREG(LHEP_EMV)
+  #include "Geant4/LHEP_EMV.hh"
+  PHYSLISTREG(LHEP_EMV)
+#endif
 
 #include "Geant4/QBBC.hh"
 PHYSLISTREG(QBBC)
 
-#include "Geant4/QGSC_BERT.hh"
-PHYSLISTREG(QGSC_BERT)
+#if G4VERSION_NUMBER < 1000
+  #include "Geant4/QGSC_BERT.hh"
+  PHYSLISTREG(QGSC_BERT)
 
-#include "Geant4/QGSP.hh"
-PHYSLISTREG(QGSP)
+  #include "Geant4/QGSP.hh"
+  PHYSLISTREG(QGSP)
+#endif
 
 #include "Geant4/QGSP_BERT.hh"
 PHYSLISTREG(QGSP_BERT)
 
-#include "Geant4/QGSP_BERT_EMV.hh"
-PHYSLISTREG(QGSP_BERT_EMV)
+#if G4VERSION_NUMBER < 1000
+  #include "Geant4/QGSP_BERT_EMV.hh"
+  PHYSLISTREG(QGSP_BERT_EMV)
 
-#include "Geant4/QGSP_BERT_EMX.hh"
-PHYSLISTREG(QGSP_BERT_EMX)
+  #include "Geant4/QGSP_BERT_EMX.hh"
+  PHYSLISTREG(QGSP_BERT_EMX)
+#endif
 
 #include "Geant4/QGSP_BERT_HP.hh"
 PHYSLISTREG(QGSP_BERT_HP)
 
-#include "Geant4/QGSP_BERT_NOLEP.hh"
-PHYSLISTREG(QGSP_BERT_NOLEP)
+#if G4VERSION_NUMBER < 1000
+  #include "Geant4/QGSP_BERT_NOLEP.hh"
+  PHYSLISTREG(QGSP_BERT_NOLEP)
 
-#include "Geant4/QGSP_BERT_TRV.hh"
-PHYSLISTREG(QGSP_BERT_TRV)
+  #include "Geant4/QGSP_BERT_TRV.hh"
+  PHYSLISTREG(QGSP_BERT_TRV)
 
-#include "Geant4/QGSP_BERT_CHIPS.hh"
-PHYSLISTREG(QGSP_BERT_CHIPS)
+  #include "Geant4/QGSP_BERT_CHIPS.hh"
+  PHYSLISTREG(QGSP_BERT_CHIPS)
+#endif
 
 #include "Geant4/QGSP_BIC.hh"
 PHYSLISTREG(QGSP_BIC)
 
-#include "Geant4/QGSP_BIC_EMY.hh"
-PHYSLISTREG(QGSP_BIC_EMY)
+#if G4VERSION_NUMBER < 1000
+  #include "Geant4/QGSP_BIC_EMY.hh"
+  PHYSLISTREG(QGSP_BIC_EMY)
+#endif
 
 #include "Geant4/QGSP_BIC_HP.hh"
 PHYSLISTREG(QGSP_BIC_HP)

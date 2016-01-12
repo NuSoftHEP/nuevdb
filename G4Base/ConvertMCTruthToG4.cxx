@@ -126,10 +126,10 @@ namespace g4b{
       
 	// Get the vertex.  Note that LArSoft/ROOT uses cm, but
 	// Geant4/CLHEP uses mm.
-	G4double x = particle.Vx() * cm;
-	G4double y = particle.Vy() * cm;
-	G4double z = particle.Vz() * cm;
-	G4double t = particle.T()  * ns;
+	G4double x = particle.Vx() * CLHEP::cm;
+	G4double y = particle.Vy() * CLHEP::cm;
+	G4double z = particle.Vz() * CLHEP::cm;
+	G4double t = particle.T()  * CLHEP::ns;
       
 	// Create a CLHEP four-vector from the particle's vertex.
 	CLHEP::HepLorentzVector fourpos(x,y,z,t);
@@ -190,9 +190,9 @@ namespace g4b{
       
 	// Create a Geant4 particle to add to the vertex.
 	G4PrimaryParticle* g4particle = new G4PrimaryParticle( particleDefinition,
-							       momentum.Px() * GeV,
-							       momentum.Py() * GeV,
-							       momentum.Pz() * GeV);
+							       momentum.Px() * CLHEP::GeV,
+							       momentum.Py() * CLHEP::GeV,
+							       momentum.Pz() * CLHEP::GeV);
 
 	// Add more particle information the Geant4 particle.
 	G4double charge = particleDefinition->GetPDGCharge();

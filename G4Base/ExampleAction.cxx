@@ -62,7 +62,7 @@ namespace altns {
   {
     /// Configure the object
 
-    fSomeValue            = pset.get< double >("SomeValue",0)*GeV;
+    fSomeValue            = pset.get< double >("SomeValue",0)*CLHEP::GeV;
     fVerbose              = pset.get< int    >("Verbose",0);
     fStepMsgMaxPerEvt     = pset.get< int    >("StepMsgMaxPerEvt",42);
     fTrack2ndMsgMaxPerEvt = pset.get< int    >("Track2ndMsgMaxPerEvt",2);

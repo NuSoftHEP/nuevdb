@@ -11,38 +11,38 @@ include_directories( $ENV{LIBWDA_FQ_DIR}/include )
 
 art_make_library( LIBRARY_NAME  ${PACKAGE}
                   SOURCE ${src_files} #${CMAKE_CURRENT_BINARY_DIR}/${PACKAGE}Cint.cc
-		  LIBRARIES     ${LIBWDA}
-	  		        ${BOOST_DATE_TIME}  
-				${BOOST_SYSTEM}	    
-				${BOOST_FILESYSTEM} 
-				${BOOST_THREAD}	    
-				${BOOST_REGEX}	    
-				${XCLIB}	    
-				${PQ}	    
-				${CURL}                
+                  LIBRARIES     ${LIBWDA}
+                                ${BOOST_DATE_TIME}
+                                ${BOOST_SYSTEM}
+                                ${BOOST_FILESYSTEM}
+                                ${BOOST_THREAD}
+                                ${BOOST_REGEX}
+                                ${XCLIB}
+                                ${PQ}
+                                ${CURL}
                  )
 
 art_make_exec( NAME tagConditionsTableInDB
-	       SOURCE tagConditionsTableInDB.cc	         
+               SOURCE tagConditionsTableInDB.cc
                LIBRARIES IFDatabase
-			 ${CURL}
+                         ${CURL}
                )
 
 art_make_exec( NAME writeConditionsCSVToDB.cc
-	       SOURCE writeConditionsCSVToDB.cc   
+               SOURCE writeConditionsCSVToDB.cc
                LIBRARIES IFDatabase
-			 ${CURL}
+                         ${CURL}
                )
 
 art_make_exec( NAME dumpConditionsToCSV
-	       SOURCE dumpConditionsToCSV.cc
+               SOURCE dumpConditionsToCSV.cc
                LIBRARIES IFDatabase
-			 ${CURL}
+                         ${CURL}
                )
 
 simple_plugin( DBI "service"
                BASENAME_ONLY
-	       IFDatabase
+               IFDatabase
                ${ART_FRAMEWORK_CORE}
                ${ART_FRAMEWORK_PRINCIPAL}
                ${ART_FRAMEWORK_SERVICES_REGISTRY}
