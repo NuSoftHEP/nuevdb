@@ -12,24 +12,24 @@ include_directories( $ENV{LIBWDA_FQ_DIR}/include )
 art_make_library( LIBRARY_NAME  ${PACKAGE}
                   SOURCE ${src_files} #${CMAKE_CURRENT_BINARY_DIR}/${PACKAGE}Cint.cc
                   LIBRARIES     ${LIBWDA}
-                                ${BOOST_DATE_TIME}  
-                                ${BOOST_SYSTEM}            
-                                ${BOOST_FILESYSTEM} 
-                                ${BOOST_THREAD}            
-                                ${BOOST_REGEX}            
-                                ${XCLIB}            
-                                ${PQ}            
-                                ${CURL}                
+                                ${BOOST_DATE_TIME}
+                                ${BOOST_SYSTEM}
+                                ${BOOST_FILESYSTEM}
+                                ${BOOST_THREAD}
+                                ${BOOST_REGEX}
+                                ${XCLIB}
+                                ${PQ}
+                                ${CURL}
                  )
 
 art_make_exec( NAME tagConditionsTableInDB
-               SOURCE tagConditionsTableInDB.cc                 
+               SOURCE tagConditionsTableInDB.cc
                LIBRARIES IFDatabase
                          ${CURL}
                )
 
 art_make_exec( NAME writeConditionsCSVToDB.cc
-               SOURCE writeConditionsCSVToDB.cc   
+               SOURCE writeConditionsCSVToDB.cc
                LIBRARIES IFDatabase
                          ${CURL}
                )

@@ -124,12 +124,12 @@ cet_find_library( GRES NAMES GRES PATHS ENV GENIE_LIB NO_DEFAULT_PATH )
 cet_find_library( GREGISTRY NAMES GRegistry PATHS ENV GENIE_LIB NO_DEFAULT_PATH )
 
 # prior to GENIE R-2_9_0 Sehgal's name was spelled incorrectly
-# so if minor version # is 8 or less use GReinSeghal, otherwise GReinSehgal 
+# so if minor version # is 8 or less use GReinSeghal, otherwise GReinSehgal
 
 # parse_ups_version returns VMAJ, VMIN, and VPRJ
 parse_ups_version( ${GENIE_VERSION} )
 set ( GRSSPELLING GReinSehgal )
-if ( ${VMIN} LESS 9 ) 
+if ( ${VMIN} LESS 9 )
   set ( GRSSPELLING GReinSeghal )
 endif ( ${VMIN} LESS 9 )
 message(STATUS "GENIE version ${GENIE_VERSION} minor ${VMIN} ${GRSSPELLING}")

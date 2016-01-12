@@ -10,10 +10,10 @@ set( SIMB_LIBS ${ART_FRAMEWORK_SERVICES_REGISTRY}
                ${CETLIB}
                ${ROOT_EG}
                ${ROOT_CORE}
-               ${ROOT_CINT} 
+               ${ROOT_CINT}
                ${ROOT_RIO}
                ${ROOT_NET}
-               ${ROOT_HIST} 
+               ${ROOT_HIST}
                ${ROOT_GRAF}
                ${ROOT_GRAF3D}
                ${ROOT_GPAD}

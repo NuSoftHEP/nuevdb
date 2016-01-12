@@ -49,10 +49,10 @@ art_make( LIBRARY_NAME NuReweight
                         ${GREWEIGHT}
                         ${GNUCLEONDECAY}
                         ${ROOT_CORE}
-                        ${ROOT_CINT} 
+                        ${ROOT_CINT}
                         ${ROOT_RIO}
                         ${ROOT_NET}
-                        ${ROOT_HIST} 
+                        ${ROOT_HIST}
                         ${ROOT_GRAF}
                         ${ROOT_GRAF3D}
                         ${ROOT_GPAD}

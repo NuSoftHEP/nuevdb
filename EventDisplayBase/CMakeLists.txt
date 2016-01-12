@@ -20,16 +20,16 @@ set( EVD_LIBS ${ART_FRAMEWORK_SERVICES_REGISTRY}
               ${ROOT_EVE}
               ${ROOT_EG}
               ${ROOT_GX11}
-              ${ROOT_TREEPLAYER} 
+              ${ROOT_TREEPLAYER}
               ${ROOT_GEOM}
-              ${ROOT_GED} 
-              ${ROOT_RGL} 
+              ${ROOT_GED}
+              ${ROOT_RGL}
               ${ROOT_GUI}
               ${ROOT_CORE}
-              ${ROOT_CINT} 
+              ${ROOT_CINT}
               ${ROOT_RIO}
               ${ROOT_NET}
-              ${ROOT_HIST} 
+              ${ROOT_HIST}
               ${ROOT_GRAF}
               ${ROOT_GRAF3D}
               ${ROOT_GPAD}

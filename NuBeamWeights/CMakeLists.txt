@@ -1,10 +1,10 @@
 
 art_make( LIBRARY_NAME NuBeamWeights
           LIB_LIBRARIES ${ROOT_CORE}
-                        ${ROOT_CINT} 
+                        ${ROOT_CINT}
                         ${ROOT_RIO}
                         ${ROOT_NET}
-                        ${ROOT_HIST} 
+                        ${ROOT_HIST}
                         ${ROOT_GRAF}
                         ${ROOT_GRAF3D}
                         ${ROOT_GPAD}
