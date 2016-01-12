@@ -126,12 +126,13 @@ cet_find_library( GREGISTRY NAMES GRegistry PATHS ENV GENIE_LIB NO_DEFAULT_PATH 
 # prior to GENIE R-2_9_0 Sehgal's name was spelled incorrectly
 # so if minor version # is 8 or less use GReinSeghal, otherwise GReinSehgal 
 
-execute_process(COMMAND ${CMAKE_COMMAND} -E echo ${GENIE_VERSION} | cut -d'_' -f2 OUTPUT_VARIABLE GENIEMINOR)
+# parse_ups_version returns VMAJ, VMIN, and VPRJ
+parse_ups_version( ${GENIE_VERSION} )
 set ( GRSSPELLING GReinSehgal )
-if ( ${GENIEMINOR} LESS 9 ) 
+if ( ${VMIN} LESS 9 ) 
   set ( GRSSPELLING GReinSeghal )
-endif ( ${GENIEMINOR} LESS 9 )
-message(STATUS "GENIE version ${GENIE_VERSION} minor ${GENIEMINOR} ${GRSSPELLING}")
+endif ( ${VMIN} LESS 9 )
+message(STATUS "GENIE version ${GENIE_VERSION} minor ${VMIN} ${GRSSPELLING}")
 cet_find_library( GREINSEHGAL NAMES ${GRSSPELLING} PATHS ENV GENIE_LIB NO_DEFAULT_PATH )
 
 cet_find_library( GUTILS NAMES GUtils PATHS ENV GENIE_LIB NO_DEFAULT_PATH )
