@@ -55,7 +55,7 @@ art_make( LIBRARY_NAME EventGeneratorBaseGiBUU
                         ${GQEL}
                         ${GRES}
                         ${GREGISTRY}
-                        ${GREINSEGHAL}
+                        ${GREINSEHGAL}
                         ${GUTILS}
                         ${GGEO}
                         ${GFLUXDRIVERS}
