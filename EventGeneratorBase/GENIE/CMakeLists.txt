@@ -54,7 +54,7 @@ art_make( LIBRARY_NAME EventGeneratorBaseGENIE
                         ${GQEL}
                         ${GRES}
                         ${GREGISTRY}
-                        ${GREINSEGHAL}
+                        ${GREINSEHGAL}
                         ${GUTILS}
                         ${GGEO}
                         ${GFLUXDRIVERS}
