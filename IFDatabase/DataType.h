@@ -4,8 +4,9 @@
 namespace nutools {
   namespace dbi {
     enum DataType {
-      kMCOnly=1,
-      kDataOnly=2,
+      kNone=1,
+      kMCOnly=2,
+      kDataOnly=4,
       kNDataType
     };
   }

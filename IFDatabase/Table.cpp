@@ -6,6 +6,8 @@
 #include <cctype>
 #include <algorithm>
 #include <ctime>
+#include <cinttypes>
+#include <cstdio>
 //#include <sys/types.h>
 //#include <sys/sysinfo.h>
 
@@ -1711,7 +1713,7 @@ namespace nutools {
 	  }
 	  else {
 	    if (isKnownField[i]) {
-	      if (isString[i]) { // remove quotes
+	      if (isString[i] && (ss[0]=='\'' || ss[0]=='\"')) { // remove quotes
 		int k = strlen(ss);
 		strncpy(ss2,&ss[1],k-2);
 		ss2[k-2] = '\0';
@@ -1897,13 +1899,15 @@ namespace nutools {
 
       myss << fWSURL << "get?table=" << Schema() << "." << Name() << "&";
 
-      myss << "type=";
+      if (fDataTypeMask > kNone) {
+	myss << "type=";
+	
+	if ((fDataTypeMask & kMCOnly)) myss << "mc";
+	if ((fDataTypeMask & kDataOnly)) myss << "data";
       
-      if ((fDataTypeMask & kMCOnly)) myss << "mc";
-      if ((fDataTypeMask & kDataOnly)) myss << "data";
+	myss << "&";
+      }
       
-      myss << "&";
-
       if (fMaxChannel > fMinChannel) {
 	myss << "cr=" << fMinChannel << "-" << fMaxChannel << "&";
       }
@@ -1914,11 +1918,17 @@ namespace nutools {
 
       if (fTag != "") myss << "tag=" << fTag << "&";
 
+      //      char ts[256];
+      
       if (fMinTSVld == fMaxTSVld) {
-        myss << "t=" << fMinTSVld;
+	//	sprintf(ts,"t=%" PRIu64,fMinTSVld);
+	//        myss << ts; //"t=" << fMinTSVld;
+        myss << "t=" << std::setprecision(12) << fMinTSVld;
       }
       else {
-        myss << "t0=" << fMinTSVld << "&t1=" << fMaxTSVld;
+	//	sprintf(ts,"t0=%" PRIu64 "&t1=" PRIu64,fMinTSVld,fMaxTSVld);
+	//        myss << ts; //"t0=" << fMinTSVld << "&t1=" << fMaxTSVld;
+        myss << "t0=" << std::setprecision(12) << fMinTSVld << "&t1=" << std::setprecision(12) << fMaxTSVld;
       }
 
       if (fHasRecordTime) myss << "&rtime=" << fRecordTime;
