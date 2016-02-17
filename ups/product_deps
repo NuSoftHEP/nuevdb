@@ -1,7 +1,7 @@
 # The parent line must be the first non-comment line in the file
 # This line defines the product name and version
-parent nutools  v1_22_01
-defaultqual     e9:gn286
+parent nutools  v1_23_00
+defaultqual     e9:gn2104
 
 # These optional lines define the installed directories where
 # headers, libraries, and executables will be found
@@ -20,7 +20,7 @@ bindir      fq_dir      bin
 product         version
 art             v1_17_07
 genie           v2_8_6d       gn286
-genie           v2_10_2       gn2102
+genie           v2_10_4       gn2104
 geant4          v4_9_6_p04d
 cry             v1_7e
 ifdhc		v1_8_9
@@ -33,12 +33,12 @@ end_product_list
 # -nq- here means there is no qualifier
 # a - here means the dependent product is not required by the parent and will not be setup
 qualifier        art             genie       cry         geant4    libwda  ifdhc         notes
-e9:gn2102:debug  nu:e9:debug     e9:r5:debug    e9:debug    e9:debug  -nq-    e9:p2710:debug 
-e9:gn2102:opt    nu:e9:opt       e9:r5:opt      e9:opt      e9:opt    -nq-    e9:p2710:opt   
-e9:gn2102:prof   nu:e9:prof      e9:r5:prof     e9:prof     e9:prof   -nq-    e9:p2710:prof  
-e7:gn2102:debug  nu:e7:debug     e7:r5:debug    e7:debug    e7:debug  -nq-    e7:p2710:debug 
-e7:gn2102:opt    nu:e7:opt       e7:r5:opt      e7:opt      e7:opt    -nq-    e7:p2710:opt   
-e7:gn2102:prof   nu:e7:prof      e7:r5:prof     e7:prof     e7:prof   -nq-    e7:p2710:prof  
+e9:gn2104:debug  nu:e9:debug     e9:r5:debug e9:debug    e9:debug  -nq-    e9:p2710:debug 
+e9:gn2104:opt    nu:e9:opt       e9:r5:opt   e9:opt      e9:opt    -nq-    e9:p2710:opt   
+e9:gn2104:prof   nu:e9:prof      e9:r5:prof  e9:prof     e9:prof   -nq-    e9:p2710:prof  
+e7:gn2104:debug  nu:e7:debug     e7:r5:debug e7:debug    e7:debug  -nq-    e7:p2710:debug 
+e7:gn2104:opt    nu:e7:opt       e7:r5:opt   e7:opt      e7:opt    -nq-    e7:p2710:opt   
+e7:gn2104:prof   nu:e7:prof      e7:r5:prof  e7:prof     e7:prof   -nq-    e7:p2710:prof  
 e9:gn286:debug   nu:e9:debug     e9:debug    e9:debug    e9:debug  -nq-    e9:p2710:debug 
 e9:gn286:opt     nu:e9:opt       e9:opt      e9:opt      e9:opt    -nq-    e9:p2710:opt   
 e9:gn286:prof    nu:e9:prof      e9:prof     e9:prof     e9:prof   -nq-    e9:p2710:prof  
