@@ -151,7 +151,7 @@ namespace evgb {
     , fAtmoRl            (pset.get< double                   >("Rl",               20.0) )
     , fAtmoRt            (pset.get< double                   >("Rt",               20.0) )
     , fEnvironment       (pset.get< std::vector<std::string> >("Environment")            )
-    , fXSecTable         (pset.get< std::string              >("XSecTable",          "") ) //e.g. "gxspl-NuMIsmall.xml"
+    , fXSecTable         (pset.get< std::string              >("XSecTable",          "") ) //e.g. "gxspl-FNALsmall.xml"
     , fEventGeneratorList(pset.get< std::string              >("EventGeneratorList", "") ) // "Default"
     , fGXMLPATH          (pset.get< std::string              >("GXMLPATH",           "") )
     , fGMSGLAYOUT        (pset.get< std::string              >("GMSGLAYOUT",         "") ) // [BASIC] or SIMPLE
@@ -2368,13 +2368,13 @@ namespace evgb {
     //    fcl fEnvironment GSPLOAD
     //    fcl XSecTable
     //    $GSPLOAD in environment
-    //    default 'gxspl-NuMIsmall.xml'
+    //    default 'gxspl-FNALsmall.xml'
 
     if ( fXSecTable == "" ) {
       // stand-alone value is not set
       const char* gspload_alt = std::getenv("GSPLOAD");
       if ( ! gspload_alt ) {
-        const char* gspload_dflt = "gxspl-NuMIsmall.xml";  // fall back
+        const char* gspload_dflt = "gxspl-FNALsmall.xml";  // fall back
         gspload_alt = gspload_dflt;
       }
       fXSecTable = std::string(gspload_alt);
