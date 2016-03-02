@@ -1,14 +1,4 @@
 
-# support building for -q xx:noifdh on any system
-
-cet_find_library( IFDH NAMES ifdh PATHS ENV IFDHC_LIB NO_DEFAULT_PATH )
-if( IFDH )
-  include_directories( $ENV{IFDHC_FQ_DIR}/inc )
-else()
-  add_definitions(-DNO_IFDH_LIB)
-  SET(IFDH "")
-endif()
-
 art_make( LIBRARY_NAME EventGeneratorBaseGiBUU
           LIB_LIBRARIES EventGeneratorBaseGENIE
                         SimulationBase
