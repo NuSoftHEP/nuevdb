@@ -22,14 +22,14 @@
 namespace g4b{
 
   // Allocate static variables.
-  G4VPhysicalVolume* DetectorConstruction::fWorld    = 0;
-  G4FieldManager*    DetectorConstruction::fFieldMgr = 0;
+  G4VPhysicalVolume* DetectorConstruction::fWorld    = nullptr;
+  G4FieldManager*    DetectorConstruction::fFieldMgr = nullptr;
 
   //---------------------------------------------------
   // Constructor
   DetectorConstruction::DetectorConstruction(std::string const& gdmlFile,
-                                             bool overlapCheck,
-                                             bool validateSchema)
+                                             bool        const& overlapCheck,
+                                             bool        const& validateSchema)
   {
     if ( gdmlFile.empty() ) {
       throw cet::exception("DetectorConstruction") << "Supplied GDML filename is empty\n"
@@ -47,6 +47,7 @@ namespace g4b{
     // the entire detector, not just the outline of the experimental
     // hall.
     fWorld = parser.GetWorldVolume();
+    
   }
   
   //---------------------------------------------------
@@ -60,28 +61,35 @@ namespace g4b{
   {
     // Setup the magnetic field situation 
     art::ServiceHandle<mag::MagneticField> bField;
+    
     switch (bField->UseField()) {
     case mag::kNoBFieldMode: 
       /* NOP */
       break;
     case mag::kConstantBFieldMode: {
-      // Define the basic field
-      G4UniformMagField* magField = new G4UniformMagField( bField->FieldAtPoint() * CLHEP::tesla );
-      fFieldMgr = G4TransportationManager::GetTransportationManager()->GetFieldManager();
+      // Attach this to the magnetized volume only, so get that volume
+      G4LogicalVolume *bvol = G4LogicalVolumeStore::GetInstance()->GetVolume(bField->MagnetizedVolume());
+      
+      // Define the basic field, using p we should get the uniform field
+      G4UniformMagField* magField = new G4UniformMagField( bField->UniformFieldInVolume(bField->MagnetizedVolume()) * CLHEP::tesla );
+      fFieldMgr = new G4FieldManager();
       fFieldMgr->SetDetectorField(magField);
       fFieldMgr->CreateChordFinder(magField);
+
+      LOG_INFO("DetectorConstruction")
+      << "Setting uniform magnetic field to be "
+      << magField->GetConstantFieldValue().x() << " "
+      << magField->GetConstantFieldValue().y() << " "
+      << magField->GetConstantFieldValue().z() << " "
+      << " in " << bvol->GetName();
       
       // Reset the chord finding accuracy
       // fFieldMgr->GetChordFinder()->SetDeltaChord(1.0 * cm);
       
-      // Attach this to the magnetized volume only
-      /// \todo This isn't the Right (tm) thing to do, but it will do
-      G4LogicalVolumeStore *lvs  = G4LogicalVolumeStore::GetInstance();
-      G4LogicalVolume      *bvol = lvs->GetVolume(bField->MagnetizedVolume());
-      
       // the boolean tells the field manager to use local volume
       bvol->SetFieldManager(fFieldMgr,true);
-      break; 
+
+      break;
     } // case mag::kConstantBFieldMode
     default: // Complain if the user asks for something not handled
       mf::LogError("DetectorConstruction") << "Unknown or illegal Magneticfield "

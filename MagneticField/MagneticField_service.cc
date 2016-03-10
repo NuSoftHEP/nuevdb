@@ -20,15 +20,20 @@
 //////////////////////////////////////////////////////////////////////////
 
 // Framework includes
+#include "messagefacility/MessageLogger/MessageLogger.h"
 
 // nutools includes
 #include "MagneticField/MagneticField.h"
+
+#include "TGeoManager.h"
 
 #include <vector>
 #include <string>
 
 namespace mag {
 
+  TGeoVolume* MagneticField::fGeoVol = nullptr;
+  
   MagneticField::MagneticField(fhicl::ParameterSet const& pset, art::ActivityRegistry& reg)
   {
     this->reconfigure(pset);
@@ -37,10 +42,9 @@ namespace mag {
   //------------------------------------------------------------
   void MagneticField::reconfigure(fhicl::ParameterSet const& pset)
   {
-
-    fVolume    = pset.get<std::string >("MagnetizedVolume");
-    int mode   = pset.get< int        >("UseField"        );
-    fUseField  = (mag::MagFieldMode_t)mode;
+    fVolume      = pset.get<std::string >("MagnetizedVolume");
+    int mode     = pset.get< int        >("UseField"        );
+    fUseField    = (mag::MagFieldMode_t)mode;
 
     // These need to be read as types that FHICL know about, but they
     // are used by Geant, so I store them in Geant4 types.
@@ -54,14 +58,36 @@ namespace mag {
   }
 
   //------------------------------------------------------------
-  G4ThreeVector MagneticField::FieldAtPoint(G4ThreeVector p) const
+  G4ThreeVector const MagneticField::FieldAtPoint(G4ThreeVector const& p) const
   {
-    /// \todo This does not do what it says. Must test to see if the
-    /// \todo point is in the master volume
-    //
-    // But it is enough to let me code the DetectorConstruction bit
+    // check that the input point is in the magnetized volume
+    // Use the gGeoManager to determine what node the point
+    // is in
+    if( fGeoVol == nullptr){
+      fGeoVol = gGeoManager->FindVolumeFast(fVolume.c_str());
+      if( fGeoVol == nullptr )
+        throw cet::exception("MagneticField")
+        << "cannot locat volume "
+        << fVolume
+        << " in gGeoManager, bail";
+    }
+    double point[3] = { p.x(), p.y(), p.z() };
+    // we found a node, see if its name is the same as
+    // the volume with the field
+    if (fGeoVol->Contains(point)) return fField;
 
-    if ( /* is in the magnetized volume */ true ) return fField;
+    // if we get here, we can't find a field
+    return G4ThreeVector(0);
+  }
+
+  //------------------------------------------------------------
+  G4ThreeVector const MagneticField::UniformFieldInVolume(std::string const& volName) const
+  {
+    // if the input volume name is the same as the magnetized volume
+    // return the uniform field
+    if (volName.compare(fVolume) == 0) return fField;
+    
+    // if we get here, we can't find a field
     return G4ThreeVector(0);
   }
 
