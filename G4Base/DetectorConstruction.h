@@ -21,8 +21,8 @@ namespace g4b {
   public:
     /// Standard constructor and destructor.
     explicit DetectorConstruction(std::string const& gdmlFile,
-                                  bool overlapCheck = false,
-                                  bool validateSchema = true);
+                                  bool        const& overlapCheck   = false,
+                                  bool        const& validateSchema = true);
     virtual ~DetectorConstruction();
 
     /// The key method in this class; returns the Geant4 version of

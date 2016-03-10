@@ -1,7 +1,11 @@
 
 simple_plugin( MagneticField service
-                        ${CLHEP}
-                        BASENAME_ONLY )
+               ${MF_MESSAGELOGGER}
+               ${MF_UTILITIES}
+               ${CLHEP}
+               ${ROOT_BASIC_LIB_LIST}
+               ${ROOT_GEOM}
+               BASENAME_ONLY )
 
 install_headers()
 install_fhicl()
