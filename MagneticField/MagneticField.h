@@ -12,6 +12,8 @@
 
 #include <string>
 
+#include "TGeoVolume.h"
+
 // Geant4 includes
 #include "Geant4/G4ThreeVector.hh"
 
@@ -41,21 +43,27 @@ namespace mag {
 
     void reconfigure(fhicl::ParameterSet const& pset);
 
-    bool UseField() const { return fUseField; }
+    MagFieldMode_t const& UseField() const { return fUseField; }
 
     // return the field at a particular point
-    G4ThreeVector FieldAtPoint(G4ThreeVector p=G4ThreeVector(0)) const;
+    G4ThreeVector const FieldAtPoint(G4ThreeVector const& p=G4ThreeVector(0)) const;
 
+    // This method will only return a uniform field based on the input
+    // volume name.  If the input volume does not have a uniform field
+    // caveat emptor
+    G4ThreeVector const UniformFieldInVolume(std::string const& volName) const;
+    
     // return the outermost affected volume
     std::string MagnetizedVolume() const { return fVolume; }
 
   private:
     // The simplest implmentation has a constant field inside a named
     // detector volume
-    MagFieldMode_t fUseField; ///< What field description to use
-    G4ThreeVector  fField;    ///< the three vector of the field
-    G4String       fVolume;   ///< the volume of the field
-
+    MagFieldMode_t      fUseField; ///< What field description to use
+    G4ThreeVector       fField;    ///< the three vector of the field
+    G4String            fVolume;   ///< the volume of the field
+    static TGeoVolume*  fGeoVol;   ///< ROOT geometry volume for checking points
+    
     ///\todo Need to add ability to read in a field from a database
   };
 
