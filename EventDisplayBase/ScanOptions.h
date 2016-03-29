@@ -11,7 +11,7 @@
 #include "TGScrollBar.h"
 #include "TGCanvas.h"
 
-#ifndef __CINT__
+#ifndef __CINT__ // root 5
 #include <string>
 #include <vector>
 

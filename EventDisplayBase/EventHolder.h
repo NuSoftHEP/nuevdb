@@ -6,7 +6,7 @@
 ///
 #ifndef EVDB_EVENTHOLDER_H
 #define EVDB_EVENTHOLDER_H
-#ifndef __CINT__
+#ifndef __CINT__ // root 5
 
 #include "art/Framework/Principal/Event.h"
 
