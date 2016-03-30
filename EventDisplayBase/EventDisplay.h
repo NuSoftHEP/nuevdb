@@ -7,7 +7,7 @@
 ///
 #ifndef EVDB_EVENTDISPLAY_H
 #define EVDB_EVENTDISPLAY_H
-#ifndef __CINT__
+#ifndef __CINT__ // root 5
 #include "art/Framework/Services/Registry/ServiceMacros.h"
 namespace fhicl { class ParameterSet; }
 namespace art   { class ActivityRegistry; }

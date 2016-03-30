@@ -1,6 +1,6 @@
 # The parent line must be the first non-comment line in the file
 # This line defines the product name and version
-parent nutools  v1_24_01
+parent nutools  v1_25_00
 defaultqual     e9
 
 # These optional lines define the installed directories where
@@ -18,7 +18,7 @@ bindir      fq_dir      bin
 # note that art -q nu: depends, via root, on geant4 and more
 # this means that we only need to list art, cry, and genie as a dependencies
 product         version
-art             v1_17_07
+art             v1_18_05
 genie           v2_10_4a
 geant4          v4_10_1_p03
 cry             v1_7e
@@ -32,12 +32,12 @@ end_product_list
 # -nq- here means there is no qualifier
 # a - here means the dependent product is not required by the parent and will not be setup
 qualifier     art             genie       cry         geant4    libwda  ifdhc           notes
-e9:debug      nu:e9:debug     e9:r5:debug e9:debug    e9:debug  -nq-    e9:p2710:debug 
-e9:opt        nu:e9:opt       e9:r5:opt   e9:opt      e9:opt    -nq-    e9:p2710:opt   
-e9:prof       nu:e9:prof      e9:r5:prof  e9:prof     e9:prof   -nq-    e9:p2710:prof  
-e7:debug      nu:e7:debug     e7:r5:debug e7:debug    e7:debug  -nq-    e7:p2710:debug 
-e7:opt        nu:e7:opt       e7:r5:opt   e7:opt      e7:opt    -nq-    e7:p2710:opt   
-e7:prof       nu:e7:prof      e7:r5:prof  e7:prof     e7:prof   -nq-    e7:p2710:prof  
+e9:debug      nu:e9:debug     e9:r6:debug e9:debug    e9:debug  -nq-    e9:p2710:debug 
+e9:opt        nu:e9:opt       e9:r6:opt   e9:opt      e9:opt    -nq-    e9:p2710:opt   
+e9:prof       nu:e9:prof      e9:r6:prof  e9:prof     e9:prof   -nq-    e9:p2710:prof  
+e7:debug      nu:e7:debug     e7:r6:debug e7:debug    e7:debug  -nq-    e7:p2710:debug 
+e7:opt        nu:e7:opt       e7:r6:opt   e7:opt      e7:opt    -nq-    e7:p2710:opt   
+e7:prof       nu:e7:prof      e7:r6:prof  e7:prof     e7:prof   -nq-    e7:p2710:prof  
 end_qualifier_list
 
 # Preserve tabs and formatting in emacs and vi / vim:
