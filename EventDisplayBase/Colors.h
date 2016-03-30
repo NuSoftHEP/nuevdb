@@ -5,7 +5,7 @@
 ///
 #ifndef EVDB_COLORS_H
 #define EVDB_COLORS_H
-#ifndef __CINT__
+#ifndef __CINT__ // root 5
 #include <vector>
 #include <string>
 
