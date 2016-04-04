@@ -31,6 +31,7 @@
  <class name="simb::GTruth"        ClassVersion="10"                         	   >
   <version ClassVersion="10" checksum="1491363396"/>
  </class>
+ <enum  name="simb::_ev_origin"                                                    />
  <class name="art::Ptr<simb::MCTruth>"       				     	   />
  <class name="art::Ptr<simb::MCFlux>"       				     	   />
  <class name="art::Ptr<simb::GTruth>"                                        	   />
