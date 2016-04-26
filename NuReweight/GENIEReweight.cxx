@@ -577,16 +577,16 @@ namespace rwgt {
   void GENIEReweight::ReweightDIS(double aht, double bht, double cv1u, double cv2u) {
     LOG_INFO("GENIEReweight") << "Configuring GENIEReweight for DIS Form Factor Model Reweighting";
     fDISshape = false;
-    if(aht==0.0) {
+    if(aht != 0.0) {
       this->AddReweightValue(rwgt::fReweightAhtBY, aht);
     }
-    if(bht==0.0) {
+    if(bht != 0.0) {
       this->AddReweightValue(rwgt::fReweightBhtBY, bht);
     }
-    if(cv1u==0.0) {
+    if(cv1u != 0.0) {
       this->AddReweightValue(rwgt:: fReweightCV1uBY, cv1u);
     }
-    if(cv2u==0.0) {
+    if(cv2u != 0.0) {
       this->AddReweightValue(rwgt::fReweightCV2uBY, cv2u);
     }
     this->Configure();
