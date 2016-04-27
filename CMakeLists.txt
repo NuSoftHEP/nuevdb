@@ -119,7 +119,6 @@ include(BuildPlugins)
 include(CetRootCint)
 
 # include search path
-include_directories ( ${CMAKE_SOURCE_DIR} )
 include_directories ( $ENV{GENIE_INC}/GENIE )
 include_directories ( $ENV{LIBXML2_INC} )
 include_directories ( $ENV{G4INCLUDE} )
