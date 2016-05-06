@@ -32,6 +32,9 @@
   <version ClassVersion="10" checksum="1491363396"/>
  </class>
  <enum  name="simb::_ev_origin"                                                    />
+ <enum  name="simb::flux_code_"                                                    />
+ <enum  name="simb::curr_type_"                                                    />
+ <enum  name="simb::int_type_"                                                     />
  <class name="art::Ptr<simb::MCTruth>"       				     	   />
  <class name="art::Ptr<simb::MCFlux>"       				     	   />
  <class name="art::Ptr<simb::GTruth>"                                        	   />
