@@ -139,7 +139,6 @@ add_subdirectory (IFDatabase)
 add_subdirectory (MagneticField)
 add_subdirectory (NuBeamWeights)
 add_subdirectory (NuReweight)
-add_subdirectory (SimulationBase)
 #add_subdirectory (dk2nu)
 
 # ups - table and config files
