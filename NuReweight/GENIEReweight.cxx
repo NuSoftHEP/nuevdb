@@ -61,10 +61,10 @@ using genie::Messenger;
 #include "Conventions/Constants.h" //for calculating event kinematics
 
 //NuTools includes
-#include "SimulationBase/MCTruth.h"
-#include "SimulationBase/MCParticle.h"
-#include "SimulationBase/MCNeutrino.h"
-#include "SimulationBase/GTruth.h"
+#include "nusimdata/SimulationBase/MCTruth.h"
+#include "nusimdata/SimulationBase/MCParticle.h"
+#include "nusimdata/SimulationBase/MCNeutrino.h"
+#include "nusimdata/SimulationBase/GTruth.h"
 #include "NuReweight/GENIEReweight.h"
 
 // Framework includes

@@ -1,27 +1,15 @@
 
 art_make( LIBRARY_NAME EventGeneratorBaseCRY
-          LIB_LIBRARIES SimulationBase
+          LIB_LIBRARIES nusimdata_SimulationBase
                         ${CRY}
                         ${MF_MESSAGELOGGER}
                         ${MF_UTILITIES}
+                        ${FHICLCPP}
                         ${CETLIB}
                         ${ROOT_GEOM}
                         ${ROOT_GEOMPAINTER}
-                        ${ROOT_CORE}
-                        ${ROOT_CINT}
-                        ${ROOT_RIO}
-                        ${ROOT_NET}
-                        ${ROOT_HIST}
-                        ${ROOT_GRAF}
-                        ${ROOT_GRAF3D}
-                        ${ROOT_GPAD}
-                        ${ROOT_TREE}
-                        ${ROOT_RINT}
-                        ${ROOT_POSTSCRIPT}
-                        ${ROOT_MATRIX}
-                        ${ROOT_PHYSICS}
-                        ${ROOT_MATHCORE}
-                        ${ROOT_THREAD} )
+			${ROOT_EG}
+                        ${ROOT_BASIC_LIB_LIST} )
 
 
 install_headers()

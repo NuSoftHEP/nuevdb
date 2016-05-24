@@ -4,13 +4,13 @@ FILE( GLOB src_files *.cxx )
 
 set( EVD_LIBS ${ART_FRAMEWORK_SERVICES_REGISTRY}
               ${ART_FRAMEWORK_CORE}
-              ${ART_PERSISTENCY_COMMON}
+              art_Persistency_Common canvas_Persistency_Common
               ${ART_FRAMEWORK_IO_SOURCES}
               ${ART_FRAMEWORK_IO_ROOT}
               ${ART_FRAMEWORK_IO_ROOT_ROOTINPUT_SOURCE}
               ${ART_FRAMEWORK_PRINCIPAL}
-              ${ART_PERSISTENCY_PROVENANCE}
-              ${ART_UTILITIES}
+              art_Persistency_Provenance canvas_Persistency_Provenance
+              art_Utilities canvas_Utilities
               ${MF_MESSAGELOGGER}
               ${MF_UTILITIES}
               ${FHICLCPP}
@@ -44,7 +44,7 @@ cet_rootcint( ${PACKAGE} )
 
 art_make_library( LIBRARY_NAME ${PACKAGE}
                   SOURCE ${src_files} ${CMAKE_CURRENT_BINARY_DIR}/${PACKAGE}Cint.cc
-                  LIBRARIES SimulationBase ${EVD_LIBS} )
+                  LIBRARIES nusimdata_SimulationBase ${EVD_LIBS} )
 
 set( EVD_SERVICE_LIBS ${PACKAGE} ${EVD_LIBS} )
 simple_plugin( EventDisplay service ${EVD_SERVICE_LIBS} BASENAME_ONLY )

@@ -22,8 +22,8 @@
 #include "EventDisplayBase/ScanOptions.h"
 #include "EventDisplayBase/NavState.h"
 #include "EventDisplayBase/EventHolder.h"
-#include "SimulationBase/MCTruth.h"
-#include "SimulationBase/MCNeutrino.h"
+#include "nusimdata/SimulationBase/MCTruth.h"
+#include "nusimdata/SimulationBase/MCNeutrino.h"
 
 #include "art/Framework/Principal/Event.h"
 #include "art/Framework/Services/Registry/ServiceHandle.h"

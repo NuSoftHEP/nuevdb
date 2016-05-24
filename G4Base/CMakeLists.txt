@@ -1,9 +1,12 @@
 
 art_make( LIBRARY_NAME G4Base
-          LIB_LIBRARIES SimulationBase
+          LIB_LIBRARIES nusimdata_SimulationBase
                         MagneticField_service
+			canvas_Persistency_Provenance
                         ${MF_MESSAGELOGGER}
                         ${MF_UTILITIES}
+                        ${FHICLCPP}
+                        ${CETLIB}
                         ${G4FR}
                         ${G4GMOCREN}
                         ${G4RAYTRACER}

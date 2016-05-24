@@ -5,7 +5,7 @@
 /// \author  seligman@nevis.columbia.edu, brebel@fnal.gov
 ////////////////////////////////////////////////////////////////////////
 #include "G4Base/PrimaryParticleInformation.h"
-#include "SimulationBase/MCTruth.h"
+#include "nusimdata/SimulationBase/MCTruth.h"
 
 namespace g4b{
 

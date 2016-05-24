@@ -10,7 +10,7 @@
 #include <string>
 #include <map>
 #include <vector>
-#include "SimulationBase/MCFlux.h"
+#include "nusimdata/SimulationBase/MCFlux.h"
 #include "NuBeamWeights/Conventions.h"
 
 class TFile;

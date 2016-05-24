@@ -14,11 +14,11 @@
 // NuTools includes
 #include "EventGeneratorBase/evgenbase.h"
 #include "EventGeneratorBase/GiBUU/GiBUUHelper.h"
-#include "SimulationBase/MCTruth.h"
-#include "SimulationBase/MCFlux.h"
-#include "SimulationBase/GTruth.h"
-#include "SimulationBase/MCParticle.h"
-#include "SimulationBase/MCNeutrino.h"
+#include "nusimdata/SimulationBase/MCTruth.h"
+#include "nusimdata/SimulationBase/MCFlux.h"
+#include "nusimdata/SimulationBase/GTruth.h"
+#include "nusimdata/SimulationBase/MCParticle.h"
+#include "nusimdata/SimulationBase/MCNeutrino.h"
 
 // Framework includes
 #include "art/Framework/Services/Registry/ServiceHandle.h"

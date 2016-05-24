@@ -27,8 +27,8 @@
 // NuTools include files
 #include "EventGeneratorBase/evgenbase.h"
 #include "EventGeneratorBase/CRY/CRYHelper.h"
-#include "SimulationBase/MCTruth.h"
-#include "SimulationBase/MCParticle.h"
+#include "nusimdata/SimulationBase/MCTruth.h"
+#include "nusimdata/SimulationBase/MCParticle.h"
 
 namespace evgb{
 

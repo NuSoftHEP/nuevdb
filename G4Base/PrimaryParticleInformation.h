@@ -37,8 +37,8 @@
 #include "Geant4/G4Allocator.hh"
 
 // ART Includes
-#include "art/Persistency/Common/Ptr.h"
-#include "art/Persistency/Common/PtrVector.h"
+#include "canvas/Persistency/Common/Ptr.h"
+#include "canvas/Persistency/Common/PtrVector.h"
 
 
 // Forward declaration for this namespace.

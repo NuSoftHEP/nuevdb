@@ -3,13 +3,13 @@ set( NURW_LIBS ${ART_FRAMEWORK_SERVICES_REGISTRY}
                ${ART_FRAMEWORK_SERVICES_OPTIONAL}
                ${ART_FRAMEWORK_SERVICES_OPTIONAL_TFILESERVICE_SERVICE}
                ${ART_FRAMEWORK_CORE}
-               ${ART_PERSISTENCY_COMMON}
+               art_Persistency_Common canvas_Persistency_Common
                ${ART_FRAMEWORK_IO_SOURCES}
                ${ART_FRAMEWORK_IO_ROOT}
                ${ART_FRAMEWORK_IO_ROOT_ROOTINPUT_SOURCE}
                ${ART_FRAMEWORK_PRINCIPAL}
-               ${ART_PERSISTENCY_PROVENANCE}
-               ${ART_UTILITIES}
+               art_Persistency_Provenance canvas_Persistency_Provenance
+               art_Utilities canvas_Utilities
                ${MF_MESSAGELOGGER}
                ${MF_UTILITIES}
                ${FHICLCPP}
@@ -84,13 +84,13 @@ set( NURW_LIBS ${ART_FRAMEWORK_SERVICES_REGISTRY}
 
 art_make_library( LIBRARY_NAME NuReweightArt
                   SOURCE NuReweight.cxx
-                  LIBRARIES SimulationBase
+                  LIBRARIES nusimdata_SimulationBase
                             NuReweight
                             ${NURW_LIBS} )
 
 simple_plugin( ReweightAna module NuReweightArt
                                   NuReweight
-                                  SimulationBase
+                                  nusimdata_SimulationBase
                                  ${NURW_LIBS}
                BASENAME_ONLY )
 

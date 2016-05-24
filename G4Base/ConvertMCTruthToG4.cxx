@@ -8,8 +8,8 @@
 
 #include "G4Base/ConvertMCTruthToG4.h"
 #include "G4Base/PrimaryParticleInformation.h"
-#include "SimulationBase/MCTruth.h"
-#include "SimulationBase/MCParticle.h"
+#include "nusimdata/SimulationBase/MCTruth.h"
+#include "nusimdata/SimulationBase/MCParticle.h"
 
 #include "Geant4/G4Event.hh"
 #include "Geant4/G4PrimaryVertex.hh"

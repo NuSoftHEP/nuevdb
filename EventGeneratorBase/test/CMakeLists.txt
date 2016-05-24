@@ -1,9 +1,10 @@
 
 art_make( EventGeneratorBasetest
-          MODULE_LIBRARIES SimulationBase
+          MODULE_LIBRARIES nusimdata_SimulationBase
                            EventGeneratorBaseCRY
                            EventGeneratorBaseGENIE
-                        ${ART_FRAMEWORK_SERVICES_OPTIONAL_RANDOMNUMBERGENERATOR_SERVICE}
+                        art_Framework_Services_Optional_RandomNumberGenerator_service
+			art_Framework_Services_Registry
                         ${MF_MESSAGELOGGER}
                         ${MF_UTILITIES}
                         ${FHICLCPP}

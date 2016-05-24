@@ -46,8 +46,8 @@ simple_plugin( DBI "service"
                ${ART_FRAMEWORK_PRINCIPAL}
                ${ART_FRAMEWORK_SERVICES_REGISTRY}
                ${ART_FRAMEWORK_SERVICES_BASIC}
-               ${ART_PERSISTENCY_COMMON}
-               ${ART_UTILITIES}
+               art_Persistency_Common canvas_Persistency_Common
+               art_Utilities canvas_Utilities
                ${MF_MESSAGELOGGER}
                ${MF_UTILITIES}
                ${FHICLCPP}

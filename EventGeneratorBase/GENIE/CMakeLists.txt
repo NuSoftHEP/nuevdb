@@ -1,8 +1,8 @@
 
 
 art_make( LIBRARY_NAME EventGeneratorBaseGENIE
-          LIB_LIBRARIES SimulationBase
-                        ${ART_UTILITIES}
+          LIB_LIBRARIES nusimdata_SimulationBase
+                        art_Utilities canvas_Utilities
                         ${MF_MESSAGELOGGER}
                         ${MF_UTILITIES}
                         ${FHICLCPP}

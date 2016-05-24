@@ -10,7 +10,7 @@
 #include "G4Base/DetectorConstruction.h"
 #include "G4Base/UserActionManager.h"
 
-#include "SimulationBase/MCTruth.h"
+#include "nusimdata/SimulationBase/MCTruth.h"
 
 #include "Geant4/G4UImanager.hh"
 #include "Geant4/G4VUserDetectorConstruction.hh"
