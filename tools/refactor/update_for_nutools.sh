@@ -20,7 +20,7 @@ get_this_dir()
 
 function one_file() {
   local F=$1
-  printf "$F ... "
+  printf "$F \n"
   # Optionally fix whitespace
   (( ${fix_whitespace:-0} )) && ed "$F" < fix-whitespace.ed > /dev/null 2>&1
   # Fix includes 
@@ -29,7 +29,7 @@ function one_file() {
 
 function cmake_file() {
   local F=$1
-  printf "$F ... "
+  printf "$F \n"
   # Optionally fix whitespace
   (( ${fix_whitespace:-0} )) && ed "$F" < fix-whitespace.ed > /dev/null 2>&1
   # Fix CMakeLists.txt 
@@ -88,6 +88,7 @@ else
   for F in `find $TOP \( -name "*.c*" -o -name "*.C*" -o -name "*.h*" -o -name "*.H*" \) -print`; do
     one_file "$F"
   done
+  echo
   for F in `find $TOP -name CMakeLists.txt -print`; do
     cmake_file "$F"
   done
