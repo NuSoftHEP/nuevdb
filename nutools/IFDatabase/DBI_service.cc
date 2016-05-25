@@ -4,7 +4,7 @@
 //////////////////////////////////////////////////////////////////////////
 
 // nutools includes
-#include "IFDatabase/DBIService.h"
+#include "nutools/IFDatabase/DBIService.h"
 
 // Framework includes
 #include "messagefacility/MessageLogger/MessageLogger.h"

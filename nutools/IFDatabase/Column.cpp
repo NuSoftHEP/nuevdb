@@ -6,9 +6,9 @@
 #include <ctime>
 #include <algorithm>
 
-#include <IFDatabase/Column.h>
-#include <IFDatabase/ColumnDef.h>
-#include <IFDatabase/Util.h>
+#include <nutools/IFDatabase/Column.h>
+#include <nutools/IFDatabase/ColumnDef.h>
+#include <nutools/IFDatabase/Util.h>
 
 //************************************************************
 namespace nutools {

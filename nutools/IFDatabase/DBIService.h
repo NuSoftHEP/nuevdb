@@ -8,7 +8,7 @@
 
 #include <string>
 
-#include <IFDatabase/Table.h>
+#include <nutools/IFDatabase/Table.h>
 
 //Framework includes
 #include "fhiclcpp/ParameterSet.h"

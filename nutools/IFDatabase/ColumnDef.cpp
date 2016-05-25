@@ -1,4 +1,4 @@
-#include <IFDatabase/ColumnDef.h>
+#include <nutools/IFDatabase/ColumnDef.h>
 
 //************************************************************
 namespace nutools {

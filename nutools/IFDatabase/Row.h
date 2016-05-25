@@ -4,8 +4,8 @@
 #include <string>
 #include <vector>
 
-#include "IFDatabase/Column.h"
-#include "IFDatabase/ColumnDef.h"
+#include "nutools/IFDatabase/Column.h"
+#include "nutools/IFDatabase/ColumnDef.h"
 
 namespace nutools {
   namespace dbi {
