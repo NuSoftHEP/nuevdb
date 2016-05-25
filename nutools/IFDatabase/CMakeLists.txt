@@ -40,7 +40,6 @@ art_make_exec( NAME dumpConditionsToCSV
                )
 
 simple_plugin( DBI "service"
-               BASENAME_ONLY
                IFDatabase
                ${ART_FRAMEWORK_CORE}
                ${ART_FRAMEWORK_PRINCIPAL}

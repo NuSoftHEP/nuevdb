@@ -91,8 +91,7 @@ art_make_library( LIBRARY_NAME NuReweightArt
 simple_plugin( ReweightAna module NuReweightArt
                                   NuReweight
                                   nusimdata_SimulationBase
-                                 ${NURW_LIBS}
-               BASENAME_ONLY )
+                                 ${NURW_LIBS} )
 
 install_headers()
 install_fhicl()
