@@ -18,8 +18,6 @@ get_this_dir()
     thisdir=`cd ${reldir} && /bin/pwd ${pwd_P_arg}`
 }
 
-##  perl -wapi\~ -f fix-header-locs.pl "${F}" >/dev/null 2>&1 && rm -f "${F}~"
-
 function one_file() {
   local F=$1
   printf "$F ... "
