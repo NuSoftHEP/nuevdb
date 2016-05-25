@@ -84,11 +84,11 @@ set( NURW_LIBS ${ART_FRAMEWORK_SERVICES_REGISTRY}
 
 art_make_library( SOURCE NuReweight.cxx
                   LIBRARIES nusimdata_SimulationBase
-                            NuReweight
+                            nutools_NuReweight
                             ${NURW_LIBS} )
 
-simple_plugin( ReweightAna module NuReweightArt
-                                  NuReweight
+simple_plugin( ReweightAna module nutools_NuReweight_art
+                                  nutools_NuReweight
                                   nusimdata_SimulationBase
                                  ${NURW_LIBS} )
 

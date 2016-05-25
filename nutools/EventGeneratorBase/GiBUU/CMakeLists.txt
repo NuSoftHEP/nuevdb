@@ -1,5 +1,5 @@
 
-art_make( LIB_LIBRARIES EventGeneratorBaseGENIE
+art_make( LIB_LIBRARIES nutools_EventGeneratorBase_GENIE
                         nusimdata_SimulationBase
                         art_Utilities canvas_Utilities
                         ${MF_MESSAGELOGGER}

@@ -1,8 +1,8 @@
 
 art_make( EventGeneratorBasetest
           MODULE_LIBRARIES nusimdata_SimulationBase
-                           EventGeneratorBaseCRY
-                           EventGeneratorBaseGENIE
+                           nutools_EventGeneratorBase_CRY
+                           nutools_EventGeneratorBase_GENIE
                         art_Framework_Services_Optional_RandomNumberGenerator_service
 			art_Framework_Services_Registry
                         ${MF_MESSAGELOGGER}

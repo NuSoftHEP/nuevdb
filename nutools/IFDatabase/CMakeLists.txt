@@ -22,24 +22,24 @@ art_make_library( SOURCE ${src_files} #${CMAKE_CURRENT_BINARY_DIR}/${PACKAGE}Cin
 
 art_make_exec( NAME tagConditionsTableInDB
                SOURCE tagConditionsTableInDB.cc
-               LIBRARIES IFDatabase
+               LIBRARIES nutools_IFDatabase
                          ${CURL}
                )
 
 art_make_exec( NAME writeConditionsCSVToDB.cc
                SOURCE writeConditionsCSVToDB.cc
-               LIBRARIES IFDatabase
+               LIBRARIES nutools_IFDatabase
                          ${CURL}
                )
 
 art_make_exec( NAME dumpConditionsToCSV
                SOURCE dumpConditionsToCSV.cc
-               LIBRARIES IFDatabase
+               LIBRARIES nutools_IFDatabase
                          ${CURL}
                )
 
 simple_plugin( DBI "service"
-               IFDatabase
+               nutools_IFDatabase
                ${ART_FRAMEWORK_CORE}
                ${ART_FRAMEWORK_PRINCIPAL}
                ${ART_FRAMEWORK_SERVICES_REGISTRY}
