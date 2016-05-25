@@ -2,21 +2,22 @@ use strict;
 
 use vars qw(%dir_list);
 BEGIN { %dir_list = (
-	"Colors_service" => "nutools_Colors_service",
-	"DBI_service" => "nutools_DBI_service",
+	"Colors_service" => "nutools_EventDisplayBase_Colors_service",
+	"DBI_service" => "nutools_IFDatabase_DBI_service",
 	"EventDisplayBase" => "nutools_EventDisplayBase",
-	"EventDisplay_service" => "nutools_EventDisplay_service",
+	"EventDisplay_service" => "nutools_EventDisplayBase_EventDisplay_service",
 	"EventGeneratorBaseCRY" => "nutools_EventGeneratorBase_CRY",
 	"EventGeneratorBaseGENIE" => "nutools_EventGeneratorBase_GENIE",
 	"EventGeneratorBaseGiBUU" => "nutools_EventGeneratorBase_GiBUU",
+	"EventGeneratorBase_test_EventGeneratorTest_module" => "nutools_EventGeneratorBase_test_EventGeneratorTest_module",
 	"G4Base" => "nutools_G4Base",
 	"IFDatabase" => "nutools_IFDatabase",
 	"MagneticField_service" => "nutools_MagneticField_MagneticField_service",
 	"NuBeamWeights" => "nutools_NuBeamWeights",
 	"NuReweightArt" => "nutools_NuReweight_art",
 	"NuReweight" => "nutools_NuReweight",
-	"ReweightAna_module" => "nutools_ReweightAna_module",
-	"ScanOptions_service" => "nutools_ScanOptions_service",
+	"ReweightAna_module" => "nutools_NuReweight_art_ReweightAna_module",
+	"ScanOptions_service" => "nutools_EventDisplayBase_ScanOptions_service",
 	"SimulationBase_dict" => "nutools_SimulationBase_dict",
 	"SimulationBase" => "nusimdata_SimulationBase"
 		       ); }
