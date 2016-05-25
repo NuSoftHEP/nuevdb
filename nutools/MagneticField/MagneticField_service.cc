@@ -23,7 +23,7 @@
 #include "messagefacility/MessageLogger/MessageLogger.h"
 
 // nutools includes
-#include "MagneticField/MagneticField.h"
+#include "nutools/MagneticField/MagneticField.h"
 
 #include "TGeoManager.h"
 
