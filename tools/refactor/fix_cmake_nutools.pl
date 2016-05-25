@@ -26,6 +26,7 @@ foreach my $lib (sort keys %dir_list) {
    next if m&simple_plugin&i;
    next if m&SUBDIRNAME&i;
    next if m&SUBDIRS&i;
+   next if m&LIBRARY_NAME&i;
    next if m&PACKAGE&i;
   #s&\b\Q${lib}\E([^\.\s]*\b)([^\.]|$)&$dir_list{$lib}${1}${2}&g and last;
   s&\b\Q${lib}\E\b([^\.]|$)&$dir_list{$lib}${1}${2}&g and last;
