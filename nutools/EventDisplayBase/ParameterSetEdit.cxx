@@ -22,8 +22,8 @@ extern "C" {
 #include "TGButton.h"
 #include "TGTextEntry.h"
 
-#include "EventDisplayBase/ParameterSetEdit.h"
-#include "EventDisplayBase/NavState.h"
+#include "nutools/EventDisplayBase/ParameterSetEdit.h"
+#include "nutools/EventDisplayBase/NavState.h"
 
 namespace evdb{
 

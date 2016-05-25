@@ -12,11 +12,11 @@
 #include "TGMenu.h"
 #include "TGLayout.h"
 
-#include "EventDisplayBase/WindowMenu.h"
-#include "EventDisplayBase/evdb.h"
-#include "EventDisplayBase/DisplayWindow.h"
-#include "EventDisplayBase/ListWindow.h"
-#include "EventDisplayBase/ScanWindow.h"
+#include "nutools/EventDisplayBase/WindowMenu.h"
+#include "nutools/EventDisplayBase/evdb.h"
+#include "nutools/EventDisplayBase/DisplayWindow.h"
+#include "nutools/EventDisplayBase/ListWindow.h"
+#include "nutools/EventDisplayBase/ScanWindow.h"
 
 namespace evdb{
 

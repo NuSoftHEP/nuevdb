@@ -3,15 +3,15 @@
 /// \brief  Interface to services and their configurations
 /// \author messier@indiana.edu
 ///
-#include "EventDisplayBase/ServiceTable.h"
+#include "nutools/EventDisplayBase/ServiceTable.h"
 
 #include "fhiclcpp/intermediate_table.h"
 #include "fhiclcpp/make_ParameterSet.h"
 #include "art/Framework/Services/Registry/ServiceRegistry.h"
 #include "messagefacility/MessageLogger/MessageLogger.h"
 
-#include "EventDisplayBase/ParameterSetEdit.h"
-#include "EventDisplayBase/ParameterSetEditDialog.h"
+#include "nutools/EventDisplayBase/ParameterSetEdit.h"
+#include "nutools/EventDisplayBase/ParameterSetEditDialog.h"
 
 #include <iostream>
 

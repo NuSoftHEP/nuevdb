@@ -5,9 +5,9 @@
 /// \version $Id: FileMenu.cxx,v 1.3 2011-04-11 20:13:56 messier Exp $
 /// \author  messier@indiana.edu
 ///
-#include "EventDisplayBase/FileMenu.h"
-#include "EventDisplayBase/PrintDialog.h"
-#include "EventDisplayBase/evdb.h"
+#include "nutools/EventDisplayBase/FileMenu.h"
+#include "nutools/EventDisplayBase/PrintDialog.h"
+#include "nutools/EventDisplayBase/evdb.h"
 
 #include <cstdlib>
 #include <string>

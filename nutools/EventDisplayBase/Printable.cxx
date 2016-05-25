@@ -5,7 +5,7 @@
 //
 // messier@indiana.edu
 ////////////////////////////////////////////////////////////////////////
-#include "EventDisplayBase/Printable.h"
+#include "nutools/EventDisplayBase/Printable.h"
 #include <iostream>
 #include <cstdlib>
 

@@ -29,10 +29,10 @@
 #include "nusimdata/SimulationBase/MCFlux.h"
 #include "nusimdata/SimulationBase/MCNeutrino.h"
 #include "nusimdata/SimulationBase/MCParticle.h"
-#include "EventGeneratorBase/evgenbase.h"
+#include "nutools/EventGeneratorBase/evgenbase.h"
 
-#include "EventGeneratorBase/CRY/CRYHelper.h"
-#include "EventGeneratorBase/GENIE/GENIEHelper.h"
+#include "nutools/EventGeneratorBase/CRY/CRYHelper.h"
+#include "nutools/EventGeneratorBase/GENIE/GENIEHelper.h"
 
 #include "TStopwatch.h"
 #include "TGeoManager.h"

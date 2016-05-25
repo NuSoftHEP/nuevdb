@@ -16,14 +16,14 @@
 #include "TCanvas.h"
 #include "TH1.h"
 
-#include "EventDisplayBase/DisplayWindow.h"
-#include "EventDisplayBase/FileMenu.h"
-#include "EventDisplayBase/EditMenu.h"
-#include "EventDisplayBase/MenuBar.h"
-#include "EventDisplayBase/ButtonBar.h"
-#include "EventDisplayBase/Canvas.h"
-#include "EventDisplayBase/StatusBar.h"
-#include "EventDisplayBase/EventHolder.h"
+#include "nutools/EventDisplayBase/DisplayWindow.h"
+#include "nutools/EventDisplayBase/FileMenu.h"
+#include "nutools/EventDisplayBase/EditMenu.h"
+#include "nutools/EventDisplayBase/MenuBar.h"
+#include "nutools/EventDisplayBase/ButtonBar.h"
+#include "nutools/EventDisplayBase/Canvas.h"
+#include "nutools/EventDisplayBase/StatusBar.h"
+#include "nutools/EventDisplayBase/EventHolder.h"
 
 #include "cetlib/exception.h"
 

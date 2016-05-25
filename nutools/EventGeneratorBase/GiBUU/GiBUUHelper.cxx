@@ -12,8 +12,8 @@
 #include "EVGCore/EventRecord.h"
 
 // NuTools includes
-#include "EventGeneratorBase/evgenbase.h"
-#include "EventGeneratorBase/GiBUU/GiBUUHelper.h"
+#include "nutools/EventGeneratorBase/evgenbase.h"
+#include "nutools/EventGeneratorBase/GiBUU/GiBUUHelper.h"
 #include "nusimdata/SimulationBase/MCTruth.h"
 #include "nusimdata/SimulationBase/MCFlux.h"
 #include "nusimdata/SimulationBase/GTruth.h"

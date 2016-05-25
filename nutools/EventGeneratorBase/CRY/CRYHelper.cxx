@@ -25,8 +25,8 @@
 #include "cetlib/exception.h"
 
 // NuTools include files
-#include "EventGeneratorBase/evgenbase.h"
-#include "EventGeneratorBase/CRY/CRYHelper.h"
+#include "nutools/EventGeneratorBase/evgenbase.h"
+#include "nutools/EventGeneratorBase/CRY/CRYHelper.h"
 #include "nusimdata/SimulationBase/MCTruth.h"
 #include "nusimdata/SimulationBase/MCParticle.h"
 

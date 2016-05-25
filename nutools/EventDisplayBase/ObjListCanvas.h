@@ -12,7 +12,7 @@
 #include "TQObject.h"
 #include "RQ_OBJECT.h"
 #ifndef EVDB_PRINTABLE_H
-#include "EventDisplayBase/Printable.h"
+#include "nutools/EventDisplayBase/Printable.h"
 #endif
 class TGMainFrame;
 class TGCompositeFrame;

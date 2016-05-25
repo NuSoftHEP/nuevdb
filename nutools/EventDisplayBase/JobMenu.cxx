@@ -16,9 +16,9 @@
 #include "TGFileDialog.h"
 #include "TTimer.h"
 
-#include "EventDisplayBase/JobMenu.h"
-#include "EventDisplayBase/evdb.h"
-#include "EventDisplayBase/EventDisplay.h"
+#include "nutools/EventDisplayBase/JobMenu.h"
+#include "nutools/EventDisplayBase/evdb.h"
+#include "nutools/EventDisplayBase/EventDisplay.h"
 
 namespace evdb{
 

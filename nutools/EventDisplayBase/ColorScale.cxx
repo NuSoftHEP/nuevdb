@@ -5,7 +5,7 @@
 /// \version $Id: ColorScale.cxx,v 1.3 2011-04-19 22:50:49 brebel Exp $
 /// \author  messier@indiana.edu
 ////////////////////////////////////////////////////////////////////////
-#include "EventDisplayBase/ColorScale.h"
+#include "nutools/EventDisplayBase/ColorScale.h"
 
 #include <iostream>
 #include <cmath>

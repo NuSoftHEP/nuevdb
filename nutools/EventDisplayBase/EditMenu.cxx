@@ -3,9 +3,9 @@
 /// \brief  The edit pull down menu
 /// \author messier@indiana.edu
 ///
-#include "EventDisplayBase/EditMenu.h"
+#include "nutools/EventDisplayBase/EditMenu.h"
 #include "TGMenu.h"
-#include "EventDisplayBase/ServiceTable.h"
+#include "nutools/EventDisplayBase/ServiceTable.h"
 
 namespace evdb 
 {

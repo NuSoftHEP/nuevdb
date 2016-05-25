@@ -10,7 +10,7 @@
 /// Allow dynamic re-sizing of the canvas if the user drags the window's
 /// size box.
 
-#include "EventDisplayBase/ObjListCanvas.h"
+#include "nutools/EventDisplayBase/ObjListCanvas.h"
 
 #include "TCanvas.h"
 #include "TGFrame.h"

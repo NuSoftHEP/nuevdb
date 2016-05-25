@@ -10,7 +10,7 @@
 #ifndef EVDB_SCANWINDOW_H
 #define EVDB_SCANWINDOW_H
 
-#include "EventDisplayBase/Canvas.h"
+#include "nutools/EventDisplayBase/Canvas.h"
 #include "RQ_OBJECT.h"
 #include "TGCanvas.h"
 #include "TGFrame.h"

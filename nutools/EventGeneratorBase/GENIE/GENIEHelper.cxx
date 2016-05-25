@@ -73,8 +73,8 @@
 #include "FluxDrivers/GFlavorMixerFactory.h"
 
 //NuTools includes
-#include "EventGeneratorBase/evgenbase.h"
-#include "EventGeneratorBase/GENIE/GENIEHelper.h"
+#include "nutools/EventGeneratorBase/evgenbase.h"
+#include "nutools/EventGeneratorBase/GENIE/GENIEHelper.h"
 #include "nusimdata/SimulationBase/MCTruth.h"
 #include "nusimdata/SimulationBase/MCFlux.h"
 #include "nusimdata/SimulationBase/GTruth.h"

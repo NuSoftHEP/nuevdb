@@ -13,7 +13,7 @@
 
 #include "TGeoManager.h"
 
-#include "EventGeneratorBase/GENIE/GENIEHelper.h"
+#include "nutools/EventGeneratorBase/GENIE/GENIEHelper.h"
 
 namespace evgb{
 

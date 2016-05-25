@@ -15,13 +15,13 @@
 #include "TRootEmbeddedCanvas.h"
 #include "TCanvas.h"
 #include "TH1.h"
-#include "EventDisplayBase/evdb.h"
-#include "EventDisplayBase/ListWindow.h"
-#include "EventDisplayBase/MenuBar.h"
-#include "EventDisplayBase/ButtonBar.h"
-#include "EventDisplayBase/Canvas.h"
-#include "EventDisplayBase/StatusBar.h"
-#include "EventDisplayBase/ObjListCanvas.h"
+#include "nutools/EventDisplayBase/evdb.h"
+#include "nutools/EventDisplayBase/ListWindow.h"
+#include "nutools/EventDisplayBase/MenuBar.h"
+#include "nutools/EventDisplayBase/ButtonBar.h"
+#include "nutools/EventDisplayBase/Canvas.h"
+#include "nutools/EventDisplayBase/StatusBar.h"
+#include "nutools/EventDisplayBase/ObjListCanvas.h"
 
 namespace evdb{
 

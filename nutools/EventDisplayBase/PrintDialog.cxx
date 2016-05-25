@@ -14,10 +14,10 @@
 #include "TGButton.h"
 #include "TGTextEntry.h"
 
-#include "EventDisplayBase/PrintDialog.h"
-#include "EventDisplayBase/Printable.h"
-#include "EventDisplayBase/EventHolder.h"
-#include "EventDisplayBase/evdb.h"
+#include "nutools/EventDisplayBase/PrintDialog.h"
+#include "nutools/EventDisplayBase/Printable.h"
+#include "nutools/EventDisplayBase/EventHolder.h"
+#include "nutools/EventDisplayBase/evdb.h"
 
 namespace evdb{
 

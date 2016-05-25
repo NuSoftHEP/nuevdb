@@ -4,7 +4,7 @@
 /// \version $Id: ButtonBar.cxx,v 1.6 2012-03-03 06:48:11 messier Exp $
 /// \author  messier@indiana.edu
 ///
-#include "EventDisplayBase/ButtonBar.h"
+#include "nutools/EventDisplayBase/ButtonBar.h"
 #include <iostream>
 #include <string>
 #include <cstdlib>
@@ -20,10 +20,10 @@
 // ART Framework includes
 #include "art/Framework/Services/Registry/ServiceHandle.h"
 // Local includes
-#include "EventDisplayBase/EventDisplay.h"
-#include "EventDisplayBase/evdb.h"
-#include "EventDisplayBase/PrintDialog.h"
-#include "EventDisplayBase/NavState.h"
+#include "nutools/EventDisplayBase/EventDisplay.h"
+#include "nutools/EventDisplayBase/evdb.h"
+#include "nutools/EventDisplayBase/PrintDialog.h"
+#include "nutools/EventDisplayBase/NavState.h"
 
 namespace evdb{
 
