@@ -1,6 +1,5 @@
 
-art_make( LIBRARY_NAME G4Base
-          LIB_LIBRARIES nusimdata_SimulationBase
+art_make( LIB_LIBRARIES nusimdata_SimulationBase
                         MagneticField_service
 			canvas_Persistency_Provenance
                         ${MF_MESSAGELOGGER}

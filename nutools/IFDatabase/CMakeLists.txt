@@ -8,8 +8,7 @@ find_library( CURL NAMES curl )
 
 include_directories( $ENV{LIBWDA_FQ_DIR}/include )
 
-art_make_library( LIBRARY_NAME  ${PACKAGE}
-                  SOURCE ${src_files} #${CMAKE_CURRENT_BINARY_DIR}/${PACKAGE}Cint.cc
+art_make_library( SOURCE ${src_files} #${CMAKE_CURRENT_BINARY_DIR}/${PACKAGE}Cint.cc
                   LIBRARIES     ${LIBWDA}
                                 ${BOOST_DATE_TIME}
                                 ${BOOST_SYSTEM}

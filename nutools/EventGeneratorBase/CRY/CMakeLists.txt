@@ -1,6 +1,5 @@
 
-art_make( LIBRARY_NAME EventGeneratorBaseCRY
-          LIB_LIBRARIES nusimdata_SimulationBase
+art_make( LIB_LIBRARIES nusimdata_SimulationBase
                         ${CRY}
                         ${MF_MESSAGELOGGER}
                         ${MF_UTILITIES}

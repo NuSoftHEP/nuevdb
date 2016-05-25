@@ -82,8 +82,7 @@ set( NURW_LIBS ${ART_FRAMEWORK_SERVICES_REGISTRY}
                ${ROOT_GUI}
            )
 
-art_make_library( LIBRARY_NAME NuReweightArt
-                  SOURCE NuReweight.cxx
+art_make_library( SOURCE NuReweight.cxx
                   LIBRARIES nusimdata_SimulationBase
                             NuReweight
                             ${NURW_LIBS} )

@@ -1,8 +1,7 @@
 
 ##cet_add_compiler_flags(CXX -DSETDIFFXSEC_1ARG )
 
-art_make( LIBRARY_NAME NuReweight
-          LIB_LIBRARIES 
+art_make( LIB_LIBRARIES 
                         ${LOG4CPP}
                         ${XML2}
                         ${PYTHIA6}

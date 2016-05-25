@@ -42,8 +42,7 @@ set( EVD_LIBS ${ART_FRAMEWORK_SERVICES_REGISTRY}
 
 cet_rootcint( ${PACKAGE} )
 
-art_make_library( LIBRARY_NAME ${PACKAGE}
-                  SOURCE ${src_files} ${CMAKE_CURRENT_BINARY_DIR}/${PACKAGE}Cint.cc
+art_make_library( SOURCE ${src_files} ${CMAKE_CURRENT_BINARY_DIR}/${PACKAGE}Cint.cc
                   LIBRARIES nusimdata_SimulationBase ${EVD_LIBS} )
 
 set( EVD_SERVICE_LIBS ${PACKAGE} ${EVD_LIBS} )

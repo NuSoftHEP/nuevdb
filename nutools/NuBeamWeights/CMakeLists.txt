@@ -1,6 +1,5 @@
 
-art_make( LIBRARY_NAME NuBeamWeights
-          LIB_LIBRARIES ${ROOT_CORE}
+art_make( LIB_LIBRARIES ${ROOT_CORE}
                         ${ROOT_CINT}
                         ${ROOT_RIO}
                         ${ROOT_NET}
