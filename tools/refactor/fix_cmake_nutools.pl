@@ -3,7 +3,7 @@ use strict;
 use vars qw(%dir_list);
 BEGIN { %dir_list = (
 	"Colors_service" => "nutools_Colors_service",
-	"DBI_service" => "nutools_",
+	"DBI_service" => "nutools_DBI_service",
 	"EventDisplayBase" => "nutools_EventDisplayBase",
 	"EventDisplay_service" => "nutools_EventDisplay_service",
 	"EventGeneratorBaseCRY" => "nutools_EventGeneratorBase_CRY",
