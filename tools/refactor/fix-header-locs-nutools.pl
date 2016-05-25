@@ -1,6 +1,6 @@
 use strict;
 
-use vars qw(%inc_translations);
+use vars qw(%inc_translations $g4physics_list);
 BEGIN { %inc_translations = (
 		"EventGeneratorBase/CRY/CRYHelper.h"  => "nutools/EventGeneratorBase/CRY/CRYHelper.h",
 		"EventGeneratorBase/GENIE/GENIEHelper.h"  => "nutools/EventGeneratorBase/GENIE/GENIEHelper.h",
@@ -60,12 +60,8 @@ BEGIN { %inc_translations = (
 		"G4Base/G4PhysicsProcessFactorySingleton.hh"  => "nutools/G4Base/G4PhysicsProcessFactorySingleton.hh",
 		"G4Base/G4PhysListFactory.hh"  => "nutools/G4Base/G4PhysListFactory.hh",
 		"G4Base/G4PhysListFactorySingleton.hh"  => "nutools/G4Base/G4PhysListFactorySingleton.hh",
-		"G4NuPhysicsLists/HadronPhysicsNuBeam.hh"  => "nutools/G4NuPhysicsLists/include/G4NuPhysicsLists/HadronPhysicsNuBeam.hh",
-		"G4NuPhysicsLists/G4PhysicsProcessFactorySingleton.hh"  => "nutools/G4NuPhysicsLists/include/G4NuPhysicsLists/G4PhysicsProcessFactorySingleton.hh",
-		"G4NuPhysicsLists/G4PhysListFactory.hh"  => "nutools/G4NuPhysicsLists/include/G4NuPhysicsLists/G4PhysListFactory.hh",
-		"G4NuPhysicsLists/QGSPStrFragmLundProtonBuilder.hh"  => "nutools/G4NuPhysicsLists/include/G4NuPhysicsLists/QGSPStrFragmLundProtonBuilder.hh",
-		"G4NuPhysicsLists/G4PhysListFactorySingleton.hh"  => "nutools/G4NuPhysicsLists/include/G4NuPhysicsLists/G4PhysListFactorySingleton.hh",
-		"G4NuPhysicsLists/NuBeam.hh"  => "nutools/G4NuPhysicsLists/include/G4NuPhysicsLists/NuBeam.hh",
+		"G4Base/G4PhysicsProcessRegisterOld.icc"  => "nutools/G4Base/G4PhysicsProcessRegisterOld.icc",
+		"G4Base/G4PhysListRegisterOld.icc"  => "nutools/G4Base/G4PhysListRegisterOld.icc",
 		"SimulationBase/GTruth.h" => "nusimdata/SimulationBase/GTruth.h",
 		"SimulationBase/MCFlux.h" => "nusimdata/SimulationBase/MCFlux.h",
 		"SimulationBase/MCNeutrino.h" => "nusimdata/SimulationBase/MCNeutrino.h",
@@ -76,9 +72,28 @@ BEGIN { %inc_translations = (
                             );
 
       }
+
+# since we do not build G4NuPhysicsLists, we do not translate anything
+# this is for future reference
+BEGIN { %g4physics_list = (
+ 		"G4NuPhysicsLists/HadronPhysicsNuBeam.hh"  => "nutools/G4NuPhysicsLists/include/G4NuPhysicsLists/HadronPhysicsNuBeam.hh",
+		"G4NuPhysicsLists/G4PhysicsProcessFactorySingleton.hh"  => "nutools/G4NuPhysicsLists/include/G4NuPhysicsLists/G4PhysicsProcessFactorySingleton.hh",
+		"G4NuPhysicsLists/G4PhysListFactory.hh"  => "nutools/G4NuPhysicsLists/include/G4NuPhysicsLists/G4PhysListFactory.hh",
+		"G4NuPhysicsLists/QGSPStrFragmLundProtonBuilder.hh"  => "nutools/G4NuPhysicsLists/include/G4NuPhysicsLists/QGSPStrFragmLundProtonBuilder.hh",
+		"G4NuPhysicsLists/G4PhysListFactorySingleton.hh"  => "nutools/G4NuPhysicsLists/include/G4NuPhysicsLists/G4PhysListFactorySingleton.hh",
+		"G4NuPhysicsLists/NuBeam.hh"  => "nutools/G4NuPhysicsLists/include/G4NuPhysicsLists/NuBeam.hh",
+		"G4NuPhysicsLists/G4PhysicsProcessRegisterOld.icc"  => "nutools/G4NuPhysicsLists/include/G4NuPhysicsLists/G4PhysicsProcessRegisterOld.icc",
+		"G4NuPhysicsLists/G4PhysListRegisterOld.icc"  => "nutools/G4NuPhysicsLists/include/G4NuPhysicsLists/G4PhysListRegisterOld.icc",
+		"G4NuPhysicsLists/NuBeam.icc"  => "nutools/G4NuPhysicsLists/include/G4NuPhysicsLists/NuBeam.icc",
+                           );
+
+      }
+
 foreach my $inc (sort keys %inc_translations) {
   s&^(\s*#include\s+["<])\Q$inc\E(.*)&${1}$inc_translations{$inc}${2}& and last;
 }
+
+
 
 ### Local Variables:
 ### mode: cperl
