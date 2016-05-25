@@ -9,7 +9,7 @@
 /// \update  2012-08-17 initial version
 ////////////////////////////////////////////////////////////////////////
 
-#include "G4Base/UserActionFactory.h"
+#include "nutools/G4Base/UserActionFactory.h"
 
 #include "messagefacility/MessageLogger/MessageLogger.h"
 

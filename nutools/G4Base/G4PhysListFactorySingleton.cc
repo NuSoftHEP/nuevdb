@@ -37,10 +37,10 @@
 //----------------------------------------------------------------------------
 //
 
-#include "G4Base/G4PhysListFactorySingleton.hh"
+#include "nutools/G4Base/G4PhysListFactorySingleton.hh"
 
 #include <iomanip>
-#include "G4Base/G4PhysicsProcessFactorySingleton.hh"
+#include "nutools/G4Base/G4PhysicsProcessFactorySingleton.hh"
 
 // Define static variable which holds the one-and-only instance
 G4PhysListFactorySingleton* G4PhysListFactorySingleton::fgTheInstance;
@@ -296,7 +296,7 @@ G4PhysListFactorySingleton::GetBaseName(G4String name,
 }
 
 /// !!!!!! register existing classes without disturbing their .cc files (yet)
-#include "G4Base/G4PhysListRegisterOld.icc"
+#include "nutools/G4Base/G4PhysListRegisterOld.icc"
 /// !!!!!! register some existing G4PhysicsConstructor objects w/ G4PhysicsProcessFactorySingleton
 /// !!!!!! so that one can do the "normal" EM overrides
-#include "G4Base/G4PhysicsProcessRegisterOld.icc"
+#include "nutools/G4Base/G4PhysicsProcessRegisterOld.icc"

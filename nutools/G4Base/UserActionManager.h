@@ -36,7 +36,7 @@
 #ifndef G4BASE_UserActionManager_H
 #define G4BASE_UserActionManager_H
 
-#include "G4Base/UserAction.h"
+#include "nutools/G4Base/UserAction.h"
 
 #include "Geant4/G4UserRunAction.hh"
 #include "Geant4/G4UserEventAction.hh"

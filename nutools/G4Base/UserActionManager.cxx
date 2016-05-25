@@ -11,8 +11,8 @@
 /// 27-Jan-2009 <seligman@nevis.columbia.edu> Revised for LArSoft.
 /// 2012-08-17: <rhatcher@fnal.gov> Add G4UserStackingAction interfaces
 
-#include "G4Base/UserActionManager.h"
-#include "G4Base/UserAction.h"
+#include "nutools/G4Base/UserActionManager.h"
+#include "nutools/G4Base/UserAction.h"
 
 #include "Geant4/G4Run.hh"
 #include "Geant4/G4Event.hh"

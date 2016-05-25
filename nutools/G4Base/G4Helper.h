@@ -19,7 +19,7 @@
 #define G4BASE_G4HELPER_H
 
 // nutools includes
-#include "G4Base/ConvertMCTruthToG4.h"
+#include "nutools/G4Base/ConvertMCTruthToG4.h"
 
 #include <cstring>
 

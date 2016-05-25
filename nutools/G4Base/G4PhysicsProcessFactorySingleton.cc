@@ -37,7 +37,7 @@
 //----------------------------------------------------------------------------
 //
 
-#include "G4Base/G4PhysicsProcessFactorySingleton.hh"
+#include "nutools/G4Base/G4PhysicsProcessFactorySingleton.hh"
 
 #include <iomanip>
 

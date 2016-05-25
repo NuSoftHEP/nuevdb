@@ -6,11 +6,11 @@
 /// \author  rhatcher@fnal.gov
 ////////////////////////////////////////////////////////////////////////
 
-#include "G4Base/ExampleAction.h"
+#include "nutools/G4Base/ExampleAction.h"
 #include "messagefacility/MessageLogger/MessageLogger.h"
 
 // self-register with the factory
-#include "G4Base/UserActionFactory.h"
+#include "nutools/G4Base/UserActionFactory.h"
 USERACTIONREG3(altns,ExampleAction,altns::ExampleAction)
 
 // G4 includes

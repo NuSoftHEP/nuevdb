@@ -41,7 +41,7 @@
 //----------------------------------------------------------------------------
 //
 
-#include "G4Base/G4PhysicsProcessFactorySingleton.hh"
+#include "nutools/G4Base/G4PhysicsProcessFactorySingleton.hh"
 
 #include "Geant4/G4EmStandardPhysics_option1.hh"
 PHYSPROCREG(G4EmStandardPhysics_option1)

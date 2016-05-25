@@ -9,8 +9,8 @@
 #include "messagefacility/MessageLogger/MessageLogger.h"
 #include "cetlib/exception.h"
 
-#include "G4Base/DetectorConstruction.h"
-#include "MagneticField/MagneticField.h"
+#include "nutools/G4Base/DetectorConstruction.h"
+#include "nutools/MagneticField/MagneticField.h"
 
 #include "Geant4/G4VPhysicalVolume.hh"
 #include "Geant4/G4GDMLParser.hh"

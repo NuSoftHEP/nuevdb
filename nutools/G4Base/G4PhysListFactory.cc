@@ -37,8 +37,8 @@
 //----------------------------------------------------------------------------
 //
 
-#include "G4Base/G4PhysListFactory.hh"
-#include "G4Base/G4PhysListFactorySingleton.hh"
+#include "nutools/G4Base/G4PhysListFactory.hh"
+#include "nutools/G4Base/G4PhysListFactorySingleton.hh"
 
 #ifdef DEF_ALT_FACTORY
 namespace alt {

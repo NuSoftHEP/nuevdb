@@ -42,7 +42,7 @@
 //
 
 #include "Geant4/G4Version.hh"
-#include "G4Base/G4PhysListFactorySingleton.hh"
+#include "nutools/G4Base/G4PhysListFactorySingleton.hh"
 
 #if G4VERSION_NUMBER < 1000
   #include "Geant4/CHIPS.hh"
