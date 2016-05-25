@@ -10,7 +10,7 @@
 #include "TFile.h"
 #include "TH2F.h"
 #include "TSystem.h"
-#include "NuBeamWeights/skzpReweight.h"
+#include "nutools/NuBeamWeights/skzpReweight.h"
 
 namespace nbw{
 

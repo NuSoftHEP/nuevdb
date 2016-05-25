@@ -65,7 +65,7 @@ using genie::Messenger;
 #include "nusimdata/SimulationBase/MCParticle.h"
 #include "nusimdata/SimulationBase/MCNeutrino.h"
 #include "nusimdata/SimulationBase/GTruth.h"
-#include "NuReweight/GENIEReweight.h"
+#include "nutools/NuReweight/GENIEReweight.h"
 
 // Framework includes
 //#include "messagefacility/MessageLogger/MessageLogger.h"

@@ -63,7 +63,7 @@
 #include "nusimdata/SimulationBase/MCParticle.h"
 #include "nusimdata/SimulationBase/MCNeutrino.h"
 #include "nusimdata/SimulationBase/GTruth.h"
-#include "NuReweight/art/NuReweight.h"
+#include "nutools/NuReweight/art/NuReweight.h"
 
 namespace rwgt {
 

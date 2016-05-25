@@ -11,7 +11,7 @@
 #include <map>
 #include <vector>
 #include "nusimdata/SimulationBase/MCFlux.h"
-#include "NuBeamWeights/Conventions.h"
+#include "nutools/NuBeamWeights/Conventions.h"
 
 class TFile;
 class TH2F;

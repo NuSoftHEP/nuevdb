@@ -28,7 +28,7 @@
 #include "art/Framework/Services/Optional/TFileDirectory.h"
 #include "messagefacility/MessageLogger/MessageLogger.h"
 
-#include "NuReweight/art/NuReweight.h"
+#include "nutools/NuReweight/art/NuReweight.h"
 
 #include "art/Framework/Core/EDAnalyzer.h"
 
