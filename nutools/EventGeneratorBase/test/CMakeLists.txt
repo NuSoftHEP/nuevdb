@@ -1,6 +1,5 @@
 
-art_make( EventGeneratorBasetest
-          MODULE_LIBRARIES nusimdata_SimulationBase
+art_make( MODULE_LIBRARIES nusimdata_SimulationBase
                            nutools_EventGeneratorBase_CRY
                            nutools_EventGeneratorBase_GENIE
                         art_Framework_Services_Optional_RandomNumberGenerator_service
