@@ -34,4 +34,3 @@ foreach my $lib (sort keys %dir_list) {
 }
 
 #s&\$\{SIMULATIONBASE\}&nusimdata_SimulationBase&g;
-#	"EventGeneratorBase_test_EventGeneratorTest_module" => "nutools_",
