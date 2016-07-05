@@ -61,20 +61,22 @@ namespace simb {
     /// the implementation details.  (If you're not familiar with STL,
     /// you can ignore these definitions.)
     typedef std::vector< std::pair<TLorentzVector, TLorentzVector> >  list_type;
-    typedef list_type::value_type                   value_type;
-    typedef list_type::iterator                     iterator;
-    typedef list_type::const_iterator               const_iterator;
-    typedef list_type::reverse_iterator             reverse_iterator;
-    typedef list_type::const_reverse_iterator       const_reverse_iterator;
-    typedef list_type::size_type                    size_type;
-    typedef list_type::difference_type              difference_type;
-
+    typedef list_type::value_type                                     value_type;
+    typedef list_type::iterator                                       iterator;
+    typedef list_type::const_iterator                                 const_iterator;
+    typedef list_type::reverse_iterator                               reverse_iterator;
+    typedef list_type::const_reverse_iterator                         const_reverse_iterator;
+    typedef list_type::size_type                                      size_type;
+    typedef list_type::difference_type                                difference_type;
+    typedef std::vector< std::pair<size_t, unsigned char> >           ProcessMap;
     /// Standard constructor: Start with initial position and momentum
     /// of the particle.
     MCTrajectory();
 
   private:
-    list_type ftrajectory;
+    list_type  ftrajectory;        ///< The list of trajectory points
+    ProcessMap fTrajectoryProcess; ///< map of the scattering process to index
+                                   ///< in ftrajectory for a given point
 
 #ifndef __GCCXML__
   public:
@@ -122,9 +124,17 @@ namespace simb {
 
     /// The only "set" methods for this class; once you've added a
     /// trajectory point, you can't take it back.
-    void push_back( const value_type& v );
-    void push_back( const TLorentzVector& p, const TLorentzVector& m );
-    void Add( const TLorentzVector& p, const TLorentzVector& m );
+    void push_back(value_type const& v );
+    void push_back(TLorentzVector const& p,
+                   TLorentzVector const& m );
+    void Add(TLorentzVector const& p,
+             TLorentzVector const& m );
+    void Add(TLorentzVector const& p,
+             TLorentzVector const& m,
+             std::string    const& process );
+    
+    unsigned char ProcessToKey(std::string   const& process);
+    std::string   KeyToProcess(unsigned char const& key);
 
     /// Remove points from trajectory. Straight line interpolation between the
     /// remaining points will pass no further than \a margin from removed

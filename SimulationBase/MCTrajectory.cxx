@@ -92,6 +92,59 @@ namespace simb {
   }
 
   //----------------------------------------------------------------------------
+  unsigned char MCTrajectory::ProcessToKey(std::string const& process)
+  {
+    unsigned char key = 0;
+    
+    if     (process.compare("hadElastic")       == 0) key = 1;
+    else if(process.compare("pi-Inelastic")     == 0) key = 2;
+    else if(process.compare("pi+Inelastic")     == 0) key = 3;
+    else if(process.compare("kaon-Inelastic")   == 0) key = 4;
+    else if(process.compare("kaon+Inelastic")   == 0) key = 5;
+    else if(process.compare("protonInelastic")  == 0) key = 6;
+    else if(process.compare("neutronInelastic") == 0) key = 7;
+    
+    return key;
+  }
+  
+  //----------------------------------------------------------------------------
+  std::string MCTrajectory::KeyToProcess(unsigned char const& key)
+  {
+    std::string process("Unknown");
+    
+    if     (key == 1) process = "hadElastic";
+    else if(key == 2) process = "pi-Inelastic";
+    else if(key == 3) process = "pi+Inelastic";
+    else if(key == 4) process = "kaon-Inelastic";
+    else if(key == 5) process = "kaon+Inelastic";
+    else if(key == 6) process = "protonInelastic";
+    else if(key == 7) process = "neutronInelastic";
+    
+    return process;
+  }
+  
+  //----------------------------------------------------------------------------
+  void MCTrajectory::Add(TLorentzVector const& p,
+                         TLorentzVector const& m,
+                         std::string    const& process )
+  {
+    // add the the momentum and position, then get the location of the added
+    // bits to store the process
+    this->push_back(p, m);
+    
+    size_t insertLoc = ftrajectory.size() - 1;
+    
+    auto key = this->ProcessToKey(process);
+    
+    // only add a process to the list if it is defined, ie one of the values
+    // allowed in the ProcessToKey() method
+    if(key > 0)
+      fTrajectoryProcess.push_back(std::make_pair(insertLoc, key));
+    
+    return;
+  }
+
+  //----------------------------------------------------------------------------
   void MCTrajectory::Sparsify(double margin)
   {
     // This is a divide-and-conquer algorithm. If the straight line between two
