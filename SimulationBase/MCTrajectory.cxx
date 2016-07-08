@@ -92,7 +92,7 @@ namespace simb {
   }
 
   //----------------------------------------------------------------------------
-  unsigned char MCTrajectory::ProcessToKey(std::string const& process)
+  unsigned char MCTrajectory::ProcessToKey(std::string const& process) const
   {
     unsigned char key = 0;
     
@@ -108,7 +108,7 @@ namespace simb {
   }
   
   //----------------------------------------------------------------------------
-  std::string MCTrajectory::KeyToProcess(unsigned char const& key)
+  std::string MCTrajectory::KeyToProcess(unsigned char const& key) const
   {
     std::string process("Unknown");
     

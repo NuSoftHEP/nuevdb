@@ -135,7 +135,7 @@ namespace simb {
     
     unsigned char        ProcessToKey(std::string   const& process) const;
     std::string          KeyToProcess(unsigned char const& key)     const;
-    ProcessMap    const& ProcessMap()                               const;
+    ProcessMap    const& TrajectoryProcesses()                      const;
 
     /// Remove points from trajectory. Straight line interpolation between the
     /// remaining points will pass no further than \a margin from removed
@@ -189,7 +189,7 @@ inline void                                       simb::MCTrajectory::Add(const 
 									  const TLorentzVector& m )       
 { push_back(p,m);           }
 
-inline simb::MCTrajectory::ProcessMap    const&   simb::MCTrajectory::ProcessMap() const { return fProcessMap; }
+inline simb::MCTrajectory::ProcessMap    const&   simb::MCTrajectory::TrajectoryProcesses() const { return fTrajectoryProcess; }
 
 #endif
 
