@@ -32,7 +32,7 @@
 // Do not include the objects they contain internally.
 //
 template class std::pair< TLorentzVector, TLorentzVector>;
-template class std::pair< size_t, unsigned char>;
+template class std::pair<size_t, unsigned char>;
 template class std::vector<std::pair< size_t, unsigned char> >;
 template class std::vector<simb::MCNeutrino>;
 template class std::vector<simb::MCTrajectory>;

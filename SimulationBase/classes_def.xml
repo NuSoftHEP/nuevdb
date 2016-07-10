@@ -11,6 +11,7 @@
 <lcgdict>
 
  <class name="std::set<int>"                                                    />
+ <class name="std::pair<size_t, unsigned char>"                                 />
  <class name="std::vector< std::pair<size_t, unsigned char> >"                  />
  <class name="simb::MCParticle"    ClassVersion="18"                  	     	   >
   <version ClassVersion="18" checksum="275984218"/>
