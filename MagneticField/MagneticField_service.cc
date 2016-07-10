@@ -57,7 +57,7 @@ namespace mag {
 
       // These need to be read as types that FHICL know about, but they
       // are used by Geant, so I store them in Geant4 types.
-      std::vector<double> field = pset.get<std::vector<double> >("ConstantField");
+      std::vector<double> field = itr.get<std::vector<double> >("ConstantField");
       
       // Force the dimension of the field definition
       field.resize(3);
