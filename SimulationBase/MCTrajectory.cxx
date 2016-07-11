@@ -15,6 +15,8 @@
 #include <deque>
 #include <iterator>
 #include <vector>
+#include <set>
+#include <map>
 
 namespace simb {
 
@@ -92,6 +94,59 @@ namespace simb {
   }
 
   //----------------------------------------------------------------------------
+  unsigned char MCTrajectory::ProcessToKey(std::string const& process) const
+  {
+    unsigned char key = 0;
+    
+    if     (process.compare("hadElastic")       == 0) key = 1;
+    else if(process.compare("pi-Inelastic")     == 0) key = 2;
+    else if(process.compare("pi+Inelastic")     == 0) key = 3;
+    else if(process.compare("kaon-Inelastic")   == 0) key = 4;
+    else if(process.compare("kaon+Inelastic")   == 0) key = 5;
+    else if(process.compare("protonInelastic")  == 0) key = 6;
+    else if(process.compare("neutronInelastic") == 0) key = 7;
+    
+    return key;
+  }
+  
+  //----------------------------------------------------------------------------
+  std::string MCTrajectory::KeyToProcess(unsigned char const& key) const
+  {
+    std::string process("Unknown");
+    
+    if     (key == 1) process = "hadElastic";
+    else if(key == 2) process = "pi-Inelastic";
+    else if(key == 3) process = "pi+Inelastic";
+    else if(key == 4) process = "kaon-Inelastic";
+    else if(key == 5) process = "kaon+Inelastic";
+    else if(key == 6) process = "protonInelastic";
+    else if(key == 7) process = "neutronInelastic";
+    
+    return process;
+  }
+  
+  //----------------------------------------------------------------------------
+  void MCTrajectory::Add(TLorentzVector const& p,
+                         TLorentzVector const& m,
+                         std::string    const& process )
+  {
+    // add the the momentum and position, then get the location of the added
+    // bits to store the process
+    this->push_back(p, m);
+    
+    size_t insertLoc = ftrajectory.size() - 1;
+    
+    auto key = this->ProcessToKey(process);
+    
+    // only add a process to the list if it is defined, ie one of the values
+    // allowed in the ProcessToKey() method
+    if(key > 0)
+      fTrajectoryProcess.push_back(std::make_pair(insertLoc, key));
+    
+    return;
+  }
+
+  //----------------------------------------------------------------------------
   void MCTrajectory::Sparsify(double margin)
   {
     // This is a divide-and-conquer algorithm. If the straight line between two
@@ -115,7 +170,10 @@ namespace simb {
     // endpoints.
     toCheck.push_back(std::make_pair(0, size()-1));
 
-    std::vector<int> done;
+    // use a std::set to keep track of which indices of points we want to
+    // keep because the set does not allow duplicates and it keeps items in
+    // order
+    std::set<int> done;
 
     while(!toCheck.empty()){
       const int loIdx = toCheck.front().first;
@@ -142,7 +200,7 @@ namespace simb {
       
       if(ok){
         // These points adequately represent this range
-        done.push_back(loIdx);
+        done.insert(loIdx);
       }
       else{
         // Split in half
@@ -158,14 +216,14 @@ namespace simb {
         // for those cases.
 
         if(midIdx == loIdx+1){
-          done.push_back(loIdx);
+          done.insert(loIdx);
         }
         else{
           toCheck.push_back(std::make_pair(loIdx, midIdx));
         }
 
         if(midIdx == hiIdx-1){
-          done.push_back(midIdx);
+          done.insert(midIdx);
         }
         else{
           toCheck.push_back(std::make_pair(midIdx, hiIdx));
@@ -173,20 +231,40 @@ namespace simb {
       }
     } // end while
 
-    // We end up with them in a somewhat-randomized order
-    std::sort(done.begin(), done.end());
+    // now make sure we have not left out any of the indices where interesting
+    // processes were recorded
+    std::map< size_t, unsigned char> processMap;
+    for(auto itr : fTrajectoryProcess){
+      done.insert(itr.first);
+      processMap[itr.first] = itr.second;
+    }
 
     // Look up the trajectory points at the stored indices, write them to a new
     // trajectory
     const unsigned int I = done.size();
     list_type newTraj;
     newTraj.reserve(I+1);
-    for(unsigned int i = 0; i < I; ++i) newTraj.push_back(at(done[i]));
-    // Remember to add the very last point in
-    newTraj.push_back(*rbegin());
 
-    // Replace trajectory with new version
-    ftrajectory = newTraj;
+    // make a new process map as well based on these points
+    ProcessMap newProcMap;
+    
+    for(auto idx : done){
+      newTraj.push_back(at(idx));
+      if(processMap.count(idx) > 0){
+        newProcMap.push_back(std::make_pair(newTraj.size() - 1,
+                                            processMap.find(idx)->second)
+                             );
+      }
+    }
+    
+    // Remember to add the very last point in if it hasn't already been added
+    if(done.count(ftrajectory.size() - 1) < 1) newTraj.push_back(*rbegin());
+
+    // Replace trajectory and fTrajectoryProcess with new versions
+    std::swap(ftrajectory,        newTraj   );
+    std::swap(fTrajectoryProcess, newProcMap);
+    
+    return;
   }
 
 } // namespace sim

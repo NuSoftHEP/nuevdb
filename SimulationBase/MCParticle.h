@@ -178,8 +178,11 @@ namespace simb {
 
     // Make it easier to add a (position,momentum) point to the
     // trajectory. You must add this information for every point you wish to keep
-    void AddTrajectoryPoint( const TLorentzVector& position, 
-                            const TLorentzVector& momentum );
+    void AddTrajectoryPoint(TLorentzVector const& position,
+                            TLorentzVector const& momentum );
+    void AddTrajectoryPoint(TLorentzVector const& position,
+                            TLorentzVector const& momentum,
+                            std::string    const& process);
 
     // methods for giving/accessing a weight to this particle for use
     // in studies of rare processes, etc
@@ -258,14 +261,18 @@ inline const simb::MCTrajectory& simb::MCParticle::Trajectory()         const { 
 inline       double          simb::MCParticle::Weight()                 const { return fWeight;                            }
 
 // methods to set information
-inline       void            simb::MCParticle::AddTrajectoryPoint(const TLorentzVector& position, 
-                                                                  const TLorentzVector& momentum )
-                                                                                  { ftrajectory.Add( position, momentum ); }
+inline       void            simb::MCParticle::AddTrajectoryPoint(TLorentzVector const& position,
+                                                                  TLorentzVector const& momentum )
+                                                                              { ftrajectory.Add( position, momentum );     }
+inline       void            simb::MCParticle::AddTrajectoryPoint(TLorentzVector const& position,
+                                                                  TLorentzVector const& momentum,
+                                                                  std::string    const& process)
+                                                                              { ftrajectory.Add( position, momentum, process); }
 inline       void            simb::MCParticle::SparsifyTrajectory()               { ftrajectory.Sparsify();                }
-inline       void            simb::MCParticle::AddDaughter(const int trackID)     { fdaughters.insert(trackID); 	   }
-inline       void            simb::MCParticle::SetPolarization(TVector3 const& p) { fpolarization = p;          	   }
-inline       void            simb::MCParticle::SetRescatter(int code)             { frescatter    = code;       	   }
-inline       void            simb::MCParticle::SetWeight(double wt)               { fWeight       = wt;         	   }
+inline       void            simb::MCParticle::AddDaughter(int const trackID)     { fdaughters.insert(trackID); 	         }
+inline       void            simb::MCParticle::SetPolarization(TVector3 const& p) { fpolarization = p;          	         }
+inline       void            simb::MCParticle::SetRescatter(int code)             { frescatter    = code;       	         }
+inline       void            simb::MCParticle::SetWeight(double wt)               { fWeight       = wt;         	         }
 
 // definition of the < operator
 inline       bool            simb::MCParticle::operator<( const simb::MCParticle& other ) const { return ftrackId < other.ftrackId;}

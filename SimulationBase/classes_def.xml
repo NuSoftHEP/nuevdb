@@ -10,11 +10,14 @@
 
 <lcgdict>
 
- <class name="std::set<int>"                                                       />  
+ <class name="std::set<int>"                                                    />
+ <class name="std::pair<size_t, unsigned char>"                                 />
+ <class name="std::vector< std::pair<size_t, unsigned char> >"                  />
  <class name="simb::MCParticle"    ClassVersion="18"                  	     	   >
   <version ClassVersion="18" checksum="275984218"/>
  </class>
- <class name="simb::MCTrajectory"  ClassVersion="11"                  	     	   >
+ <class name="simb::MCTrajectory"  ClassVersion="12"                  	     	   >
+  <version ClassVersion="12" checksum="749513453"/>
   <version ClassVersion="11" checksum="1656038010"/>
  </class>
  <class name="simb::MCNeutrino"    ClassVersion="10"                  	     	   >
