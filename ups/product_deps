@@ -18,11 +18,11 @@ bindir      fq_dir      bin
 # note that art -q nu: depends, via root, on geant4 and more
 # this means that we only need to list art, cry, and genie as a dependencies
 product         version
-art             v1_17_08
-genie           v2_10_6a
-geant4          v4_10_1_p03b
-cry             v1_7f
-dk2nu		v01_03_00g
+art             v1_17_07
+genie           v2_10_6
+geant4          v4_10_1_p03
+cry             v1_7e
+dk2nu		v01_03_00c
 ifdhc		v1_8_11
 libwda          v2_22_2
 
@@ -36,9 +36,9 @@ qualifier     art             genie       cry         dk2nu		geant4    libwda  i
 e9:debug      nu:e9:debug     e9:r5:debug e9:debug    e9:r5:debug	e9:debug  -nq-    e9:p2710:debug 
 e9:opt        nu:e9:opt       e9:r5:opt   e9:opt      e9:r5:op		e9:opt    -nq-    e9:p2710:opt   
 e9:prof       nu:e9:prof      e9:r5:prof  e9:prof     e9:r5:prof	e9:prof   -nq-    e9:p2710:prof  
-e10:debug     nu:e10:debug    e10:r5:debug e10:debug  e10:r5:debug	e10:debug -nq-    e10:p2710:debug 
-e10:opt       nu:e10:opt      e10:r5:opt   e10:opt    e10:r5:opt	e10:opt   -nq-    e10:p2710:opt   
-e10:prof      nu:e10:prof     e10:r5:prof  e10:prof   e10:r5:prof	e10:prof  -nq-    e10:p2710:prof  
+e7:debug      nu:e7:debug     e7:r5:debug e7:debug    e7:r5:debug	e7:debug  -nq-    e7:p2710:debug 
+e7:opt        nu:e7:opt       e7:r5:opt   e7:opt      e7:r5:opt		e7:opt    -nq-    e7:p2710:opt   
+e7:prof       nu:e7:prof      e7:r5:prof  e7:prof     e7:r5:prof	e7:prof   -nq-    e7:p2710:prof  
 end_qualifier_list
 
 # Preserve tabs and formatting in emacs and vi / vim:
