@@ -62,42 +62,48 @@ namespace g4b{
     // Setup the magnetic field situation 
     art::ServiceHandle<mag::MagneticField> bField;
     
-    switch (bField->UseField()) {
-    case mag::kNoBFieldMode: 
-      /* NOP */
-      break;
-    case mag::kConstantBFieldMode: {
-      // Attach this to the magnetized volume only, so get that volume
-      G4LogicalVolume *bvol = G4LogicalVolumeStore::GetInstance()->GetVolume(bField->MagnetizedVolume());
+    // loop over the possible fields
+    for(auto fd : bField->Fields()){
+      switch (fd.fMode) {
+        case mag::kNoBFieldMode:
+          /* NOP */
+          break;
+        case mag::kConstantBFieldMode: {
+          // Attach this to the magnetized volume only, so get that volume
+          G4LogicalVolume *bvol = G4LogicalVolumeStore::GetInstance()->GetVolume(fd.fVolume);
+          
+          // Define the basic field, using p we should get the uniform field
+          G4UniformMagField* magField = new G4UniformMagField( fd.fField * CLHEP::tesla );
+          fFieldMgr = new G4FieldManager();
+          fFieldMgr->SetDetectorField(magField);
+          fFieldMgr->CreateChordFinder(magField);
+          
+          LOG_INFO("DetectorConstruction")
+          << "Setting uniform magnetic field to be "
+          << magField->GetConstantFieldValue().x() << " "
+          << magField->GetConstantFieldValue().y() << " "
+          << magField->GetConstantFieldValue().z() << " "
+          << " in " << bvol->GetName();
+          
+          // Reset the chord finding accuracy
+          // fFieldMgr->GetChordFinder()->SetDeltaChord(1.0 * cm);
+          
+          // the boolean tells the field manager to use local volume
+          bvol->SetFieldManager(fFieldMgr, true);
+          
+          break;
+        } // case mag::kConstantBFieldMode
+        default: // Complain if the user asks for something not handled
+          LOG_ERROR("DetectorConstruction")
+          << "Unknown or illegal Magneticfield "
+          << "mode specified: " 
+          << fd.fMode
+          << ". Note that AutomaticBFieldMode is reserved.";
+          break;
+      } // end switch cases
       
-      // Define the basic field, using p we should get the uniform field
-      G4UniformMagField* magField = new G4UniformMagField( bField->UniformFieldInVolume(bField->MagnetizedVolume()) * CLHEP::tesla );
-      fFieldMgr = new G4FieldManager();
-      fFieldMgr->SetDetectorField(magField);
-      fFieldMgr->CreateChordFinder(magField);
-
-      LOG_INFO("DetectorConstruction")
-      << "Setting uniform magnetic field to be "
-      << magField->GetConstantFieldValue().x() << " "
-      << magField->GetConstantFieldValue().y() << " "
-      << magField->GetConstantFieldValue().z() << " "
-      << " in " << bvol->GetName();
-      
-      // Reset the chord finding accuracy
-      // fFieldMgr->GetChordFinder()->SetDeltaChord(1.0 * cm);
-      
-      // the boolean tells the field manager to use local volume
-      bvol->SetFieldManager(fFieldMgr,true);
-
-      break;
-    } // case mag::kConstantBFieldMode
-    default: // Complain if the user asks for something not handled
-      mf::LogError("DetectorConstruction") << "Unknown or illegal Magneticfield "
-					   << "mode specified: " 
-					   << bField->UseField()
-					   << ". Note that AutomaticBFieldMode is reserved.";
-      break;
-    }
+    } // end loop over fields
+    
     return fWorld;
   }
 

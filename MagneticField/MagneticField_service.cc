@@ -32,8 +32,6 @@
 
 namespace mag {
 
-  TGeoVolume* MagneticField::fGeoVol = nullptr;
-  
   MagneticField::MagneticField(fhicl::ParameterSet const& pset, art::ActivityRegistry& reg)
   {
     this->reconfigure(pset);
@@ -42,17 +40,31 @@ namespace mag {
   //------------------------------------------------------------
   void MagneticField::reconfigure(fhicl::ParameterSet const& pset)
   {
-    fVolume      = pset.get<std::string >("MagnetizedVolume");
-    int mode     = pset.get< int        >("UseField"        );
-    fUseField    = (mag::MagFieldMode_t)mode;
+    auto fieldDescriptions = pset.get<std::vector<fhicl::ParameterSet> >("FieldDescriptions");
+    
+    MagneticFieldDescription fieldDescription;
+    for(auto itr : fieldDescriptions){
+      fieldDescription.fMode   = (mag::MagFieldMode_t)(itr.get<int>("UseField"));
+      fieldDescription.fVolume = itr.get<std::string>("MagnetizedVolume");
+      fieldDescription.fGeoVol = gGeoManager->FindVolumeFast(fieldDescription.fVolume.c_str());
 
-    // These need to be read as types that FHICL know about, but they
-    // are used by Geant, so I store them in Geant4 types.
-    std::vector<double> field = pset.get<std::vector<double> >("ConstantField");
+      // check that we have a good volume
+      if( fieldDescription.fGeoVol == nullptr )
+        throw cet::exception("MagneticField")
+        << "cannot locat volume "
+        << fieldDescription.fVolume
+        << " in gGeoManager, bail";
 
-    // Force the dimension of the field definition
-    field.resize(3);
-    for(size_t i = 0; i < 3; ++i) fField[i] = field[i];
+      // These need to be read as types that FHICL know about, but they
+      // are used by Geant, so I store them in Geant4 types.
+      std::vector<double> field = itr.get<std::vector<double> >("ConstantField");
+      
+      // Force the dimension of the field definition
+      field.resize(3);
+      for(size_t i = 0; i < 3; ++i) fieldDescription.fField[i] = field[i];
+      
+      fFieldDescriptions.push_back(fieldDescription);
+    }
     
     return;
   }
@@ -63,18 +75,14 @@ namespace mag {
     // check that the input point is in the magnetized volume
     // Use the gGeoManager to determine what node the point
     // is in
-    if( fGeoVol == nullptr){
-      fGeoVol = gGeoManager->FindVolumeFast(fVolume.c_str());
-      if( fGeoVol == nullptr )
-        throw cet::exception("MagneticField")
-        << "cannot locat volume "
-        << fVolume
-        << " in gGeoManager, bail";
-    }
     double point[3] = { p.x(), p.y(), p.z() };
-    // we found a node, see if its name is the same as
-    // the volume with the field
-    if (fGeoVol->Contains(point)) return fField;
+
+    // loop over the field descriptions to see if the point is in any of them
+    for(auto fd : fFieldDescriptions){
+      // we found a node, see if its name is the same as
+      // the volume with the field
+      if(fd.fGeoVol->Contains(point)) return fd.fField;
+    }
 
     // if we get here, we can't find a field
     return G4ThreeVector(0);
@@ -85,7 +93,10 @@ namespace mag {
   {
     // if the input volume name is the same as the magnetized volume
     // return the uniform field
-    if (volName.compare(fVolume) == 0) return fField;
+    
+    for(auto fd : fFieldDescriptions){
+     if (fd.fVolume.compare(volName) == 0) return fd.fField;
+    }
     
     // if we get here, we can't find a field
     return G4ThreeVector(0);
