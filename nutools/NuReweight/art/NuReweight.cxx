@@ -68,7 +68,8 @@
 namespace rwgt {
 
   ///<constructor
-  NuReweight::NuReweight() {
+  NuReweight::NuReweight()
+  {
     
     //mf::LogVerbatim("GENIEReweight") << "Create GENIEReweight object";
     
@@ -79,35 +80,24 @@ namespace rwgt {
     // Don't delete fWcalc here. The GENIEReweight parent class handles it.
   }
 
-  double NuReweight::CalcWeight(simb::MCTruth truth, simb::GTruth gtruth) {
+  double NuReweight::CalcWeight(const simb::MCTruth & truth, const simb::GTruth & gtruth) const {
     genie::EventRecord evr = this->RetrieveGHEP(truth, gtruth);
     double wgt = this->CalculateWeight(evr);
     //mf::LogVerbatim("GENIEReweight") << "New Event Weight is: " << wgt;
     return wgt;
   }
 
-  genie::EventRecord NuReweight::RetrieveGHEP(simb::MCTruth truth, simb::GTruth gtruth) {
-    
+  genie::EventRecord NuReweight::RetrieveGHEP(const simb::MCTruth & truth, const simb::GTruth & gtruth) const {
     genie::EventRecord newEvent;
     newEvent.SetWeight(gtruth.fweight);
     newEvent.SetProbability(gtruth.fprobability);
     newEvent.SetXSec(gtruth.fXsec);
 #ifndef SETDIFFXSEC_1ARG
-    genie::KinePhaseSpace_t space = genie::kPSNull; // kPSQ2fE; // ????
-    // dsig/dQ2, dsig/dQ2dW, dsig/dxdy ...
-
-    newEvent.SetDiffXSec(gtruth.fDiffXsec,space);
-
-    // TODO:  we don't know currently know what to use ... 
-    // for now just to get things to compile ... Nate needs to look at this
-    static int nmsg = 10;
-    if ( nmsg > 0 ) {
-      std::cerr << "RetrieveGHEP(simb::MCTruth,simb::GTruth) is not correctly setting KinePhaseSpace_t in SetDiffXSec()\n"
-                << "At the time of the conversion to R-2_8_0 (2013-05-01) this is not critical\n"
-                << "But it should be fixed" << std::endl;
-      --nmsg;
-      if ( nmsg == 0 ) std::cerr << "... last of such messages" << std::endl;
-    }
+    // this argument is used only for bookkeeping purposes in a GHepRecord.
+    // since we're making a GHepRecord that will be thrown away
+    // as soon as we're done getting the weights for it,
+    // it doesn't matter what we put here.
+    genie::KinePhaseSpace_t space = genie::kPSNull;
 
 #else
     newEvent.SetDiffXSec(gtruth.fDiffXsec);
