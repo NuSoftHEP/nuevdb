@@ -98,7 +98,7 @@ namespace rwgt {
     // as soon as we're done getting the weights for it,
     // it doesn't matter what we put here.
     genie::KinePhaseSpace_t space = genie::kPSNull;
-
+    newEvent.SetDiffXSec(gtruth.fDiffXsec,space);
 #else
     newEvent.SetDiffXSec(gtruth.fDiffXsec);
 #endif
