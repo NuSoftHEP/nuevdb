@@ -817,7 +817,7 @@ namespace rwgt {
 
   ///<Calculate the weights
   //double GENIEReweight::CalcWeight(simb::MCTruth truth, simb::GTruth gtruth) {
-  double GENIEReweight::CalculateWeight(const genie::EventRecord& evr) {
+  double GENIEReweight::CalculateWeight(const genie::EventRecord& evr) const {
     //genie::EventRecord evr = this->RetrieveGHEP(truth, gtruth);
     double wgt = fWcalc->CalcWeight(evr);
     //mf::LogVerbatim("GENIEReweight") << "New Event Weight is: " << wgt;
