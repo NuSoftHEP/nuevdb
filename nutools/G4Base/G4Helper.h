@@ -51,8 +51,8 @@ namespace g4b {
     /// Standard constructor and destructor for an FMWK module.
     G4Helper();
     G4Helper(std::string const& g4macropath, 
-	     std::string const& g4physicslist = "QGSP_BERT",
-	     std::string const& gdmlFile = "");
+             std::string const& g4physicslist = "QGSP_BERT",
+             std::string const& gdmlFile = "");
     virtual ~G4Helper();
 
     // have to call this before InitMC if you want to load in 
@@ -100,25 +100,25 @@ namespace g4b {
     // These variables are "protected" rather than private, because I
     // can forsee that it may be desirable to derive other simulation
     // routines from this one.
-    std::string                        fG4MacroPath;    ///< Full directory path for Geant4 macro file 	 
-                          	                        ///< to be executed before main MC processing.	 
-    std::string           	       fG4PhysListName; ///< Name of physics list to use	
-    std::string                        fGDMLFile;       ///< Name of the gdml file containing the detector Geometry
-    bool                               fCheckOverlaps;  ///< Have G4GDML check for overlaps?
+    std::string                        fG4MacroPath;        ///< Full directory path for Geant4 macro file
+                          	                                ///< to be executed before main MC processing.
+    std::string           	           fG4PhysListName;     ///< Name of physics list to use
+    std::string                        fGDMLFile;           ///< Name of the gdml file containing the detector Geometry
+    bool                               fCheckOverlaps;      ///< Have G4GDML check for overlaps?
     bool                               fValidateGDMLSchema; ///< Have G4GDML validate geometry schema?
 
-    G4RunManager*         	       fRunManager;     ///< Geant4's run manager.		        
-    G4UImanager*          	       fUIManager;      ///< Geant4's user-interface manager.		
-    ConvertMCTruthToG4*   	       fConvertMCTruth; ///< Converts MCTruth objects; 
-                                                        ///< Geant4 event generator.
-    DetectorConstruction* 	       fDetector;       ///< DetectorConstruction object   
-    std::vector<G4VUserParallelWorld*> fParallelWorlds; ///< list of parallel worlds
+    G4RunManager*         	           fRunManager;         ///< Geant4's run manager.
+    G4UImanager*          	           fUIManager;          ///< Geant4's user-interface manager.
+    ConvertMCTruthToG4*   	           fConvertMCTruth;     ///< Converts MCTruth objects;
+                                                            ///< Geant4 event generator.
+    DetectorConstruction* 	           fDetector;           ///< DetectorConstruction object
+    std::vector<G4VUserParallelWorld*> fParallelWorlds;     ///< list of parallel worlds
   };
 
 } // namespace g4b
 
 #ifndef __GCCXML__
-inline void g4b::G4Helper::SetOverlapCheck(bool check) { fCheckOverlaps = check; }
+inline void g4b::G4Helper::SetOverlapCheck(bool check)          { fCheckOverlaps      = check;    }
 inline void g4b::G4Helper::SetValidateGDMLSchema(bool validate) { fValidateGDMLSchema = validate; }
 #endif
 

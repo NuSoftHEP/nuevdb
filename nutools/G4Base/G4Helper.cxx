@@ -45,6 +45,8 @@
 
 namespace g4b{
 
+  static G4VisExecutive* vm_ = 0;
+  
   //------------------------------------------------
   // Constructor
   G4Helper::G4Helper()
@@ -55,8 +57,8 @@ namespace g4b{
   //------------------------------------------------
   // Constructor
   G4Helper::G4Helper(std::string const& g4macropath, 
-		     std::string const& g4physicslist,
-		     std::string const& gdmlFile) 
+                     std::string const& g4physicslist,
+                     std::string const& gdmlFile)
     : fG4MacroPath(g4macropath)
     , fG4PhysListName(g4physicslist)
     , fGDMLFile(gdmlFile)
@@ -80,6 +82,8 @@ namespace g4b{
   // Destructor
   G4Helper::~G4Helper() 
   {
+    if( vm_ ) delete vm_;
+    
     if ( fRunManager != 0 ){
       // In SetUserAction(), we set all the G4 user-action classes to be the
       // same action: G4Base::UserActionManager This is convenient, but
@@ -113,9 +117,9 @@ namespace g4b{
       delete fRunManager;
     }
     else{
-      std::cerr << "ERROR: " << __FILE__ << ": line " << __LINE__ 
-		<< ": G4Helper never initialized; probably because there were no input primary events"
-		<< std::endl;
+      std::cerr << "ERROR: " << __FILE__ << ": line " << __LINE__
+      << ": G4Helper never initialized; probably because there were no input primary events"
+      << std::endl;
     }
 
     for(size_t i = 0; i < fParallelWorlds.size(); ++i){
@@ -197,42 +201,43 @@ namespace g4b{
 #endif
 
       if ( ! physics ) {
-	if ( factory.IsReferencePhysList(phListName) ) {
-	  bywhom  = factoryname;
-	  physics = factory.GetReferencePhysList(phListName);
-	} else {
-	  // in the case of non-default name
-	  if ( phListName != "" ) {
-	    std::cerr << std::endl << factoryname 
-                      << " failed to find ReferencePhysList \"" 
-                      << phListName << "\"" << std::endl;                      
+        if ( factory.IsReferencePhysList(phListName) ) {
+          bywhom  = factoryname;
+          physics = factory.GetReferencePhysList(phListName);
+        }
+        else {
+          // in the case of non-default name
+          if ( phListName != "" ) {
+            std::cerr << std::endl << factoryname
+            << " failed to find ReferencePhysList \""
+            << phListName << "\"" << std::endl;
 #ifdef TRY_NEW_PL_FACTORY
             factory.PrintAvailablePhysLists();
 #else
-	    std::vector<G4String> list = factory.AvailablePhysLists();
-	    std::cout << "For reference: PhysicsLists in G4PhysListFactory are: " 
-		      << std::endl;
-	    for (size_t indx=0; indx < list.size(); ++indx ) {
-	      std::cout << " [" << std::setw(2) << indx << "] " 
-			<< "\"" << list[indx] << "\"" << std::endl;
-	    }
+            std::vector<G4String> list = factory.AvailablePhysLists();
+            std::cout << "For reference: PhysicsLists in G4PhysListFactory are: "
+            << std::endl;
+            for (size_t indx=0; indx < list.size(); ++indx ) {
+              std::cout << " [" << std::setw(2) << indx << "] "
+              << "\"" << list[indx] << "\"" << std::endl;
+            }
 #endif
-	  }
-	} // query factory
+          }
+        } // query factory
       }  // no predetermined user list
 
       if ( ! physics ) {
-	std::cerr << "G4PhysListFactory could not construct \""
-		  << phListName << "\"," << std::endl 
-                  << "fall back to using QGSP_BERT"
-		  << std::endl;
-	physics = new QGSP_BERT;
+        std::cerr << "G4PhysListFactory could not construct \""
+        << phListName << "\"," << std::endl
+        << "fall back to using QGSP_BERT"
+        << std::endl;
+        physics = new QGSP_BERT;
         phListName = "QGSP_BERT";
-      
+        
       } else {
-	std::cout << bywhom << " constructed G4VUserPhysicsList \""
-		  << phListName << "\""
-		  << std::endl;
+        std::cout << bywhom << " constructed G4VUserPhysicsList \""
+        << phListName << "\""
+        << std::endl;
       }
 
     }
@@ -387,6 +392,13 @@ namespace g4b{
       fRunManager->SetUserAction( stackingAction );
     }
 
+    /// Tell Geant4 to initialize the run manager.  We're ready to
+    /// simulate events in the detector.
+    fRunManager->Initialize();
+
+    if(!vm_) vm_ = new G4VisExecutive();
+    vm_->Initialize();
+
     // Tell the manager to execute the contents of the Geant4 macro
     // file.
     if ( ! fG4MacroPath.empty() ) {
@@ -394,9 +406,6 @@ namespace g4b{
       fUIManager->ApplyCommand(command);
     }
  
-    /// Tell Geant4 to initialize the run manager.  We're ready to
-    /// simulate events in the detector.
-    fRunManager->Initialize();
 
     return;
   }
