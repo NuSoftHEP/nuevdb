@@ -2,6 +2,14 @@ use strict;
 
 use vars qw(%dir_list);
 BEGIN { %dir_list = (
+        "art_Persistency_Common" => "art_Persistency_Common canvas_Persistency_Common",
+        "art_Persistency_Provenance" => "art_Persistency_Provenance canvas_Persistency_Provenance",
+        "art_Persistency_Common_dict" => "canvas_Persistency_Common_dict",
+        "art_Persistency_StdDictionaries" => "canvas_Persistency_StdDictionaries",
+        "art_Persistency_StdDictionaries_dict" => "canvas_Persistency_StdDictionaries_dict",
+        "art_Persistency_WrappedStdDictionaries" => "canvas_Persistency_WrappedStdDictionaries",
+        "art_Persistency_WrappedStdDictionaries_dict" => "canvas_Persistency_WrappedStdDictionaries_dict",
+        "art_Utilities" => "art_Utilities canvas_Utilities",
 	"Colors_service" => "nutools_EventDisplayBase_Colors_service",
 	"DBI_service" => "nutools_IFDatabase_DBI_service",
 	"EventDisplayBase" => "nutools_EventDisplayBase",
