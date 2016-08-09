@@ -1,0 +1,10 @@
+# This script must be sourced
+# This script allows users NOT using mrb or cetbuildtools to find checkClassVersion
+
+if [ -z ${UPS_DIR} ]
+then
+   echo "ERROR: please setup ups"
+   exit 1
+fi
+
+source `${UPS_DIR}/bin/ups setup cetbuildtools @CETBUILDTOOLS_VERSION@`
