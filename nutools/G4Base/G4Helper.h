@@ -34,7 +34,7 @@
 class G4UImanager;
 
 namespace simb{ class MCTruth;      }
-namespace sim { class ParticleList; }
+namespace rndm { class ParticleList; }
 
 ///basic interface to Geant4 for ART-based software
 namespace g4b {  
