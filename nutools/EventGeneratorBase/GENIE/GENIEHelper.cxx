@@ -43,10 +43,18 @@
 #include "FluxDrivers/GMonoEnergeticFlux.h"
 #include "FluxDrivers/GNuMIFlux.h"
 #include "FluxDrivers/GSimpleNtpFlux.h"
-#include "FluxDrivers/GBartolAtmoFlux.h"  //for atmo nu generation
-#include "FluxDrivers/GFlukaAtmo3DFlux.h" //for atmo nu generation
+#if __GENIE_RELEASE_CODE__ >= GRELCODE(2,11,0)
+  #include "FluxDrivers/GBGLRSAtmoFlux.h"  //for atmo nu generation
+  #include "FluxDrivers/GFLUKAAtmoFlux.h"  //for atmo nu generation
+#else
+  #include "FluxDrivers/GBartolAtmoFlux.h"  //for atmo nu generation
+  #include "FluxDrivers/GFlukaAtmo3DFlux.h" //for atmo nu generation
+#endif
 #include "FluxDrivers/GAtmoFlux.h"        //for atmo nu generation
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wunused-variable"
 #include "Conventions/Constants.h" //for calculating event kinematics
+#pragma GCC diagnostic pop
 #ifndef GENIE_USE_ENVVAR
 #include "Utils/AppInit.h"
 #include "Utils/RunOpt.h"
@@ -281,8 +289,9 @@ namespace evgb {
         mf::LogInfo("GENIEHelper") << "The sims are from FLUKA";
       }
       
-      else if (fFluxType.compare("atmo_BARTOL") == 0 ){
-        mf::LogInfo("GENIEHelper") << "The sims are from BARTOL";
+      else if (fFluxType.compare("atmo_BARTOL") == 0 ||
+               fFluxType.compare("atmo_BGLRS")  == 0    ){
+        mf::LogInfo("GENIEHelper") << "The sims are from BARTOL/BGLRS";
       }      
       else {
         mf::LogInfo("GENIEHelper") << "Uknonwn flux simulation: " << fFluxType;
@@ -937,17 +946,32 @@ namespace evgb {
 
 
     //Using the atmospheric fluxes
-    else if(fFluxType.compare("atmo_FLUKA") == 0 || fFluxType.compare("atmo_BARTOL") == 0){
+    else if (fFluxType.compare("atmo_FLUKA")  == 0 || 
+             fFluxType.compare("atmo_BARTOL") == 0 || 
+             fFluxType.compare("atmo_BGLRS")  == 0    ){
 
       // Instantiate appropriate concrete flux driver
       genie::flux::GAtmoFlux *atmo_flux_driver = 0;
       
-      if(fFluxType.compare("atmo_FLUKA") == 0) {
-        genie::flux::GFlukaAtmo3DFlux * fluka_flux = new genie::flux::GFlukaAtmo3DFlux;
+      if (fFluxType.compare("atmo_FLUKA") == 0) {
+#if __GENIE_RELEASE_CODE__ >= GRELCODE(2,11,0)
+        genie::flux::GFLUKAAtmoFlux * fluka_flux = 
+          new genie::flux::GFLUKAAtmoFlux;
+#else
+        genie::flux::GFlukaAtmo3DFlux * fluka_flux = 
+          new genie::flux::GFlukaAtmo3DFlux;
+#endif
         atmo_flux_driver = dynamic_cast<genie::flux::GAtmoFlux *>(fluka_flux);
       }
-      if(fFluxType.compare("atmo_BARTOL") == 0) {
-        genie::flux::GBartolAtmoFlux * bartol_flux = new genie::flux::GBartolAtmoFlux;
+      if (fFluxType.compare("atmo_BARTOL") == 0 ||
+          fFluxType.compare("atmo_BGLRS")  == 0    ) {
+#if __GENIE_RELEASE_CODE__ >= GRELCODE(2,11,0)
+        genie::flux::GBGLRSAtmoFlux * bartol_flux = 
+          new genie::flux::GBGLRSAtmoFlux;
+#else
+        genie::flux::GBartolAtmoFlux * bartol_flux = 
+          new genie::flux::GBartolAtmoFlux;
+#endif
         atmo_flux_driver = dynamic_cast<genie::flux::GAtmoFlux *>(bartol_flux);
       } 
       
@@ -960,7 +984,7 @@ namespace evgb {
       for ( size_t j = 0; j < fGenFlavors.size(); ++j ) {
         int         flavor  = fGenFlavors[j];
         std::string flxfile = fSelectedFluxFiles[j];
-        atmo_flux_driver->SetFluxFile(flavor,flxfile);
+        atmo_flux_driver->AddFluxFile(flavor,flxfile);
         atmoCfgText << "\n  FLAVOR: " << std::setw(3) << flavor 
                     << "  FLUX FILE: " <<  flxfile;      
       }
