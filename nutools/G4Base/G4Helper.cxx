@@ -16,11 +16,14 @@
 #include "Geant4/G4VUserDetectorConstruction.hh"
 #include "Geant4/G4VUserPrimaryGeneratorAction.hh"
 #include "Geant4/G4VUserPhysicsList.hh"
+#include "Geant4/G4UserLimits.hh"
 #include "Geant4/G4UserRunAction.hh"
 #include "Geant4/G4UserEventAction.hh"
 #include "Geant4/G4UserTrackingAction.hh"
 #include "Geant4/G4UserSteppingAction.hh"
 #include "Geant4/G4VisExecutive.hh"
+#include "Geant4/G4StepLimiterPhysics.hh"
+#include "Geant4/G4LogicalVolumeStore.hh"
 
 #include <boost/algorithm/string.hpp>
 
@@ -59,14 +62,15 @@ namespace g4b{
   G4Helper::G4Helper(std::string const& g4macropath, 
                      std::string const& g4physicslist,
                      std::string const& gdmlFile)
-    : fG4MacroPath(g4macropath)
-    , fG4PhysListName(g4physicslist)
-    , fGDMLFile(gdmlFile)
-    , fCheckOverlaps(false)
-    , fValidateGDMLSchema(true)
-    , fUIManager(0)
-    , fConvertMCTruth(0)
-    , fDetector(0)
+  : fG4MacroPath(g4macropath)
+  , fG4PhysListName(g4physicslist)
+  , fGDMLFile(gdmlFile)
+  , fCheckOverlaps(false)
+  , fValidateGDMLSchema(true)
+  , fUseStepLimits(false)
+  , fUIManager(0)
+  , fConvertMCTruth(0)
+  , fDetector(0)
   {
     // Geant4 run manager.  Nothing happens in Geant4 until this object
     // is created.
@@ -117,9 +121,8 @@ namespace g4b{
       delete fRunManager;
     }
     else{
-      std::cerr << "ERROR: " << __FILE__ << ": line " << __LINE__
-      << ": G4Helper never initialized; probably because there were no input primary events"
-      << std::endl;
+      LOG_ERROR("G4Helper")
+      << "G4Helper never initialized; probably because there were no input primary events";
     }
 
     for(size_t i = 0; i < fParallelWorlds.size(); ++i){
@@ -215,11 +218,12 @@ namespace g4b{
             factory.PrintAvailablePhysLists();
 #else
             std::vector<G4String> list = factory.AvailablePhysLists();
-            std::cout << "For reference: PhysicsLists in G4PhysListFactory are: "
-            << std::endl;
+            LOG_VERBATIM("G4Helper")
+            << "For reference: PhysicsLists in G4PhysListFactory are: ";
             for (size_t indx=0; indx < list.size(); ++indx ) {
-              std::cout << " [" << std::setw(2) << indx << "] "
-              << "\"" << list[indx] << "\"" << std::endl;
+              LOG_VERBATIM("G4Helper")
+              << " [" << std::setw(2) << indx << "] "
+              << "\"" << list[indx] << "\"";
             }
 #endif
           }
@@ -227,17 +231,22 @@ namespace g4b{
       }  // no predetermined user list
 
       if ( ! physics ) {
-        std::cerr << "G4PhysListFactory could not construct \""
-        << phListName << "\"," << std::endl
-        << "fall back to using QGSP_BERT"
-        << std::endl;
+        LOG_ERROR("G4Helper")
+        << "G4PhysListFactory could not construct \""
+        << phListName
+        << "\","
+        << std::endl
+        << "fall back to using QGSP_BERT";
+
         physics = new QGSP_BERT;
         phListName = "QGSP_BERT";
         
       } else {
-        std::cout << bywhom << " constructed G4VUserPhysicsList \""
-        << phListName << "\""
-        << std::endl;
+        LOG_VERBATIM("G4Helper")
+        << bywhom
+        << " constructed G4VUserPhysicsList \""
+        << phListName
+        << "\"";
       }
 
     }
@@ -265,36 +274,47 @@ namespace g4b{
         G4PhysicsProcessFactorySingleton::Instance();
 
       if ( ! procFactory.IsKnownPhysicsProcess(physProcName) ) {
-        std::cout << "G4PhysicsProcessFactorySingleton could not "
-                  << "construct a \"" << physProcName << "\"" << std::endl;
+        LOG_VERBATIM("G4Helper")
+        << "G4PhysicsProcessFactorySingleton could not "
+        << "construct a \""
+        << physProcName
+        << "\"";
+        
         if ( ! list_known_procs ) continue;
         list_known_procs = false;
         std::vector<G4String> list = procFactory.AvailablePhysicsProcesses();
-        std::cout << "For reference: PhysicsProcesses in "
-                  << "G4PhysicsProcessFactorySingleton are: " 
-                  << std::endl;
-        if ( list.empty() ) std::cout << " ... no registered processes" << std::endl;
+        LOG_VERBATIM("G4Helper")
+        << "For reference: PhysicsProcesses in "
+        << "G4PhysicsProcessFactorySingleton are: ";
+        
+        if ( list.empty() )
+          LOG_VERBATIM("G4Helper")
+          << " ... no registered processes";
         else {
           for (size_t indx=0; indx < list.size(); ++indx ) {
-            std::cout << " [" << std::setw(2) << indx << "] " 
-                      << "\"" << list[indx] << "\"" << std::endl;
+            LOG_VERBATIM("G4Helper")
+            << " [" << std::setw(2) << indx << "] "
+            << "\"" << list[indx] << "\"";
           }
         }
         continue;
       }
 
-      std::cout << "Adding \"" << physProcName 
-                << "\" physics process to \"" << phListName << "\"" 
-                << std::endl;
+      LOG_VERBATIM("G4Helper")
+      << "Adding \""
+      << physProcName
+      << "\" physics process to \""
+      << phListName
+      << "\"";
 
       // construct physics process, add it to the base physics list
       G4VPhysicsConstructor* pctor = procFactory.GetPhysicsProcess(physProcName);
 
 
       G4VModularPhysicsList* mpl = dynamic_cast<G4VModularPhysicsList*>(physics);
-      if      ( ! pctor ) std::cout << " ... failed with null pointer" << std::endl;
-      else if ( ! mpl )   std::cout << " ... failed, physics list wasn't a G4VModularPhysicsList" << std::endl;
-      else mpl->RegisterPhysics(pctor);
+      if      ( ! pctor ) LOG_VERBATIM("G4Helper") << " ... failed with null pointer";
+      else if ( ! mpl )   LOG_VERBATIM("G4Helper") << " ... failed, physics list wasn't a G4VModularPhysicsList";
+      else                mpl->RegisterPhysics(pctor);
 
       // Handle associated UI commands
       // One must do it here for cases where values need to be set *before*
@@ -302,11 +322,21 @@ namespace g4b{
 
       for ( unsigned int i=1; i < physProcParts.size(); ++i ) {
         if ( physProcParts[i] == "" ) continue;
-        std::cout // << " apply UI command: " 
-                  << physProcParts[i] << std::endl;
+        LOG_VERBATIM("G4Helper")
+        << physProcParts[i];
+        
         fUIManager->ApplyCommand(physProcParts[i]);
       }
 
+    }
+
+    if(fUseStepLimits){
+      auto mpl = dynamic_cast<G4VModularPhysicsList*>(physics);
+      if(mpl) mpl->RegisterPhysics(new G4StepLimiterPhysics());
+      else
+        LOG_WARNING("G4Helper")
+        << "Step limits requested, but unable to register G4StepLimiterPhysics"
+        << "\n NO STEP LIMITS WILL BE APPLIED";
     }
 
     // pass off (possibly augmented) physics list to run manager
@@ -340,13 +370,40 @@ namespace g4b{
   }
 
   //------------------------------------------------
+  void G4Helper::SetVolumeStepLimit(std::string const& volumeName,
+                                    double             maxStepSize)
+  {
+    // find the volume corresponding to the given name
+    G4VPhysicalVolume *physVol = nullptr;
+    
+    if(physVol){
+      G4LogicalVolume* logVol = G4LogicalVolumeStore::GetInstance()->GetVolume(volumeName);
+      
+      // the logical volume takes ownership of the G4UserLimits pointer
+      G4UserLimits *stepLimit = new G4UserLimits(maxStepSize);
+      logVol->SetUserLimits(stepLimit);
+
+      fUseStepLimits = true;
+    }
+    else{
+      LOG_WARNING("G4Helper")
+      << "Unable to find volume "
+      << volumeName
+      << " and set step size limit";
+    }
+    
+    return;
+  }
+
+  
+  //------------------------------------------------
   /// Initialization for the Geant4 Monte Carlo.
   void G4Helper::InitPhysics() 
   {
     if(!fDetector) this->ConstructDetector(fGDMLFile);
 
-    for(size_t i = 0; i < fParallelWorlds.size(); ++i)
-      fDetector->RegisterParallelWorld( fParallelWorlds[i] );
+    for(auto pWorld : fParallelWorlds)
+      fDetector->RegisterParallelWorld(pWorld);
 
     // define the physics list to use
     this->SetPhysicsList(fG4PhysListName);
@@ -359,6 +416,8 @@ namespace g4b{
     // converting MCTruth objects from the input into G4Events.
     fConvertMCTruth = new ConvertMCTruthToG4;
     fRunManager->SetUserAction(fConvertMCTruth);
+    
+    return;
   }
 
 

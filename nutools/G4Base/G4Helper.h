@@ -55,15 +55,21 @@ namespace g4b {
              std::string const& gdmlFile = "");
     virtual ~G4Helper();
 
-    // have to call this before InitMC if you want to load in 
+    // have to call this before InitPhysics if you want to load in
     // parallel worlds.  G4Helper takes over ownership
     void SetParallelWorlds(std::vector<G4VUserParallelWorld*> pworlds);
 
+    // Call this method to set a step size limit in the chosen volume
+    // It must be called before InitPhysics (which calls SetPhysicsList)
+    // so that the physics list will know to register a step limiter
+    void SetVolumeStepLimit(std::string const& volumeName,
+                            double             maxStepSize);
+    
     // extra control over how GDML is parsed
     inline void SetOverlapCheck(bool check);
     inline void SetValidateGDMLSchema(bool validate);
 
-    // have to call this before InitMC if you want to control
+    // have to call this before InitPhysics if you want to control
     // when the detector is constructed, useful if you need to 
     // muck with G4LogicalVolumes
     // if the fDetector pointer is null when InitMC is called
@@ -106,6 +112,7 @@ namespace g4b {
     std::string                        fGDMLFile;           ///< Name of the gdml file containing the detector Geometry
     bool                               fCheckOverlaps;      ///< Have G4GDML check for overlaps?
     bool                               fValidateGDMLSchema; ///< Have G4GDML validate geometry schema?
+    bool                               fUseStepLimits;      ///< Set in SetVolumeStepLimit
 
     G4RunManager*         	           fRunManager;         ///< Geant4's run manager.
     G4UImanager*          	           fUIManager;          ///< Geant4's user-interface manager.
