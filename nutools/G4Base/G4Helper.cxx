@@ -384,7 +384,7 @@ namespace g4b{
     // get the logical volume for the desired volume name
     G4LogicalVolume* logVol = G4LogicalVolumeStore::GetInstance()->GetVolume(volumeName);
 
-    if(logVol)
+    if(logVol){
       // the logical volume takes ownership of the G4UserLimits pointer
       G4UserLimits *stepLimit = new G4UserLimits(maxStepSize);
       logVol->SetUserLimits(stepLimit);
