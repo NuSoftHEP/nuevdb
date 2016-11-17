@@ -373,12 +373,10 @@ namespace g4b{
   void G4Helper::SetVolumeStepLimit(std::string const& volumeName,
                                     double             maxStepSize)
   {
-    // find the volume corresponding to the given name
-    G4VPhysicalVolume *physVol = nullptr;
-    
-    if(physVol){
-      G4LogicalVolume* logVol = G4LogicalVolumeStore::GetInstance()->GetVolume(volumeName);
-      
+    // get the logical volume for the desired volume name
+    G4LogicalVolume* logVol = G4LogicalVolumeStore::GetInstance()->GetVolume(volumeName);
+
+    if(logVol)
       // the logical volume takes ownership of the G4UserLimits pointer
       G4UserLimits *stepLimit = new G4UserLimits(maxStepSize);
       logVol->SetUserLimits(stepLimit);
