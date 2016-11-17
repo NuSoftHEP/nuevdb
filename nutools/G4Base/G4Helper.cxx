@@ -53,6 +53,12 @@ namespace g4b{
   //------------------------------------------------
   // Constructor
   G4Helper::G4Helper()
+  : fCheckOverlaps     (false  )
+  , fValidateGDMLSchema(false  )
+  , fUseStepLimits     (false  )
+  , fUIManager         (nullptr)
+  , fConvertMCTruth    (nullptr)
+  , fDetector          (nullptr)
   {
     fParallelWorlds.clear();
   }
@@ -62,15 +68,15 @@ namespace g4b{
   G4Helper::G4Helper(std::string const& g4macropath, 
                      std::string const& g4physicslist,
                      std::string const& gdmlFile)
-  : fG4MacroPath(g4macropath)
-  , fG4PhysListName(g4physicslist)
-  , fGDMLFile(gdmlFile)
-  , fCheckOverlaps(false)
-  , fValidateGDMLSchema(true)
-  , fUseStepLimits(false)
-  , fUIManager(0)
-  , fConvertMCTruth(0)
-  , fDetector(0)
+  : fG4MacroPath       (g4macropath  )
+  , fG4PhysListName    (g4physicslist)
+  , fGDMLFile          (gdmlFile     )
+  , fCheckOverlaps     (false        )
+  , fValidateGDMLSchema(true         )
+  , fUseStepLimits     (false        )
+  , fUIManager         (nullptr      )
+  , fConvertMCTruth    (nullptr      )
+  , fDetector          (nullptr      )
   {
     // Geant4 run manager.  Nothing happens in Geant4 until this object
     // is created.
@@ -330,6 +336,8 @@ namespace g4b{
 
     }
 
+    // User should have called SetVolumeStepLimit before calling this
+    // method, otherwise fUseStepLimits is always false.
     if(fUseStepLimits){
       auto mpl = dynamic_cast<G4VModularPhysicsList*>(physics);
       if(mpl) mpl->RegisterPhysics(new G4StepLimiterPhysics());
