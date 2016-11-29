@@ -90,6 +90,7 @@ namespace rwgt {
         fReweightFGM(false),
         fReweightFZone(false),
         fReweightINuke(false),
+        fReweightZexp(false),
         fReweightMEC(false),
         fMaQEshape(false),
         fMaCCResShape(false),
@@ -422,13 +423,23 @@ namespace rwgt {
           fReweightResDecay = true;
           break;
 
+        //Z-expansion parameters
+        case rwgt::fReweightZNormCCQE:
+        case rwgt::fReweightZExpA1CCQE:
+        case rwgt::fReweightZExpA2CCQE:
+        case rwgt::fReweightZExpA3CCQE:
+        case rwgt::fReweightZExpA4CCQE:
+        case rwgt::fReweightAxFFCCQEshape:
+          fReweightZexp = true;
+          break;
+
       }  // switch(fReWgtParameterName[i])
       
     } //end for loop
 
     //configure the individual weight calculators
     if(fReweightNCEL) this->ConfigureNCEL();
-    if(fReweightQEMA) this->ConfigureQEMA();
+    if(fReweightQEMA || fReweightZexp) this->ConfigureQEMA();
     if(fReweightQEVec) this->ConfigureQEVec();
     if(fReweightCCRes) this->ConfigureCCRes();
     if(fReweightNCRes) this->ConfigureNCRes();
@@ -481,7 +492,18 @@ namespace rwgt {
     this->AddReweightValue(rwgt::fReweightVecCCQEshape, mv);
     this->Configure();
   }
-  
+
+  void GENIEReweight::ReweightQEZExp(double norm, double a1, double a2, double a3, double a4)
+  {
+    LOG_INFO("GENIEReweight") << "Configuring GENIEReweight for Z-expansion QE Reweighting";
+    this->AddReweightValue(rwgt::fReweightZNormCCQE, norm);
+    this->AddReweightValue(rwgt::fReweightZExpA1CCQE, a1);
+    this->AddReweightValue(rwgt::fReweightZExpA2CCQE, a2);
+    this->AddReweightValue(rwgt::fReweightZExpA3CCQE, a3);
+    this->AddReweightValue(rwgt::fReweightZExpA4CCQE, a4);
+    this->Configure();
+  }
+
   ///<Simple Configuration of the CC Resonance weight calculator
   void GENIEReweight::ReweightCCRes(double ma, double mv) {
     LOG_INFO("GENIEReweight") << "Configuring GENIEReweight for CC Resonance Reweighting";
@@ -668,21 +690,26 @@ namespace rwgt {
   }
 
   ///<End of Simple Reweight Configurations.
-  
+
   ///<Private Member functions to configure individual weight calculators.
   ///<Configure the NCEL weight calculator
   void GENIEReweight::ConfigureNCEL() {
     LOG_INFO("GENIEReweight") << "Adding NC elastic weight calculator";
     fWcalc->AdoptWghtCalc( "xsec_ncel",       new GReWeightNuXSecNCEL      );
   }
-  
+
   ///<Configure the MaQE weight calculator
   void GENIEReweight::ConfigureQEMA() {
-    LOG_INFO("GENIEReweight") << "Adding CCQE axial FF weight calculator";
+    LOG_INFO("GENIEReweight") << "Adding CCQE axial FF weight calculator ";
     fWcalc->AdoptWghtCalc( "xsec_ccqe",       new GReWeightNuXSecCCQE      );
-    if(!fMaQEshape) {
+    GReWeightNuXSecCCQE *rwccqe = dynamic_cast <GReWeightNuXSecCCQE*> (fWcalc->WghtCalc("xsec_ccqe"));
+    if (fReweightZexp)
+    {
+      LOG_INFO("GENIEReweight") << "in z-expansion mode";
+      rwccqe->SetMode(GReWeightNuXSecCCQE::kModeZExp);
+    }
+    else if(!fMaQEshape) {
       LOG_INFO("GENIEReweight") << "in axial mass (QE) rate+shape mode";
-      GReWeightNuXSecCCQE *rwccqe = dynamic_cast <GReWeightNuXSecCCQE*> (fWcalc->WghtCalc("xsec_ccqe"));
       rwccqe->SetMode(GReWeightNuXSecCCQE::kModeMa);
     }
     else {
@@ -690,7 +717,7 @@ namespace rwgt {
     }
   }
 
-  ///<Configure the QE vector FF weightcalculator
+  ///<Configure the QE vector FF weight calculator
   void GENIEReweight::ConfigureQEVec() {
     LOG_INFO("GENIEReweight") << "Adding CCQE vector FF weight calculator";
     fWcalc->AdoptWghtCalc( "xsec_ccqe_vec",   new GReWeightNuXSecCCQEvec   );

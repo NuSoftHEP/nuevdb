@@ -125,6 +125,17 @@ namespace rwgt {
     fReweightBR1eta = genie::rew::kRDcyTwkDial_BR1eta,                   ///< tweak Resonance -> X + eta   branching ratio, eg N+(1440) -> p eta
     fReweightTheta_Delta2Npi = genie::rew::kRDcyTwkDial_Theta_Delta2Npi,  ///< distort pi angular distribution in Delta -> N + pi
 
+    //
+    // Alternative approach to CCQE form factors (z-expansion)
+    //
+
+    fReweightZNormCCQE = genie::rew::kXSecTwkDial_ZNormCCQE,         ///< tweak Z-expansion CCQE normalization (energy independent)
+    fReweightZExpA1CCQE = genie::rew::kXSecTwkDial_ZExpA1CCQE,       ///< tweak Z-expansion coefficient 1, affects dsigma(CCQE)/dQ2 both in shape and normalization
+    fReweightZExpA2CCQE = genie::rew::kXSecTwkDial_ZExpA2CCQE,       ///< tweak Z-expansion coefficient 2, affects dsigma(CCQE)/dQ2 both in shape and normalization
+    fReweightZExpA3CCQE = genie::rew::kXSecTwkDial_ZExpA3CCQE,       ///< tweak Z-expansion coefficient 3, affects dsigma(CCQE)/dQ2 both in shape and normalization
+    fReweightZExpA4CCQE = genie::rew::kXSecTwkDial_ZExpA4CCQE,       ///< tweak Z-expansion coefficient 4, affects dsigma(CCQE)/dQ2 both in shape and normalization
+    fReweightAxFFCCQEshape = genie::rew::kXSecTwkDial_AxFFCCQEshape  ///< tweak axial nucleon form factors (dipole -> z-expansion) - shape only effect of dsigma(CCQE)/dQ2
+
   } ReweightLabel_t;
 
 } // end rwgt namespace

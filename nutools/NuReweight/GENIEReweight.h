@@ -47,6 +47,7 @@ namespace rwgt{
 
     void ReweightQEMA(double ma);
     void ReweightQEVec(double mv);
+    void ReweightQEZExp(double norm, double a1, double a2, double a3, double a4);
 
     void ReweightResGanged(double ma, double mv=0.0);
     void ReweightCCRes(double ma, double mv=0.0);
@@ -130,7 +131,8 @@ namespace rwgt{
     bool fReweightDISNucMod;
     bool fReweightFGM;
     bool fReweightFZone;
-    bool fReweightINuke; 
+    bool fReweightINuke;
+    bool fReweightZexp;
     bool fReweightMEC;   //Not used. Reserved for future addition to GENIE
 
     bool fMaQEshape;
