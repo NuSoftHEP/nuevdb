@@ -75,74 +75,74 @@ using genie::Messenger;
 namespace rwgt {
   ///<constructor
   GENIEReweight::GENIEReweight() :
-    fReweightNCEL(false),
-    fReweightQEMA(false),
-    fReweightQEVec(false),
-    fReweightCCRes(false),
-    fReweightNCRes(false),
-    fReweightResBkg(false),
-    fReweightResDecay(false),
-    fReweightNC(false),
-    fReweightDIS(false),
-    fReweightCoh(false),
-    fReweightAGKY(false),
-    fReweightDISNucMod(false),
-    fReweightFGM(false),
-    fReweightFZone(false),
-    fReweightINuke(false), 
-    fReweightMEC(false),
-    fMaQEshape(false),
-    fMaCCResShape(false),
-    fMaNCResShape(false),
-    fDISshape(false),
-    fUseSigmaDef(true) {
-    
+        fReweightNCEL(false),
+        fReweightQEMA(false),
+        fReweightQEVec(false),
+        fReweightCCRes(false),
+        fReweightNCRes(false),
+        fReweightResBkg(false),
+        fReweightResDecay(false),
+        fReweightNC(false),
+        fReweightDIS(false),
+        fReweightCoh(false),
+        fReweightAGKY(false),
+        fReweightDISNucMod(false),
+        fReweightFGM(false),
+        fReweightFZone(false),
+        fReweightINuke(false),
+        fReweightMEC(false),
+        fMaQEshape(false),
+        fMaCCResShape(false),
+        fMaNCResShape(false),
+        fDISshape(false),
+        fUseSigmaDef(true) {
+
     LOG_INFO("GENIEReweight") << "Create GENIEReweight object";
-    
+
     fWcalc = new genie::rew::GReWeight();
     this->SetNominalValues();
   }
-  
+
   ///<destructor
   GENIEReweight::~GENIEReweight() {
     delete fWcalc;
   }
-  
+
   ///<Set the nominal values for the reweight parameters.
   void GENIEReweight::SetNominalValues() {
     //CCQE Nominal Values
     fNominalParameters[(int)rwgt::fReweightMaNCEL] = 0.99;
 
     fNominalParameters[(int)rwgt::fReweightEtaNCEL] = 0.12;
-    
+
     //CCQE Nominal Values
     fNominalParameters[(int)rwgt::fReweightNormCCQE] = 1.0;
-        
+
     fNominalParameters[(int)rwgt::fReweightNormCCQEenu] = 1.0;
-        
+
     fNominalParameters[(int)rwgt::fReweightMaCCQEshape] = 0.99;
-        
+
     fNominalParameters[(int)rwgt::fReweightMaCCQE] = 0.99;
     fNominalParameters[(int)rwgt::fReweightVecCCQEshape] = 0.84;
-        
+
     //Resonance Nominal Values
     fNominalParameters[(int)rwgt::fReweightNormCCRES] = 1.0;
     fNominalParameters[(int)rwgt::fReweightMaCCRESshape] = 1.12;
     fNominalParameters[(int)rwgt::fReweightMvCCRESshape]  = 0.84;
     fNominalParameters[(int)rwgt::fReweightMaCCRES] = 1.12;
     fNominalParameters[(int)rwgt::fReweightMvCCRES] = 0.84;
-    
+
     fNominalParameters[(int)rwgt::fReweightNormNCRES] = 1.0;
     fNominalParameters[(int)rwgt::fReweightMaNCRESshape] = 1.12;
     fNominalParameters[(int)rwgt::fReweightMvNCRESshape] = 0.84;
     fNominalParameters[(int)rwgt::fReweightMaNCRES] = 1.12;
     fNominalParameters[(int)rwgt::fReweightMvNCRES] = 0.84;
- 
+
     //Coherent pion nominal values
     fNominalParameters[(int)rwgt::fReweightMaCOHpi] = 1.0;
     fNominalParameters[(int)rwgt::fReweightR0COHpi] = 1.0;
-    
-    
+
+
     // Non-resonance background tweaking parameters:
     fNominalParameters[(int)rwgt::fReweightRvpCC1pi] = 1.0; 
     fNominalParameters[(int)rwgt::fReweightRvpCC2pi] = 1.0; 
@@ -161,38 +161,38 @@ namespace rwgt {
     fNominalParameters[(int)rwgt::fReweightRvbarnNC1pi] = 1.0;
     fNominalParameters[(int)rwgt::fReweightRvbarnNC2pi] = 1.0;
 
-    
+
     // DIS tweaking parameters - applied for DIS events with [Q2>Q2o, W>Wo], typically Q2okReweight =1GeV^2, WokReweight =1.7-2.0GeV
     fNominalParameters[(int)rwgt::fReweightAhtBY] = 0.538;
     fNominalParameters[(int)rwgt::fReweightBhtBY] = 0.305;
     fNominalParameters[(int)rwgt::fReweightCV1uBY] = 0.291;
     fNominalParameters[(int)rwgt::fReweightCV2uBY] = 0.189;
-    
+
     fNominalParameters[(int)rwgt::fReweightAhtBYshape] = 0.538;
     fNominalParameters[(int)rwgt::fReweightBhtBYshape] = 0.305;
     fNominalParameters[(int)rwgt::fReweightCV1uBYshape] = 0.291;
     fNominalParameters[(int)rwgt::fReweightCV2uBYshape] = 0.189;
-    
+
     fNominalParameters[(int)rwgt::fReweightNormDISCC] = 1.0;
-    
+
 
     fNominalParameters[(int)rwgt::fReweightRnubarnuCC] = 0.0;//v to vbar ratio reweighting is not working in GENIE at the moment
     fNominalParameters[(int)rwgt::fReweightDISNuclMod] = 0.0;//The DIS nuclear model switch is not working in GENIE at the moment
     //
 
     fNominalParameters[(int)rwgt::fReweightNC] = 1.0;
-        
+
     //
     // Hadronization [free nucleon target]
     // 
     fNominalParameters[(int)rwgt::fReweightAGKY_xF1pi] = 0.385; 
     fNominalParameters[(int)rwgt::fReweightAGKY_pT1pi] = 1./6.625;
-        
+
     //
     // Medium-effects to hadronization
     // 
     fNominalParameters[(int)rwgt::fReweightFormZone] = 1.0;
-        
+
     //
     // Intranuclear rescattering systematics.
     fNominalParameters[(int)rwgt::fReweightMFP_pi] = 1.0;
@@ -207,7 +207,7 @@ namespace rwgt {
     fNominalParameters[(int)rwgt::fReweightFrInel_N] = 1.0;
     fNominalParameters[(int)rwgt::fReweightFrAbs_N] = 1.0;
     fNominalParameters[(int)rwgt::fReweightFrPiProd_N] = 1.0;
-    
+
 
     //
     //RFG Nuclear model
@@ -218,7 +218,7 @@ namespace rwgt {
     //From genie code it looks like weird stuff may happen for <0 and >1.
     //This parameter does not have an "uncertainty" value associated with it.  
     //The tweaked dial value gets passed all the way through unchanged to the weight calculator
-    
+
     //
     // Resonance decays
     // 
@@ -246,15 +246,15 @@ namespace rwgt {
     for(unsigned int i = 0; i < fReWgtParameterName.size(); i++) {
       in_loop = true;
       if(label == fReWgtParameterName[i]) {
-	parameter = fReWgtParameterValue[i];
-	found_par = true;
+        parameter = fReWgtParameterValue[i];
+        found_par = true;
       }
     }
     if(in_loop) {
       if(found_par) return parameter;
       else {
-	LOG_WARN("GENIEReweight") << "Parameter " << label << " not set yet or does not exist";
-	return parameter;
+        LOG_WARN("GENIEReweight") << "Parameter " << label << " not set yet or does not exist";
+        return parameter;
       }
     }
     else {
@@ -262,152 +262,170 @@ namespace rwgt {
       return parameter;
     }
   }
-  
+
   ///<Add reweight parameters to the list
   void GENIEReweight::AddReweightValue(ReweightLabel_t rLabel, double value) {
     int label = (int)rLabel;   
     LOG_INFO("GENIEReweight") << "Adding parameter: " <<  genie::rew::GSyst::AsString(genie::rew::EGSyst(label)) << ".  With value: " << value;
     fReWgtParameterName.push_back(label);
     fReWgtParameterValue.push_back(value);
-    
+
   }
-  
+
   ///<Change a reweight parameter.  If it hasn't been added yet add it.
   void GENIEReweight::ChangeParameterValue(ReweightLabel_t rLabel, double value) {
     int label = (int)rLabel;
     bool found = false;
     for(unsigned int i = 0; i < fReWgtParameterName.size(); i++) {
       if(fReWgtParameterName[i] == label) {
-	fReWgtParameterValue[i] = value;
-	found = true;
+        fReWgtParameterValue[i] = value;
+        found = true;
       }
     }
     if(!found) {
       this->AddReweightValue(rLabel, value);
     }
   }
-  
+
   ///<Configure the weight calculators.
   void GENIEReweight::Configure() {
     LOG_INFO("GENIEReweight") << "Configure weight calculator";
-    
+
     for(unsigned int i = 0; i < fReWgtParameterName.size(); i++) {
+
+      switch (fReWgtParameterName[i])
+      {
+        //NC Elastic parameters
+        case rwgt::fReweightMaNCEL:
+        case rwgt::fReweightEtaNCEL:
+          fReweightNCEL = true;
+          break;
+
+        //CC QE Axial parameters
+        case rwgt::fReweightNormCCQE:
+        case rwgt::fReweightNormCCQEenu:
+        case rwgt::fReweightMaCCQEshape:
+        case rwgt::fReweightMaCCQE:
+          fReweightQEMA = true;
+          break;
+
+        //CC QE Vector parameters
+        case rwgt::fReweightVecCCQEshape:
+          fReweightQEVec = true;
+          break;
+
+        //CC Resonance parameters
+        case rwgt::fReweightNormCCRES:
+        case rwgt::fReweightMaCCRESshape:
+        case rwgt::fReweightMvCCRESshape:
+        case rwgt::fReweightMaCCRES:
+        case rwgt::fReweightMvCCRES:
+          fReweightCCRes = true;
+          break;
+
+        //NC Resonance parameters
+        case rwgt::fReweightNormNCRES:
+        case rwgt::fReweightMaNCRESshape:
+        case rwgt::fReweightMvNCRESshape:
+        case rwgt::fReweightMaNCRES:
+        case rwgt::fReweightMvNCRES:
+          fReweightNCRes = true;
+          break;
+
+        //Coherent parameters
+        case rwgt::fReweightMaCOHpi:
+        case rwgt::fReweightR0COHpi:
+          fReweightCoh = true;
+          break;
+
+        //Non-resonance background KNO parameters
+        case rwgt::fReweightRvpCC1pi:
+        case rwgt::fReweightRvpCC2pi:
+        case rwgt::fReweightRvpNC1pi:
+        case rwgt::fReweightRvpNC2pi:
+        case rwgt::fReweightRvnCC1pi:
+        case rwgt::fReweightRvnCC2pi:
+        case rwgt::fReweightRvnNC1pi:
+        case rwgt::fReweightRvnNC2pi:
+        case rwgt::fReweightRvbarpCC1pi:
+        case rwgt::fReweightRvbarpCC2pi:
+        case rwgt::fReweightRvbarpNC1pi:
+        case rwgt::fReweightRvbarpNC2pi:
+        case rwgt::fReweightRvbarnCC1pi:
+        case rwgt::fReweightRvbarnCC2pi:
+        case rwgt::fReweightRvbarnNC1pi:
+        case rwgt::fReweightRvbarnNC2pi:
+          fReweightResBkg = true;
+          break;
+
+        //DIS parameters
+        case rwgt::fReweightAhtBY:
+        case rwgt::fReweightBhtBY:
+        case rwgt::fReweightCV1uBY:
+        case rwgt::fReweightCV2uBY:
+        case rwgt::fReweightAhtBYshape:
+        case rwgt::fReweightBhtBYshape:
+        case rwgt::fReweightCV1uBYshape:
+        case rwgt::fReweightCV2uBYshape:
+        case rwgt::fReweightNormDISCC:
+        case rwgt::fReweightRnubarnuCC:
+          fReweightDIS = true;
+          break;
+
+        //DIS nuclear model parameters
+        case rwgt::fReweightDISNuclMod:
+          fReweightDISNucMod = true;
+          break;
+
+        //NC cross section
+        case rwgt::fReweightNC:
+          fReweightNC = true;
+          break;
+
+        //Hadronization parameters
+        case rwgt::fReweightAGKY_xF1pi:
+        case rwgt::fReweightAGKY_pT1pi:
+          fReweightAGKY = true;
+          break;
+
+        //Elastic (and QE) nuclear model parameters
+        case rwgt::fReweightCCQEPauliSupViaKF:
+        case rwgt::fReweightCCQEMomDistroFGtoSF:
+          fReweightFGM = true;
+          break;
+
+        //Formation Zone
+        case rwgt::fReweightFormZone:
+          fReweightFZone = true;
+          break;
+
+        //Intranuke Parameters
+        case rwgt::fReweightMFP_pi:
+        case rwgt::fReweightMFP_N:
+        case rwgt::fReweightFrCEx_pi:
+        case rwgt::fReweightFrElas_pi:
+        case rwgt::fReweightFrInel_pi:
+        case rwgt::fReweightFrAbs_pi:
+        case rwgt::fReweightFrPiProd_pi:
+        case rwgt::fReweightFrCEx_N:
+        case rwgt::fReweightFrElas_N:
+        case rwgt::fReweightFrInel_N :
+        case rwgt::fReweightFrAbs_N :
+        case rwgt::fReweightFrPiProd_N:
+          fReweightINuke = true;
+          break;
+
+        //Resonance Decay parameters
+        case rwgt::fReweightBR1gamma:
+        case rwgt::fReweightBR1eta:
+        case rwgt::fReweightTheta_Delta2Npi:
+          fReweightResDecay = true;
+          break;
+
+      }  // switch(fReWgtParameterName[i])
       
-      //NC Elastic parameters
-      if( (fReWgtParameterName[i] == rwgt::fReweightMaNCEL) || 
-	  (fReWgtParameterName[i] == rwgt::fReweightEtaNCEL) ) {
-	fReweightNCEL = true;
-      }
-      //CC QE Axial parameters
-      else if( (fReWgtParameterName[i]==rwgt::fReweightNormCCQE) ||
-	       (fReWgtParameterName[i]==rwgt::fReweightNormCCQEenu) ||
-	       (fReWgtParameterName[i]==rwgt::fReweightMaCCQEshape) ||
-	       (fReWgtParameterName[i]==rwgt::fReweightMaCCQE) ) {
-	fReweightQEMA = true;
-      }
-      //CC QE Vector parameters
-      else if(fReWgtParameterName[i]==rwgt::fReweightVecCCQEshape) {
-	fReweightQEVec = true;
-      }
-      //CC Resonance parameters
-      else if( (fReWgtParameterName[i]==rwgt::fReweightNormCCRES) ||
-	       (fReWgtParameterName[i]==rwgt::fReweightMaCCRESshape) ||
-	       (fReWgtParameterName[i]==rwgt::fReweightMvCCRESshape) ||
-	       (fReWgtParameterName[i]==rwgt::fReweightMaCCRES) ||
-	       (fReWgtParameterName[i]==rwgt::fReweightMvCCRES) ) {
-	fReweightCCRes = true;
-      }
-      //NC Resonance parameters
-      else if( (fReWgtParameterName[i]==rwgt::fReweightNormNCRES) ||
-	       (fReWgtParameterName[i]==rwgt::fReweightMaNCRESshape) ||
-	       (fReWgtParameterName[i]==rwgt::fReweightMvNCRESshape) ||
-	       (fReWgtParameterName[i]==rwgt::fReweightMaNCRES) ||
-	       (fReWgtParameterName[i]==rwgt::fReweightMvNCRES) ) {
-	fReweightNCRes = true;
-      }
-      //Coherant parameters
-      else if( (fReWgtParameterName[i]==rwgt::fReweightMaCOHpi) || 
-	       (fReWgtParameterName[i]==rwgt::fReweightR0COHpi) ) {
-	fReweightCoh = true;
-      }
-      //Non-resonance background KNO parameters
-      else if( (fReWgtParameterName[i]==rwgt::fReweightRvpCC1pi) ||
-	       (fReWgtParameterName[i]==rwgt::fReweightRvpCC2pi) || 
-	       (fReWgtParameterName[i]==rwgt::fReweightRvpNC1pi) || 
-	       (fReWgtParameterName[i]==rwgt::fReweightRvpNC2pi) || 
-	       (fReWgtParameterName[i]==rwgt::fReweightRvnCC1pi) ||
-	       (fReWgtParameterName[i]==rwgt::fReweightRvnCC2pi) ||
-	       (fReWgtParameterName[i]==rwgt::fReweightRvnNC1pi) ||
-	       (fReWgtParameterName[i]==rwgt::fReweightRvnNC2pi) ||
-	       (fReWgtParameterName[i]==rwgt::fReweightRvbarpCC1pi) ||
-	       (fReWgtParameterName[i]==rwgt::fReweightRvbarpCC2pi) ||
-	       (fReWgtParameterName[i]==rwgt::fReweightRvbarpNC1pi) ||
-	       (fReWgtParameterName[i]==rwgt::fReweightRvbarpNC2pi) ||
-	       (fReWgtParameterName[i]==rwgt::fReweightRvbarnCC1pi) ||
-	       (fReWgtParameterName[i]==rwgt::fReweightRvbarnCC2pi) ||
-	       (fReWgtParameterName[i]==rwgt::fReweightRvbarnNC1pi) ||
-	       (fReWgtParameterName[i]==rwgt::fReweightRvbarnNC2pi) ) {
-	fReweightResBkg = true;
-      }
-      //DIS parameters
-      else if( (fReWgtParameterName[i]==rwgt::fReweightAhtBY) ||
-	       (fReWgtParameterName[i]==rwgt::fReweightBhtBY) ||
-	       (fReWgtParameterName[i]==rwgt::fReweightCV1uBY) || 
-	       (fReWgtParameterName[i]==rwgt::fReweightCV2uBY) ||
-	       (fReWgtParameterName[i]==rwgt::fReweightAhtBYshape) ||
-	       (fReWgtParameterName[i]==rwgt::fReweightBhtBYshape) ||
-	       (fReWgtParameterName[i]==rwgt::fReweightCV1uBYshape) ||
-	       (fReWgtParameterName[i]==rwgt::fReweightCV2uBYshape) ||
-	       (fReWgtParameterName[i]==rwgt::fReweightNormDISCC) ||
-	       (fReWgtParameterName[i]==rwgt::fReweightRnubarnuCC) ) {
-	fReweightDIS = true;
-      }
-      //DIS nuclear model parameters
-      else if ( fReWgtParameterName[i]==rwgt::fReweightDISNuclMod ) {
-	fReweightDISNucMod = true;
-      }
-      //NC cross section
-      else if( fReWgtParameterName[i]==rwgt::fReweightNC) {
-	fReweightNC = true;
-      }
-      //Hadronization parameters
-      else if( (fReWgtParameterName[i]==rwgt::fReweightAGKY_xF1pi) || 
-	       (fReWgtParameterName[i]==rwgt::fReweightAGKY_pT1pi) ) {
-	fReweightAGKY = true;
-      }
-      //Elastic (and QE) nuclear model parameters
-      else if( (fReWgtParameterName[i]==rwgt::fReweightCCQEPauliSupViaKF) || 
-	       (fReWgtParameterName[i]==rwgt::fReweightCCQEMomDistroFGtoSF) ) {
-	fReweightFGM = true;
-      }
-      //Formation Zone
-      else if ( fReWgtParameterName[i]==rwgt::fReweightFormZone) {
-	fReweightFZone = true;
-      }
-      //Intranuke Parameters
-      else if( (fReWgtParameterName[i]==rwgt::fReweightMFP_pi) ||
-	       (fReWgtParameterName[i]==rwgt::fReweightMFP_N) ||
-	       (fReWgtParameterName[i]==rwgt::fReweightFrCEx_pi) || 
-	       (fReWgtParameterName[i]==rwgt::fReweightFrElas_pi) ||
-	       (fReWgtParameterName[i]==rwgt::fReweightFrInel_pi) ||
-	       (fReWgtParameterName[i]==rwgt::fReweightFrAbs_pi) ||
-	       (fReWgtParameterName[i]==rwgt::fReweightFrPiProd_pi) || 
-	       (fReWgtParameterName[i]==rwgt::fReweightFrCEx_N) ||
-	       (fReWgtParameterName[i]==rwgt::fReweightFrElas_N) ||
-	       (fReWgtParameterName[i]==rwgt::fReweightFrInel_N ) ||
-	       (fReWgtParameterName[i]==rwgt::fReweightFrAbs_N ) ||
-	       (fReWgtParameterName[i]==rwgt::fReweightFrPiProd_N) ) {
-	fReweightINuke = true;
-      }
-      //Resonance Decay parameters
-      else if( (fReWgtParameterName[i]==rwgt::fReweightBR1gamma) ||
-	       (fReWgtParameterName[i]==rwgt::fReweightBR1eta) ||
-	       (fReWgtParameterName[i]==rwgt::fReweightTheta_Delta2Npi)){
-	
-	fReweightResDecay = true;
-      }
     } //end for loop
-    
+
     //configure the individual weight calculators
     if(fReweightNCEL) this->ConfigureNCEL();
     if(fReweightQEMA) this->ConfigureQEMA();
@@ -425,18 +443,18 @@ namespace rwgt {
     if(fReweightFZone) this->ConfigureFZone();
     if(fReweightINuke) this->ConfigureINuke();
     this->ConfigureParameters();
-    
+
   }
-  
+
   ///<Reconfigure the weight calculators
   void GENIEReweight::Reconfigure() {
     delete fWcalc;
     fWcalc = new genie::rew::GReWeight();
     this->Configure();
   }
-  
+
   ///<Simple Configuration functions for configuring a single weight calculator
-  
+
   ///<Simple Configuraiton of the NC elastic weight calculator
   void GENIEReweight::ReweightNCEL(double ma, double eta) {
     LOG_INFO("GENIEReweight") << "Configuring GENIEReweight for NC Elastic Reweighting";
@@ -448,7 +466,7 @@ namespace rwgt {
     }
     this->Configure();
   }
-  
+
   ///<Simple Configurtion of the CCQE axial weight calculator
   void GENIEReweight::ReweightQEMA(double ma) {
     LOG_INFO("GENIEReweight") << "Configuring GENIEReweight for QE Axial Mass Reweighting";
@@ -474,7 +492,7 @@ namespace rwgt {
     }
     this->Configure();
   }
-  
+
   ///<Simple Configurtion of the NC Resonance weight calculator
   void GENIEReweight::ReweightNCRes(double ma, double mv) {
     LOG_INFO("GENIEReweight") << "Configuring GENIEReweight for NC Resonance Reweighting";
@@ -499,7 +517,7 @@ namespace rwgt {
     }
     this->Configure();
   }
-  
+
   ///<Simple Configuration of the Coherant weight calculator
   void GENIEReweight::ReweightCoh(double ma, double r0) {
     LOG_INFO("GENIEReweight") << "Configuring GENIEReweight for Coherant Reweighting";
@@ -507,7 +525,7 @@ namespace rwgt {
     this->AddReweightValue(rwgt::fReweightR0COHpi, r0);
     this->Configure();
   }
-  
+
   ///<Simple Configuration of the Non-Resonance Background weight calculator.  
   //Here it is being configured for v+p and vbar + n (1 pi) type interactions
   void GENIEReweight::ReweightNonResRvp1pi(double sigma) {
@@ -518,7 +536,7 @@ namespace rwgt {
     this->AddReweightValue(rwgt::fReweightRvbarnNC1pi, sigma);
     this->Configure();
   }
-  
+
   ///<Simple Configuration of the Non-Resonance Background weight calculator.  
   //Here it is being configured for v+n and vbar + p (1 pi) type interactions
   void GENIEReweight::ReweightNonResRvbarp1pi(double sigma) {
@@ -529,7 +547,7 @@ namespace rwgt {
     this->AddReweightValue(rwgt::fReweightRvbarpNC1pi, sigma);
     this->Configure();
   }
-  
+
   ///<Simple Configuration of the Non-Resonance Background weight calculator.  Here it is being configured for v+p and vbar + n (2 pi) type interactions
   void GENIEReweight::ReweightNonResRvp2pi(double sigma) {
     LOG_INFO("GENIEReweight") << "Configuring GENIEReweight for  Non-Resonance Background Reweighting (Neutrino Two Pion)";
@@ -539,7 +557,7 @@ namespace rwgt {
     this->AddReweightValue(rwgt::fReweightRvbarnNC2pi, sigma);
     this->Configure();
   }
-  
+
   ///<Simple Configuration of the Non-Resonance Background weight calculator. 
   // Here it is being configured for v+n and vbar + p (2 pi) type interactions
   void GENIEReweight::ReweightNonResRvbarp2pi(double sigma) {
@@ -550,7 +568,7 @@ namespace rwgt {
     this->AddReweightValue(rwgt::fReweightRvbarpNC2pi, sigma);
     this->Configure();
   }
-  
+
   ///<Simple Configuration of the Resonance decay model weight calculator
   void GENIEReweight::ReweightResDecay(double gamma, double eta, double theta) {
     LOG_INFO("GENIEReweight") << "Configuring GENIEReweight for Resoncance Decay Parameters";
@@ -565,7 +583,7 @@ namespace rwgt {
     }
     this->Configure();
   }
-  
+
   ///<Simple Configuration of the Total NC cross section
   void GENIEReweight::ReweightNC(double norm) {
     LOG_INFO("GENIEReweight") << "Configuring GENIEReweight for NC Cross Section Scale";
@@ -591,14 +609,14 @@ namespace rwgt {
     }
     this->Configure();
   }
-  
+
   ///<Simple Configuration of the DIS nuclear model
   void GENIEReweight::ReweightDISnucl(bool mode) {
     LOG_INFO("GENIEReweight") << "Configuring GENIEReweight for DIS Nuclear Model";
     this->AddReweightValue(rwgt::fReweightDISNuclMod, mode);
     this->Configure();
   }
-  
+
   ///<Simple Configuration of the DIS AGKY hadronization model
   void GENIEReweight::ReweightAGKY(double xF, double pT) {
     LOG_INFO("GENIEReweight") << "Configuring GENIEReweight for DIS AGKY Hadronization Model Reweighting";
@@ -610,22 +628,22 @@ namespace rwgt {
     }
     this->Configure();
   }
-  
+
   ///<Simple Configuration of the Intranuke Nuclear model
   void GENIEReweight::ReweightIntraNuke(ReweightLabel_t name, double sigma) {
     LOG_INFO("GENIEReweight") << "Configuring GENIEReweight for Intranuke Model Reweighting";
     if ( (name==rwgt::fReweightMFP_pi) ||
-	 (name==rwgt::fReweightMFP_N) ||
-	 (name==rwgt::fReweightFrCEx_pi) || 
-	 (name==rwgt::fReweightFrElas_pi) ||
-	 (name==rwgt::fReweightFrInel_pi) ||
-	 (name==rwgt::fReweightFrAbs_pi) ||
-	 (name==rwgt::fReweightFrPiProd_pi) || 
-	 (name==rwgt::fReweightFrCEx_N) ||
-	 (name==rwgt::fReweightFrElas_N) ||
-	 (name==rwgt::fReweightFrInel_N ) ||
-	 (name==rwgt::fReweightFrAbs_N ) ||
-	 (name==rwgt::fReweightFrPiProd_N) ) {
+        (name==rwgt::fReweightMFP_N) ||
+        (name==rwgt::fReweightFrCEx_pi) ||
+        (name==rwgt::fReweightFrElas_pi) ||
+        (name==rwgt::fReweightFrInel_pi) ||
+        (name==rwgt::fReweightFrAbs_pi) ||
+        (name==rwgt::fReweightFrPiProd_pi) ||
+        (name==rwgt::fReweightFrCEx_N) ||
+        (name==rwgt::fReweightFrElas_N) ||
+        (name==rwgt::fReweightFrInel_N ) ||
+        (name==rwgt::fReweightFrAbs_N ) ||
+        (name==rwgt::fReweightFrPiProd_N) ) {
       this->AddReweightValue(name, sigma);
     }
     else {
@@ -640,7 +658,7 @@ namespace rwgt {
     this->AddReweightValue(rwgt::fReweightFormZone, sigma);
     this->Configure();
   }
-  
+
   ///<Simple Configuration of the Fermigas model reweight calculator
   void GENIEReweight::ReweightFGM(double kF, double sf) {
     LOG_INFO("GENIEReweight") << "Configuring GENIEReweight for Fermi Gas Model Reweighting";
@@ -780,11 +798,11 @@ namespace rwgt {
     for(unsigned int i = 0; i < fReWgtParameterName.size(); i++) {
       LOG_INFO("GENIEReweight") << "Configuring GENIEReweight parameter: " << genie::rew::GSyst::AsString(genie::rew::EGSyst(fReWgtParameterName[i])) << " with value: " << fReWgtParameterValue[i];
       if(fUseSigmaDef) {
-	syst.Set( (GSyst_t)fReWgtParameterName[i], fReWgtParameterValue[i]);
+        syst.Set( (GSyst_t)fReWgtParameterName[i], fReWgtParameterValue[i]);
       }
       else {
-	double parameter = this->CalculateSigma((ReweightLabel_t)fReWgtParameterName[i], fReWgtParameterValue[i]);
-	syst.Set( (GSyst_t)fReWgtParameterName[i], parameter);
+        double parameter = this->CalculateSigma((ReweightLabel_t)fReWgtParameterName[i], fReWgtParameterValue[i]);
+        syst.Set( (GSyst_t)fReWgtParameterName[i], parameter);
       }
     }
     fWcalc->Reconfigure();
@@ -793,7 +811,7 @@ namespace rwgt {
   ///Used in parameter value mode (instead of parameter sigma mode) Given a user passed parameter value calculate the corresponding sigma value 
   ///that needs to be passed to genie to give the same weight.
   double GENIEReweight::CalculateSigma(ReweightLabel_t label, double value) {
-  //double GENIEReweight::CalculateSigma(int label, double value) {
+    //double GENIEReweight::CalculateSigma(int label, double value) {
     int iLabel = (int) label;
     double nominal_def;
     double frac_err;
@@ -801,8 +819,8 @@ namespace rwgt {
     int sign;
     GSystUncertainty * gsysterr = GSystUncertainty::Instance();
     if(label==rwgt::fReweightCCQEMomDistroFGtoSF || 
-       label==rwgt::fReweightTheta_Delta2Npi || 
-       label==rwgt::fReweightDISNuclMod) {
+        label==rwgt::fReweightTheta_Delta2Npi ||
+        label==rwgt::fReweightDISNuclMod) {
       //These parameters don't use the sigma definition just pass them through the function unchanged
       sigma = value;
     }
@@ -827,7 +845,7 @@ namespace rwgt {
   /*
   ///< Recreate the a genie::EventRecord from the MCTruth and GTruth objects.
   genie::EventRecord GENIEReweight::RetrieveGHEP(simb::MCTruth truth, simb::GTruth gtruth) {
-    
+
     genie::EventRecord newEvent;
     newEvent.SetWeight(gtruth.fweight);
     newEvent.SetProbability(gtruth.fprobability);
@@ -838,7 +856,7 @@ namespace rwgt {
 
     for(int i = 0; i < truth.NParticles(); i++) {
       simb::MCParticle mcpart = truth.GetParticle(i);
-      
+
       int gmid = mcpart.PdgCode();
       genie::GHepStatus_t gmst = (genie::GHepStatus_t)mcpart.StatusCode();
       int gmmo = mcpart.Mother();
@@ -868,7 +886,7 @@ namespace rwgt {
 	  gmld = j;
 	}
       }
-    
+
       double gmpx = mcpart.Px(0);
       double gmpy = mcpart.Py(0);
       double gmpz = mcpart.Pz(0);
@@ -878,7 +896,7 @@ namespace rwgt {
       double gmvz = mcpart.Gvz();
       double gmvt = mcpart.Gvt();
       int gmri = mcpart.Rescatter();
-      
+
       genie::GHepParticle gpart(gmid, gmst, gmmo, -1, gmfd, gmld, gmpx, gmpy, gmpz, gme, gmvx, gmvy, gmvz, gmvt);
       gpart.SetRescatterCode(gmri);
       TVector3 polz = mcpart.Polarization();
@@ -896,20 +914,20 @@ namespace rwgt {
     proc_info.Set(gscty,ginty);
 
     genie::XclsTag gxt;
-    
+
     //Set Exclusive Final State particle numbers
     genie::Resonance_t gres = (genie::Resonance_t)gtruth.fResNum;
     gxt.SetResonance(gres);
     gxt.SetNPions(gtruth.fNumPiPlus, gtruth.fNumPi0, gtruth.fNumPiMinus);
     gxt.SetNNucleons(gtruth.fNumProton, gtruth.fNumNeutron);
-    
+
     if(gtruth.fIsCharm) {
       gxt.SetCharm(0);
     }
      else {
        gxt.UnsetCharm();
      }
-    
+
     //Set the GENIE kinematic info
     genie::Kinematics gkin;
     gkin.Setx(gtruth.fgX, true);
@@ -922,7 +940,7 @@ namespace rwgt {
     simb::MCParticle lep = nu.Lepton();
     gkin.SetFSLeptonP4(lep.Px(), lep.Py(), lep.Pz(), lep.E());
     gkin.SetHadSystP4(gtruth.fFShadSystP4.Px(), gtruth.fFShadSystP4.Py(), gtruth.fFShadSystP4.Pz(), gtruth.fFShadSystP4.E());
-    
+
     //Set the GENIE final state interaction info
     genie::Interaction * p_gint = new genie::Interaction;
     genie::InitialState * p_ginstate = p_gint->InitStatePtr();
@@ -932,22 +950,22 @@ namespace rwgt {
     int struckQuark = nu.HitQuark(); 
     int incoming = gtruth.fProbePDG;
     p_ginstate->SetProbePdg(incoming);
-    
+
     genie::Target* target123 = p_ginstate->TgtPtr();
-    
+
     target123->SetId(gtruth.ftgtPDG);
     //target123->SetId(Z,A);
-    
+
     //int pdg_code = pdg::IonPdgCode(A, Z);
     //TParticlePDG * p = PDGLibrary::Instance()->Find(pdg_code);
-    
+
     //mf::LogWarning("GENIEReweight") << "Setting Target Z and A";
     //mf::LogWarning("GENIEReweight") << "Saved PDG: " << gtruth.ftgtPDG;
     //mf::LogWarning("GENIEReweight") << "Target PDG: " << target123->Pdg();
     target123->SetHitNucPdg(targetNucleon);
     target123->SetHitQrkPdg(struckQuark);
     target123->SetHitSeaQrk(gtruth.fIsSeaQuark);
-    
+
     if(newEvent.HitNucleonPosition()> 0) {
       genie::GHepParticle * hitnucleon = newEvent.HitNucleon();
       std::auto_ptr<TLorentzVector> p4hitnucleon(hitnucleon->GetP4());
@@ -957,7 +975,7 @@ namespace rwgt {
       TLorentzVector dummy(0.,0.,0.,0.);
       target123->SetHitNucP4(dummy);
     }
-   
+
     genie::GHepParticle * probe = newEvent.Probe();
     std::auto_ptr<TLorentzVector> p4probe(probe->GetP4());
     p_ginstate->SetProbeP4(*p4probe);
@@ -973,8 +991,8 @@ namespace rwgt {
     p_gint->SetKine(gkin);
     p_gint->SetExclTag(gxt);
     newEvent.AttachSummary(p_gint);
-    
-    
+
+
     //For temporary debugging purposes
     //genie::Interaction *inter = newEvent.Summary();
     //const genie::InitialState &initState  = inter->InitState();
@@ -985,11 +1003,11 @@ namespace rwgt {
     //std::cout << "TargetPDG as Recreated: " << tgt.Pdg() << std::endl;   
     //std::cout << "TargetZ as Recreated: " << tgt.Z() << std::endl;   
     //std::cout << "TargetA as Recreated: " << tgt.A() << std::endl;   
-    
-    return newEvent;
- 
-  }
-*/
 
-  
+    return newEvent;
+
+  }
+   */
+
+
 }
