@@ -60,9 +60,9 @@ namespace rwgt {
     // DIS tweaking parameters - applied for DIS events with (Q2>Q2o, W>Wo), 
     // typically Q2okReweight =1GeV^2, WokReweight =1.7-2.0GeV
     fReweightAhtBY = genie::rew::kXSecTwkDial_AhtBY,                 ///< tweak the Bodek-Yang model parameter A_{ht} - incl. both shape and normalization effect
-    fReweightBhtBY = genie::rew::kXSecTwkDial_BhtBY,                 ///< tweak the Bodek-Yang model parameter B_{ht} - incl. both shape and normalization effect 
-    fReweightCV1uBY = genie::rew::kXSecTwkDial_CV1uBY,               ///< tweak the Bodek-Yang model parameter CV1u - incl. both shape and normalization effect 
-    fReweightCV2uBY = genie::rew::kXSecTwkDial_CV2uBY,               ///< tweak the Bodek-Yang model parameter CV2u - incl. both shape and normalization effect 
+    fReweightBhtBY = genie::rew::kXSecTwkDial_BhtBY,                 ///< tweak the Bodek-Yang model parameter B_{ht} - incl. both shape and normalization effect
+    fReweightCV1uBY = genie::rew::kXSecTwkDial_CV1uBY,               ///< tweak the Bodek-Yang model parameter CV1u - incl. both shape and normalization effect
+    fReweightCV2uBY = genie::rew::kXSecTwkDial_CV2uBY,               ///< tweak the Bodek-Yang model parameter CV2u - incl. both shape and normalization effect
     fReweightAhtBYshape = genie::rew::kXSecTwkDial_AhtBYshape,       ///< tweak the Bodek-Yang model parameter A_{ht} - shape only effect to d2sigma(DIS)/dxdy
     fReweightBhtBYshape = genie::rew::kXSecTwkDial_BhtBYshape,       ///< tweak the Bodek-Yang model parameter B_{ht} - shape only effect to d2sigma(DIS)/dxdy
     fReweightCV1uBYshape = genie::rew::kXSecTwkDial_CV1uBYshape,     ///< tweak the Bodek-Yang model parameter CV1u - shape only effect to d2sigma(DIS)/dxdy
@@ -71,7 +71,7 @@ namespace rwgt {
     fReweightRnubarnuCC = genie::rew::kXSecTwkDial_RnubarnuCC,       ///< tweak the ratio of \sigma(\bar\nu CC) / \sigma(\nu CC) (not currently working in genie)
     fReweightDISNuclMod = genie::rew::kXSecTwkDial_DISNuclMod,       ///< tweak DIS nuclear modification (shadowing, anti-shadowing, EMC).  Does not appear to be working in GENIE at the moment
     //
-    fReweightNC = genie::rew::kXSecTwkDial_NC,                ///< 
+    fReweightNC = genie::rew::kXSecTwkDial_NC,                ///<
     
     
     //
@@ -123,7 +123,18 @@ namespace rwgt {
     
     fReweightBR1gamma = genie::rew::kRDcyTwkDial_BR1gamma,               ///< tweak Resonance -> X + gamma branching ratio, eg Delta+(1232) -> p gamma
     fReweightBR1eta = genie::rew::kRDcyTwkDial_BR1eta,                   ///< tweak Resonance -> X + eta   branching ratio, eg N+(1440) -> p eta
-    fReweightTheta_Delta2Npi = genie::rew::kRDcyTwkDial_Theta_Delta2Npi  ///< distort pi angular distribution in Delta -> N + pi
+    fReweightTheta_Delta2Npi = genie::rew::kRDcyTwkDial_Theta_Delta2Npi,  ///< distort pi angular distribution in Delta -> N + pi
+
+    //
+    // Alternative approach to CCQE form factors (z-expansion)
+    //
+
+    fReweightZNormCCQE = genie::rew::kXSecTwkDial_ZNormCCQE,         ///< tweak Z-expansion CCQE normalization (energy independent)
+    fReweightZExpA1CCQE = genie::rew::kXSecTwkDial_ZExpA1CCQE,       ///< tweak Z-expansion coefficient 1, affects dsigma(CCQE)/dQ2 both in shape and normalization
+    fReweightZExpA2CCQE = genie::rew::kXSecTwkDial_ZExpA2CCQE,       ///< tweak Z-expansion coefficient 2, affects dsigma(CCQE)/dQ2 both in shape and normalization
+    fReweightZExpA3CCQE = genie::rew::kXSecTwkDial_ZExpA3CCQE,       ///< tweak Z-expansion coefficient 3, affects dsigma(CCQE)/dQ2 both in shape and normalization
+    fReweightZExpA4CCQE = genie::rew::kXSecTwkDial_ZExpA4CCQE,       ///< tweak Z-expansion coefficient 4, affects dsigma(CCQE)/dQ2 both in shape and normalization
+    fReweightAxFFCCQEshape = genie::rew::kXSecTwkDial_AxFFCCQEshape  ///< tweak axial nucleon form factors (dipole -> z-expansion) - shape only effect of dsigma(CCQE)/dQ2
 
   } ReweightLabel_t;
 
