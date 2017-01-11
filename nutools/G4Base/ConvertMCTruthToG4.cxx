@@ -12,8 +12,10 @@
 #include "nusimdata/SimulationBase/MCParticle.h"
 
 #include "Geant4/G4Event.hh"
+#include "Geant4/G4IonTable.hh"
 #include "Geant4/G4PrimaryVertex.hh"
 #include "Geant4/G4ParticleDefinition.hh"
+#include "Geant4/G4ParticleTable.hh"
 
 #include <TParticle.h>
 
@@ -162,15 +164,6 @@ namespace g4b{
 	  fParticleTable = G4ParticleTable::GetParticleTable();
 	}
 
-	if ( pdgCode > 1000000000 )
-	  LOG_DEBUG("ConvertPrimaryToGeant4") << ": %%% Nuclear PDG code = " << pdgCode
-					      << " (x,y,z,t)=(" << x
-					      << "," << y
-					      << "," << z
-					      << "," << t << ")"
-					      << " P=" << momentum.P()
-					      << ", E=" << momentum.E();
-
 	// Get Geant4's definition of the particle.
 	G4ParticleDefinition* particleDefinition;
       
@@ -179,6 +172,23 @@ namespace g4b{
 	}
 	else
 	  particleDefinition = fParticleTable->FindParticle(pdgCode);
+
+	if ( pdgCode > 1000000000) { // If the particle is a nucleus
+	  LOG_DEBUG("ConvertPrimaryToGeant4") << ": %%% Nuclear PDG code = " << pdgCode
+					      << " (x,y,z,t)=(" << x
+					      << "," << y
+					      << "," << z
+					      << "," << t << ")"
+					      << " P=" << momentum.P()
+					      << ", E=" << momentum.E();
+	  // If the particle table doesn't have a definition yet, ask the ion
+	  // table for one. This will create a new ion definition as needed.
+	  if (!particleDefinition) {
+            int Z = (pdgCode % 10000000) / 10000; // atomic number
+            int A = (pdgCode % 10000) / 10; // mass number
+            particleDefinition = fParticleTable->GetIonTable()->GetIon(Z, A, 0.);
+          }
+        }
 
 	// What if the PDG code is unknown?  This has been a known
 	// issue with GENIE.
