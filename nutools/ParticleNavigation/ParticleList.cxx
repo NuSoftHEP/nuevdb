@@ -328,6 +328,7 @@ namespace sim {
 
     m_particleList.clear();
     m_archive.clear();
+    m_primaries.clear();
   }
 
   //----------------------------------------------------------------------------
