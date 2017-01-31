@@ -150,6 +150,7 @@ namespace evgb {
     , fTotalExposure     (0.)
     , fMonoEnergy        (pset.get< double                   >("MonoEnergy",        2.0) )
     , fFunctionalFlux    (pset.get< std::string              >("FunctionalFlux", "x") )
+    , fFunctionalBinning (pset.get< int                      >("FunctionalBinning", 10000)
     , fEmin              (pset.get< double                   >("FluxEmin", 0) )
     , fEmax              (pset.get< double                   >("FluxEmax", 10) ) 
     , fBeamRadius        (pset.get< double                   >("BeamRadius",        3.0) )
@@ -952,7 +953,7 @@ namespace evgb {
 
       genie::flux::GCylindTH1Flux* histFlux = new genie::flux::GCylindTH1Flux();
       TF1* input_func = new TF1("input_func", fFunctionalFlux.c_str(), fEmin, fEmax);
-      TH1D* spectrum = new TH1D("spectrum", "neutrino flux", 1000, fEmin, fEmax);
+      TH1D* spectrum = new TH1D("spectrum", "neutrino flux", fFunctionalBinning, fEmin, fEmax);
       spectrum->Add(input_func);
 
       for ( std::vector<int>::iterator i = fGenFlavors.begin(); i != fGenFlavors.end(); i++ ) {
