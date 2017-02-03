@@ -136,6 +136,7 @@ namespace evgb{
     double                   fTotalExposure;     ///< pot used from flux ntuple
     double                   fMonoEnergy;        ///< energy of monoenergetic neutrinos
     std::string              fFunctionalFlux;
+    int                      fFunctionalBinning;
     double                   fEmin;
     double                   fEmax; 
     double                   fXSecMassPOT;       ///< product of cross section, mass and POT/spill for histogram fluxes

@@ -150,7 +150,7 @@ namespace evgb {
     , fTotalExposure     (0.)
     , fMonoEnergy        (pset.get< double                   >("MonoEnergy",        2.0) )
     , fFunctionalFlux    (pset.get< std::string              >("FunctionalFlux", "x") )
-    , fFunctionalBinning (pset.get< int                      >("FunctionalBinning", 10000)
+    , fFunctionalBinning (pset.get< int                      >("FunctionalBinning", 10000) )
     , fEmin              (pset.get< double                   >("FluxEmin", 0) )
     , fEmax              (pset.get< double                   >("FluxEmax", 10) ) 
     , fBeamRadius        (pset.get< double                   >("BeamRadius",        3.0) )
