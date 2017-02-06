@@ -21,6 +21,7 @@
 //ROOT includes
 #include "TH1.h"
 #include "TH2.h" //used by GAtmoFlux
+#include "TF1.h"
 #include "TFile.h"
 #include "TDirectory.h"
 #include "TVector3.h"
@@ -148,6 +149,10 @@ namespace evgb {
     , fSpillExposure     (0.)
     , fTotalExposure     (0.)
     , fMonoEnergy        (pset.get< double                   >("MonoEnergy",        2.0) )
+    , fFunctionalFlux    (pset.get< std::string              >("FunctionalFlux", "x") )
+    , fFunctionalBinning (pset.get< int                      >("FunctionalBinning", 10000) )
+    , fEmin              (pset.get< double                   >("FluxEmin", 0) )
+    , fEmax              (pset.get< double                   >("FluxEmax", 10) ) 
     , fBeamRadius        (pset.get< double                   >("BeamRadius",        3.0) )
     , fDetectorMass      (detectorMass)
     , fSurroundingMass   (pset.get< double                   >("SurroundingMass",    0.) )
@@ -343,7 +348,7 @@ namespace evgb {
     for ( std::vector<int>::iterator itr = fGenFlavors.begin(); itr != fGenFlavors.end(); itr++ )
       flvlist += Form(" %d",*itr);
 
-    if(fFluxType.compare("mono")==0){
+    if(fFluxType.compare("mono")==0 || fFluxType.compare("function")==0){
       fEventsPerSpill = 1;
       mf::LogInfo("GENIEHelper") 
         << "Generating monoenergetic (" << fMonoEnergy 
@@ -464,6 +469,7 @@ namespace evgb {
   double GENIEHelper::TotalHistFlux() 
   {
     if ( fFluxType.compare("mono")         == 0 ||
+	 fFluxType.compare("function")     == 0 ||
          fFluxType.compare("ntuple")       == 0 ||
          fFluxType.compare("simple_flux" ) == 0 ||
          fFluxType.compare("dk2nu")        == 0    ) return -999.;
@@ -943,6 +949,24 @@ namespace evgb {
       monoflux->SetRayOrigin(fBeamCenter.X(), fBeamCenter.Y(), fBeamCenter.Z());
       fFluxD = monoflux; // dynamic_cast<genie::GFluxI *>(monoflux);
     } //end if using monoenergetic beam
+    else if(fFluxType.compare("function") == 0){
+
+      genie::flux::GCylindTH1Flux* histFlux = new genie::flux::GCylindTH1Flux();
+      TF1* input_func = new TF1("input_func", fFunctionalFlux.c_str(), fEmin, fEmax);
+      TH1D* spectrum = new TH1D("spectrum", "neutrino flux", fFunctionalBinning, fEmin, fEmax);
+      spectrum->Add(input_func);
+
+      for ( std::vector<int>::iterator i = fGenFlavors.begin(); i != fGenFlavors.end(); i++ ) {
+        histFlux->AddEnergySpectrum(*i, spectrum);
+      } //end loop to add flux histograms to driver
+      
+      histFlux->SetNuDirection(fBeamDirection);
+      histFlux->SetBeamSpot(fBeamCenter);
+      histFlux->SetTransverseRadius(fBeamRadius);
+
+      fFluxD = histFlux; // dynamic_cast<genie::GFluxI *>(histFlux);
+      delete input_func;
+    } //end if using monoenergetic beam
 
 
     //Using the atmospheric fluxes
@@ -1323,7 +1347,7 @@ namespace evgb {
     
       ++fSpillEvents;
     }
-    else if(fFluxType.compare("mono") == 0){
+    else if(fFluxType.compare("mono") == 0 || fFluxType.compare("function") == 0){
       ++fSpillEvents;
     }
 

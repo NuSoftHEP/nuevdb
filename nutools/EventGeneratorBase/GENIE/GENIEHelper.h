@@ -19,6 +19,7 @@
 
 class TH1D;
 class TH2D;
+class TF1;
 class TRandom3;
 
 ///parameter set interface
@@ -134,6 +135,10 @@ namespace evgb{
     double                   fSpillExposure;     ///< total exposure (i.e. pot) for this spill
     double                   fTotalExposure;     ///< pot used from flux ntuple
     double                   fMonoEnergy;        ///< energy of monoenergetic neutrinos
+    std::string              fFunctionalFlux;
+    int                      fFunctionalBinning;
+    double                   fEmin;
+    double                   fEmax; 
     double                   fXSecMassPOT;       ///< product of cross section, mass and POT/spill for histogram fluxes
     double                   fTotalHistFlux;     ///< total flux of neutrinos from flux histograms for used flavors
     TVector3                 fBeamDirection;     ///< direction of the beam for histogram fluxes
