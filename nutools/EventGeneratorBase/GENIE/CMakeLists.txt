@@ -1,11 +1,13 @@
 
 
 art_make( LIB_LIBRARIES nusimdata_SimulationBase
-                        art_Utilities canvas_Utilities
+                        art_Utilities
+			canvas
                         ${MF_MESSAGELOGGER}
                         ${MF_UTILITIES}
                         ${FHICLCPP}
                         ${CETLIB}
+			cetlib_except
                         ${XML2}
                         ${LOG4CPP}
                         ${PYTHIA6}
