@@ -4,7 +4,8 @@ art_make( LIB_LIBRARIES nusimdata_SimulationBase
                         ${MF_MESSAGELOGGER}
                         ${MF_UTILITIES}
                         ${FHICLCPP}
-                        ${CETLIB}
+                        cetlib
+			cetlib_except
                         ${ROOT_GEOM}
                         ${ROOT_GEOMPAINTER}
 			${ROOT_EG}

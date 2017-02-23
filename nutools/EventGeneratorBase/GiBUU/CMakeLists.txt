@@ -1,7 +1,8 @@
 
 art_make( LIB_LIBRARIES nutools_EventGeneratorBase_GENIE
                         nusimdata_SimulationBase
-                        art_Utilities canvas_Utilities
+                        art_Utilities
+			canvas
                         ${MF_MESSAGELOGGER}
                         ${MF_UTILITIES}
                         ${FHICLCPP}

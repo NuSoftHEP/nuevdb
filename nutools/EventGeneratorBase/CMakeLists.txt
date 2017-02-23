@@ -1,10 +1,12 @@
 
 simple_plugin( GeneratedEventTimestamp "plugin"
                                        ${ART_FRAMEWORK_CORE}
-                                       art_Persistency_Provenance canvas_Persistency_Provenance
+                                       art_Persistency_Provenance
+				       canvas
                                        ${MF_MESSAGELOGGER}
                                        ${MF_UTILITIES}
-                                       ${CETLIB}
+                                       cetlib
+				       cetlib_except
 				       ${Boost_FILESYSTEM_LIBRARY}
 				       ${Boost_SYSTEM_LIBRARY}
                

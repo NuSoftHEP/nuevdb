@@ -1,11 +1,11 @@
 
 art_make( LIB_LIBRARIES nusimdata_SimulationBase
                         nutools_MagneticField_MagneticField_service
-			canvas_Persistency_Provenance
+			canvas
                         ${MF_MESSAGELOGGER}
                         ${MF_UTILITIES}
                         ${FHICLCPP}
-                        ${CETLIB}
+                        cetlib
                         ${G4FR}
                         ${G4GMOCREN}
                         ${G4RAYTRACER}

@@ -21,6 +21,9 @@
 #include <nutools/IFDatabase/Table.h>
 #include <nutools/IFDatabase/Util.h>
 
+// variable length arrays are not standard c++
+#pragma GCC diagnostic ignored "-Wvla"
+
 namespace nutools {
   namespace dbi {
 
