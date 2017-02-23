@@ -1311,9 +1311,9 @@ namespace nutools {
       char buff[256];
       std::string value;
 
-      int colMap[fCol.size()];
+      std::vector<int> colMap(fCol.size());
       for (unsigned int i=0; i<fCol.size(); ++i) {
-        colMap[i] = i;
+        colMap[i] = int(i);
       }
       
       bool hasColNames = true;
@@ -1571,9 +1571,9 @@ namespace nutools {
       char ss[1024]; 
       char ss2[1024]; 
       int wda_err, err;
-      int colMap[fCol.size()];
-      bool isString[fCol.size()];
-      bool isKnownField[fCol.size()];
+      std::vector<int> colMap(fCol.size());
+      std::vector<bool> isString(fCol.size());
+      std::vector<bool> isKnownField(fCol.size());
       
       const char* uagent = NULL;
 
