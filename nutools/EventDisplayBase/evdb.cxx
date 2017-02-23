@@ -25,8 +25,8 @@ TGPicturePool* evdb::PicturePool()
     
     // Not every experiment uses SRT, so check that the SRT environmental 
     // variables are legit before adding them to the path
-    if(private_ctx) path += private_ctx; path += "/EventDisplay/icons:";
-    if(public_ctx)  path += public_ctx;  path += "/EventDisplay/icons:";
+    if(private_ctx) { path += private_ctx; path += "/EventDisplay/icons:"; }
+    if(public_ctx)  { path += public_ctx;  path += "/EventDisplay/icons:"; }
     path += root_ctx;    path += "/icons";
     
     pp = new TGPicturePool(gClient, path.c_str());

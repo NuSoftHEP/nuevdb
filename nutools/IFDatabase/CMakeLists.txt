@@ -44,12 +44,14 @@ simple_plugin( DBI "service"
                ${ART_FRAMEWORK_PRINCIPAL}
                ${ART_FRAMEWORK_SERVICES_REGISTRY}
                ${ART_FRAMEWORK_SERVICES_BASIC}
-               art_Persistency_Common canvas_Persistency_Common
-               art_Utilities canvas_Utilities
+               art_Persistency_Common
+               art_Utilities
+	       canvas
                ${MF_MESSAGELOGGER}
                ${MF_UTILITIES}
                ${FHICLCPP}
-               ${CETLIB}
+               cetlib
+	       cetlib_except
              )
 
 install_headers()

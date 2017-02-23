@@ -3,17 +3,19 @@ set( NURW_LIBS ${ART_FRAMEWORK_SERVICES_REGISTRY}
                ${ART_FRAMEWORK_SERVICES_OPTIONAL}
                ${ART_FRAMEWORK_SERVICES_OPTIONAL_TFILESERVICE_SERVICE}
                ${ART_FRAMEWORK_CORE}
-               art_Persistency_Common canvas_Persistency_Common
+               art_Persistency_Common
                ${ART_FRAMEWORK_IO_SOURCES}
                ${ART_FRAMEWORK_IO_ROOT}
                ${ART_FRAMEWORK_IO_ROOT_ROOTINPUT_SOURCE}
                ${ART_FRAMEWORK_PRINCIPAL}
-               art_Persistency_Provenance canvas_Persistency_Provenance
-               art_Utilities canvas_Utilities
+               art_Persistency_Provenance
+               art_Utilities
+	       canvas
                ${MF_MESSAGELOGGER}
                ${MF_UTILITIES}
                ${FHICLCPP}
-               ${CETLIB}
+               cetlib
+	       cetlib_except
                ${LOG4CPP}
                ${XML2}
                ${PYTHIA6}
