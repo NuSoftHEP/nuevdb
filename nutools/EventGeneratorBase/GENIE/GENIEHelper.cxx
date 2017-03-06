@@ -1634,13 +1634,7 @@ namespace evgb {
     truth.fIsCharm = exclTag.IsCharmEvent();   
     truth.fResNum = (int)exclTag.Resonance();
 
-    //note that in principle this information could come from the XclsTag,
-    //but that object isn't completely filled for most reactions
-//    truth.fNumPiPlus = exclTag.NPiPlus();
-//    truth.fNumPiMinus = exclTag.NPiMinus();
-//    truth.fNumPi0 = exclTag.NPi0();
-//    truth.fNumProton = exclTag.NProtons();
-//    truth.fNumNeutron = exclTag.NNucleons();
+    //count hadrons from the particle record.
     truth.fNumPiPlus = truth.fNumPiMinus = truth.fNumPi0 = truth.fNumProton = truth.fNumNeutron = 0;
     for (int idx = 0; idx < record->GetEntries(); idx++)
     {
