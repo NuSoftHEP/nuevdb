@@ -51,6 +51,9 @@
   #include "FluxDrivers/GBartolAtmoFlux.h"  //for atmo nu generation
   #include "FluxDrivers/GFlukaAtmo3DFlux.h" //for atmo nu generation
 #endif
+#if __GENIE_RELEASE_CODE__ >= GRELCODE(2,12,2)
+  #include "FluxDrivers/GHAKKMAtmoFlux.h" // for atmo nu generation
+#endif
 #include "FluxDrivers/GAtmoFlux.h"        //for atmo nu generation
 #pragma GCC diagnostic push
 #pragma GCC diagnostic ignored "-Wunused-variable"
@@ -297,7 +300,13 @@ namespace evgb {
       else if (fFluxType.compare("atmo_BARTOL") == 0 ||
                fFluxType.compare("atmo_BGLRS")  == 0    ){
         mf::LogInfo("GENIEHelper") << "The sims are from BARTOL/BGLRS";
-      }      
+      }
+
+      else if (fFluxType.compare("atmo_HONDA") == 0 ||
+               fFluxType.compare("atmo_HAKKM") == 0 ){
+        mf::LogInfo("GENIEHelper") << "The sims are from HONDA/HAKKM";
+      }
+
       else {
         mf::LogInfo("GENIEHelper") << "Uknonwn flux simulation: " << fFluxType;
         exit(1);
@@ -561,7 +570,6 @@ namespace evgb {
         << (wasCleared?"successfully":"failed to") << " cleared count for "
         << fFluxType;
     }
-
     return;
   }
 
@@ -972,7 +980,9 @@ namespace evgb {
     //Using the atmospheric fluxes
     else if (fFluxType.compare("atmo_FLUKA")  == 0 || 
              fFluxType.compare("atmo_BARTOL") == 0 || 
-             fFluxType.compare("atmo_BGLRS")  == 0    ){
+             fFluxType.compare("atmo_BGLRS")  == 0 ||
+             fFluxType.compare("atmo_HONDA")  == 0 ||
+             fFluxType.compare("atmo_HAKKM")  == 0 ){
 
       // Instantiate appropriate concrete flux driver
       genie::flux::GAtmoFlux *atmo_flux_driver = 0;
@@ -998,7 +1008,15 @@ namespace evgb {
 #endif
         atmo_flux_driver = dynamic_cast<genie::flux::GAtmoFlux *>(bartol_flux);
       } 
-      
+#if __GENIE_RELEASE_CODE__ >= GRELCODE(2,12,2)
+      if (fFluxType.compare("atmo_HONDA") == 0 ||
+          fFluxType.compare("atmo_HAKKM") == 0) {
+        genie::flux::GHAKKMAtmoFlux * honda_flux =
+          new genie::flux::GHAKKMAtmoFlux;
+        atmo_flux_driver = dynamic_cast<genie::flux::GAtmoFlux *>(honda_flux);
+      }
+#endif
+
       atmo_flux_driver->ForceMinEnergy(fAtmoEmin);
       atmo_flux_driver->ForceMaxEnergy(fAtmoEmax);
       
@@ -1222,7 +1240,8 @@ namespace evgb {
     // determine if we should keep throwing neutrinos for 
     // this spill or move on
 
-    if(fFluxType.compare("atmo_FLUKA") == 0 || fFluxType.compare("atmo_BARTOL") == 0){
+    if(fFluxType.compare("atmo_FLUKA") == 0 || fFluxType.compare("atmo_BARTOL") == 0 ||
+       fFluxType.compare("atmo_HONDA") == 0 || fFluxType.compare("atmo_HAKKM") == 0 ){
       if((fEventsPerSpill > 0) && (fSpillEvents < fEventsPerSpill)){
         return false;
       }
@@ -1245,7 +1264,8 @@ namespace evgb {
 
     // made it to here, means need to reset the counters
 
-    if(fFluxType.compare("atmo_FLUKA") == 0 || fFluxType.compare("atmo_BARTOL") == 0){
+    if(fFluxType.compare("atmo_FLUKA") == 0 || fFluxType.compare("atmo_BARTOL") == 0 ||
+       fFluxType.compare("atmo_HONDA") == 0 || fFluxType.compare("atmo_HAKKM") == 0 ){
       //the exposure for atmo is in SECONDS. In order to get seconds, it needs to 
       //be normalized by 1e4 to take into account the units discrepency between 
       //AtmoFluxDriver(/m2) and Generate(/cm2) and it need to be normalized by 
@@ -1351,7 +1371,8 @@ namespace evgb {
       ++fSpillEvents;
     }
 
-    else if(fFluxType.compare("atmo_FLUKA") == 0 || fFluxType.compare("atmo_BARTOL") == 0){
+    else if(fFluxType.compare("atmo_FLUKA") == 0 || fFluxType.compare("atmo_BARTOL") == 0 ||
+            fFluxType.compare("atmo_HAKKM") == 0 || fFluxType.compare("atmo_HONDA") == 0 ){
       if(fEventsPerSpill > 0) ++fSpillEvents;
       flux.fFluxType = simb::kHistPlusFocus;
     }
