@@ -1,8 +1,8 @@
 ////////////////////////////////////////////////////////////////////////
-/// \file  GIBUUHelper.h
+/// \file  GiBUUHelper.h
 /// \brief Wrapper for generating neutrino interactions with GIBUU
 ///
-/// \version $Id: GIBUUHelper.h,v 1.25 2012-09-07 21:35:26 brebel Exp $
+/// \version $Id: GiBUUHelper.h,v 1.25 2012-09-07 21:35:26 brebel Exp $
 /// \author  jpaley@fnal.gov, brebel@fnal.gov rhatcher@fnal.gov
 ////////////////////////////////////////////////////////////////////////
 #ifndef EVGB_GIBUUHELPER_H

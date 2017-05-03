@@ -6,7 +6,7 @@
 /// \author  Robert Hatcher <rhatcher \at fnal.gov>
 ///          Fermi National Accelerator Laboratory
 ///
-/// \update  2012-08-17 initial version
+/// update  2012-08-17 initial version
 ////////////////////////////////////////////////////////////////////////
 
 #include "nutools/G4Base/UserActionFactory.h"

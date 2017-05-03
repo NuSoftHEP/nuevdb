@@ -4,8 +4,8 @@
 ///
 /// \version $Id: GENIEHelper.cxx,v 1.58 2012-11-28 23:04:03 rhatcher Exp $
 /// \author  brebel@fnal.gov  rhatcher@fnal.gov
-/// \update 2010-03-04 Sarah Budd added simple_flux
-/// \update 2013-04-24 rhatcher adapt to R-2_8_0 interface; subset flux files
+/// update 2010-03-04 Sarah Budd added simple_flux
+/// update 2013-04-24 rhatcher adapt to R-2_8_0 interface; subset flux files
 ////////////////////////////////////////////////////////////////////////
 
 // C/C++ includes

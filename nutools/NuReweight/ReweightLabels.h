@@ -1,5 +1,5 @@
 ////////////////////////////////////////////////////////////////////////
-///\file ReweightLabel.h
+///\file ReweightLabels.h
 ///\brief typedef defining all of the available GENIE reweighting parameters
 ///
 ///\author  nathan.mayer@tufts.edu 
