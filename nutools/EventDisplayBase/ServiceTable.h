@@ -1,5 +1,5 @@
 ///
-/// \file   ServiceTable.h
+/// \file   EventDisplayBase/ServiceTable.h
 /// \brief  Interface to services and their configurations
 /// \author messier@indiana.edu
 ///
