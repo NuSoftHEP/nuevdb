@@ -18,22 +18,21 @@ namespace evdb {
   ///
   class EditMenu {
     RQ_OBJECT("evdb::EditMenu")
-      
+
   public:
     EditMenu(TGMenuBar* menubar, TGMainFrame* mf);
     virtual ~EditMenu();
 
     void SetServices();
-    
+
     void MenuSelect(int which);
     void WipeMenu(TGPopupMenu* m);
-  
+
   private:
     TGMainFrame*   fMainFrame;   ///< Main graphics frame
     TGPopupMenu*   fEditMenu;    ///< The file menu
     TGPopupMenu*   fDrawingMenu; ///< Drawing options
     TGPopupMenu*   fExpMenu;     ///< Experiment services
-    TGPopupMenu*   fARTMenu;     ///< ART services
     TGLayoutHints* fLayout;      ///< How to layout the menu
   };
 }

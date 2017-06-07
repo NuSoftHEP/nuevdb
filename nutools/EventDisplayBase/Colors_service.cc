@@ -11,8 +11,7 @@
 
 namespace evdb {
 
-  Colors::Colors(fhicl::ParameterSet const& p,
-		 art::ActivityRegistry&     r) 
+  Colors::Colors(fhicl::ParameterSet const& p) : Reconfigurable{p}
   {
     this->reconfigure(p);
   }
@@ -30,23 +29,23 @@ namespace evdb {
 
   //......................................................................
 
-  void Colors::reconfigure(fhicl::ParameterSet const& p) 
+  void Colors::reconfigure(fhicl::ParameterSet const& p)
   {
     int black_on_white = p.get<int>("BlackOnWhite.val");
     if (black_on_white) this->BlackOnWhite();
     else                this->WhiteOnBlack();
 
-    std::vector<std::string> 
+    std::vector<std::string>
       cs = p.get<std::vector<std::string> >("ColorScales.val");
     for (unsigned int i=0; i<cs.size(); ++i) {
       this->UnpackColorScale(p,cs[i]);
     }
   }
-  
+
   //......................................................................
-  
-  void Colors::UnpackColorScale(fhicl::ParameterSet const& p, 
-				const std::string&         nm)
+
+  void Colors::UnpackColorScale(fhicl::ParameterSet const& p,
+                                const std::string&         nm)
   {
     std::string palette_tag(nm); palette_tag += "_Palette.val";
     std::string n_tag(nm);       n_tag       += "_N.val";
@@ -55,7 +54,7 @@ namespace evdb {
     std::string reverse_tag(nm); reverse_tag += "_Reverse.val";
     std::string ofufc_tag(nm);   ofufc_tag   += "_UnderOverflowColors.val";
     std::string hv_tag(nm);      hv_tag      += "_HVPairs.val";
-      
+
     int n, reverse;
     std::string palette, scale;
     std::vector<float> r, hv;
@@ -67,16 +66,16 @@ namespace evdb {
     reverse = p.get<int>                (reverse_tag);
     ofufc   = p.get<std::vector<int> >  (ofufc_tag);
     hv      = p.get<std::vector<float> >(hv_tag);
-    
+
     ColorScale* cs = new ColorScale(r[0],
-				    r[1],
-				    ColorScale::Palette(palette),
-				    ColorScale::Scale(scale),
-				    n,
-				    hv[0],
-				    hv[1],
-				    hv[2],
-				    hv[3]);
+                                    r[1],
+                                    ColorScale::Palette(palette),
+                                    ColorScale::Scale(scale),
+                                    n,
+                                    hv[0],
+                                    hv[1],
+                                    hv[2],
+                                    hv[3]);
     cs->SetUnderFlowColor(ofufc[0]);
     cs->SetOverFlowColor(ofufc[1]);
     if (reverse) cs->Reverse();
@@ -84,15 +83,15 @@ namespace evdb {
     if (old) delete old;
     fColorScales[nm] = cs;
   }
-  
+
   ///
   /// Look up a color scale by name
   ///
-  ColorScale& Colors::Scale(const std::string& nm) 
+  ColorScale& Colors::Scale(const std::string& nm)
   {
     ColorScale* cs = fColorScales[nm];
     if (cs) return (*cs);
-    
+
     static ColorScale gsDefaultCS(0,100);
     return gsDefaultCS;
   }
@@ -111,7 +110,7 @@ namespace evdb {
   }
 
   //......................................................................
-  
+
   void Colors::BlackOnWhite()
   {
     fFG[5] = fBG[0] = kWhite;
@@ -122,7 +121,7 @@ namespace evdb {
     fFG[0] = fBG[5] = kBlack;
     this->SetStyle();
   }
-  
+
   //......................................................................
 
   int Colors::Foreground(int i)
@@ -164,11 +163,11 @@ namespace evdb {
     gStyle->SetStatTextColor(fgcolor);
     gStyle->SetTitleFillColor(bgcolor);
     gStyle->SetTitleTextColor(fgcolor);
-    
+
     // Force this style on all histograms
     gROOT->ForceStyle();
   }
-  
+
   DEFINE_ART_SERVICE(Colors)
 
 } // namespace evdb

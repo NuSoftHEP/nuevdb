@@ -15,19 +15,18 @@ namespace dbi
 {
 
   //------------------------------------------------------------
-  DBIService::DBIService(const fhicl::ParameterSet& pset,
-			 art::ActivityRegistry &reg)
+  DBIService::DBIService(const fhicl::ParameterSet& pset) : evdb::Reconfigurable{pset}
   {
     reconfigure(pset);
   }
-  
+
   //-----------------------------------------------------------
   void DBIService::reconfigure(const fhicl::ParameterSet& pset)
   {
     fVerbosity = pset.get< int >("Verbosity",0);
     fTimeQueries = pset.get< bool >("TimeQueries", false);
     fTimeParsing = pset.get< bool >("TimeParsing", false);
-    
+
     fWebServiceURL = pset.get< std::string >("WebServiceURL");
     fQueryEngineURL = pset.get< std::string >("QueryEngineURL");
     fDBUser = pset.get< std::string >("DBUser");
@@ -35,11 +34,11 @@ namespace dbi
 
   //-----------------------------------------------------------
   Table* DBIService::CreateTable(std::string tableName,
-				 std::string schemaName,
-				 int tableType, int dataSource)
+                                 std::string schemaName,
+                                 int tableType, int dataSource)
   {
     if (tableName.empty()) return 0;
-    
+
     Table* t = new nutools::dbi::Table();
     t->SetTableName(tableName);
     t->SetDetector(schemaName);
@@ -61,7 +60,7 @@ namespace dbi
 
     return t;
   }
-  
+
   DEFINE_ART_SERVICE(DBIService)
 
 }
