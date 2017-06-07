@@ -1,4 +1,3 @@
-
 set( PACKAGE IFDatabase )
 FILE( GLOB src_files *.cpp )
 
@@ -39,6 +38,7 @@ art_make_exec( NAME dumpConditionsToCSV
                )
 
 simple_plugin( DBI "service"
+               nutools_EventDisplayBase
                nutools_IFDatabase
                ${ART_FRAMEWORK_CORE}
                ${ART_FRAMEWORK_PRINCIPAL}
@@ -46,12 +46,12 @@ simple_plugin( DBI "service"
                ${ART_FRAMEWORK_SERVICES_BASIC}
                art_Persistency_Common
                art_Utilities
-	       canvas
+               canvas
                ${MF_MESSAGELOGGER}
                ${MF_UTILITIES}
                ${FHICLCPP}
                cetlib
-	       cetlib_except
+               cetlib_except
              )
 
 install_headers()

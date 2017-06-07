@@ -5,25 +5,29 @@
 ///
 #ifndef EVDB_SERVICETABLE_H
 #define EVDB_SERVICETABLE_H
+#include "cetlib/exempt_ptr.h"
+#include "fhiclcpp/ParameterSet.h"
+#include "nutools/EventDisplayBase/Reconfigurable.h"
+
 #include <vector>
 #include <map>
 #include <string>
-namespace fhicl { class ParameterSet; }
+#include <tuple>
 
 namespace evdb {
-  static const int kDRAWING_SERVICE    = 1;
-  static const int kEXPERIMENT_SERVICE = 2;
-  static const int kART_SERVICE        = 3;
-  static const int kNONE_SERVICE       = 4;
+
+  static constexpr int kDRAWING_SERVICE    = 1;
+  static constexpr int kEXPERIMENT_SERVICE = 2;
 
   ///
   /// \brief Information about a service required by the event display
   ///
-  class ServiceTableEntry {
-  public:
+  struct ServiceTableEntry {
     std::string fName;
+    fhicl::ParameterSet fCurrentParamSet;
     std::string fParamSet;
-    int         fCategory;
+    int fCategory;
+    cet::exempt_ptr<Reconfigurable> fService;
   };
 
   ///
@@ -33,25 +37,20 @@ namespace evdb {
   public:
     static ServiceTable& Instance();
 
-    void Discover();
-    
-    static bool IsNoneService   (const std::string& s);
-    static bool IsARTService    (const std::string& s);
-    static bool IsDrawingService(const std::string& s);
-    
+    void RegisterService(fhicl::ParameterSet const& ps, cet::exempt_ptr<Reconfigurable> s);
+    static bool IsDrawingService(std::string const& s);
+
     void Edit(unsigned int i);
     void ApplyEdits();
 
-    static void OverrideCategory(const std::string& s, int cat);
-    
-    const fhicl::ParameterSet GetParameterSet(unsigned int i) const;
+    static void OverrideCategory(std::string const& s, int cat);
+    fhicl::ParameterSet const& GetParameterSet(unsigned int i) const;
 
   public:
     std::vector<ServiceTableEntry> fServices;
-    
+
   private:
     static std::map<std::string, int> fgCategoryOverrides;
-
     ServiceTable();
   };
 }

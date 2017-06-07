@@ -8,45 +8,44 @@
 
 #include <string>
 
-#include <nutools/IFDatabase/Table.h>
-
-//Framework includes
-#include "fhiclcpp/ParameterSet.h"
 #include "art/Framework/Services/Registry/ActivityRegistry.h"
 #include "art/Framework/Services/Registry/ServiceHandle.h"
 #include "art/Framework/Services/Registry/ServiceMacros.h"
+#include "fhiclcpp/ParameterSet.h"
+#include "nutools/EventDisplayBase/Reconfigurable.h"
+#include "nutools/IFDatabase/Table.h"
+
 
 namespace nutools
 {
   namespace dbi
   {
-    
+
     /// \brief Simple service to provide a RunHistory configured to the right run
-    class DBIService 
+    class DBIService : public evdb::Reconfigurable
     {
     public:
       // Get a RunHistoryService instance here
-      DBIService(const fhicl::ParameterSet& pset, art::ActivityRegistry& reg);
-      ~DBIService() {};
-      
+      DBIService(const fhicl::ParameterSet& pset);
+
       void reconfigure(const fhicl::ParameterSet& pset);
-            
+
       Table* CreateTable(std::string tableName="",
-			 std::string schemaName="",
-			 int tableType=nutools::dbi::kConditionsTable,
-			 int dataSource=nutools::dbi::kOffline);
-      
+                         std::string schemaName="",
+                         int tableType=nutools::dbi::kConditionsTable,
+                         int dataSource=nutools::dbi::kOffline);
+
     protected:
       int fVerbosity;
       bool fTimeQueries;
       bool fTimeParsing;
-      
+
       std::string fWebServiceURL;
       std::string fQueryEngineURL;
       std::string fDBUser;
-      
+
     };
-    
+
   }
 }
 

@@ -7,7 +7,7 @@
 ///
 #ifndef EVDB_EVENTDISPLAY_H
 #define EVDB_EVENTDISPLAY_H
-#ifndef __CINT__ // root 5
+
 #include "art/Framework/Services/Registry/ServiceMacros.h"
 namespace fhicl { class ParameterSet; }
 namespace art   { class ActivityRegistry; }
@@ -16,7 +16,7 @@ namespace art   { class InputSource; }
 namespace art   { class EventID; }
 namespace art   { class Event; }
 
-namespace evdb 
+namespace evdb
 {
   ///
   /// \brief ART event display service
@@ -24,22 +24,21 @@ namespace evdb
   class EventDisplay
   {
   public:
-    
+
     EventDisplay(fhicl::ParameterSet const& pset, art::ActivityRegistry& reg);
     void reconfigure(fhicl::ParameterSet const& pset);
-    ~EventDisplay();
-    
+
   private:
 
     void postBeginJob();
     void postBeginJobWorkers(art::InputSource* inputs,
-			     std::vector<art::Worker*> const& workers);
+                             std::vector<art::Worker*> const& workers);
     void preProcessEvent(art::Event const&);
     void postProcessEvent(art::Event const&);
-    
+
   private:
     art::InputSource* fInputSource; ///< Input source of events
-    
+
   public:
     unsigned int fAutoAdvanceInterval; ///< Wait time in milliseconds
     int          fAutoPrintCount;      ///< Number of events printed so far
@@ -50,7 +49,7 @@ namespace evdb
     std::string  fEchoPrintTempFile;   ///< a temporary file to enable atomic writes
   };
 }
-#endif // __CINT__
+
 DECLARE_ART_SERVICE(evdb::EventDisplay, LEGACY)
 #endif // EVDB_EVENTDISPLAY_H
 
