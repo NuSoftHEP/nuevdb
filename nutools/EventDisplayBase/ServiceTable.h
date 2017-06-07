@@ -11,10 +11,9 @@
 namespace fhicl { class ParameterSet; }
 
 namespace evdb {
-  static const int kDRAWING_SERVICE    = 1;
-  static const int kEXPERIMENT_SERVICE = 2;
-  static const int kART_SERVICE        = 3;
-  static const int kNONE_SERVICE       = 4;
+  static constexpr int kDRAWING_SERVICE    = 1;
+  static constexpr int kEXPERIMENT_SERVICE = 2;
+  static constexpr int kNONE_SERVICE       = 4;
 
   ///
   /// \brief Information about a service required by the event display
@@ -34,21 +33,20 @@ namespace evdb {
     static ServiceTable& Instance();
 
     void Discover();
-    
-    static bool IsNoneService   (const std::string& s);
-    static bool IsARTService    (const std::string& s);
-    static bool IsDrawingService(const std::string& s);
-    
+
+    static bool IsNoneService   (std::string const& s);
+    static bool IsDrawingService(std::string const& s);
+
     void Edit(unsigned int i);
     void ApplyEdits();
 
-    static void OverrideCategory(const std::string& s, int cat);
-    
-    const fhicl::ParameterSet GetParameterSet(unsigned int i) const;
+    static void OverrideCategory(std::string const& s, int cat);
+
+    fhicl::ParameterSet const& GetParameterSet(unsigned int i) const;
 
   public:
     std::vector<ServiceTableEntry> fServices;
-    
+
   private:
     static std::map<std::string, int> fgCategoryOverrides;
 

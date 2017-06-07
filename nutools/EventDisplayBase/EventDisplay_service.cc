@@ -47,7 +47,7 @@ namespace evdb
     }
     const char* Description() const { return "Test Canvas 1"; }
     const char* PrintTag()    const { return "Test1"; }
-    void Draw(const char* /* opt */) { 
+    void Draw(const char* /* opt */) {
       static TText* t = new TText(0.5,0.5,"-");
       static int count = 0;
       char buff[256];
@@ -85,15 +85,15 @@ namespace evdb
 
   //......................................................................
 
-  void EventDisplay::reconfigure(fhicl::ParameterSet const& pset) 
+  void EventDisplay::reconfigure(fhicl::ParameterSet const& pset)
   {
     fAutoAdvanceInterval = pset.get<unsigned int>("AutoAdvanceInterval" );
     fAutoPrintMax        = pset.get<int         >("AutoPrintMax",     0 );
     fAutoPrintPattern    = pset.get<std::string >("AutoPrintPattern", "");
     fEchoPrint           = pset.get<bool        >("EchoPrint",        false);
     fEchoPrintFile       = pset.get<std::string >("EchoPrintFile",    "$HOME/evt_echo.gif");
-    // Sanitize filename: root's OK with env variables, straight system 
-    // calls are not.  So, force a substitution of env. variables in the 
+    // Sanitize filename: root's OK with env variables, straight system
+    // calls are not.  So, force a substitution of env. variables in the
     // filename so we can do atomic-write "renames" later using a tmp file
     if (fEchoPrint) {
       wordexp_t p;
@@ -103,7 +103,7 @@ namespace evdb
       fEchoPrintFile = std::string(*w);
       // the tempfile has to end with the same extension (eg, ".gif") as
       // the specified filename.  root's printing takes the format of the file
-      // from that extension.  So, we have to construct a name with the same 
+      // from that extension.  So, we have to construct a name with the same
       // path, and extension: need to insert a "tmp" before the final .gif
       // Sp, simply grab the file extension and stick it back on the end
       std::string::size_type idx;
@@ -134,29 +134,29 @@ namespace evdb
   //......................................................................
 
   void EventDisplay::postBeginJobWorkers(art::InputSource* input_source,
-					 std::vector<art::Worker*> const&) 
+                                         std::vector<art::Worker*> const&)
   {
     fInputSource = input_source;
   }
 
   //......................................................................
-  
-  void EventDisplay::postBeginJob() 
+
+  void EventDisplay::postBeginJob()
   {
     ServiceTable::Instance().Discover();
     DisplayWindow::SetServicesAll();
   }
-  
+
   //......................................................................
-  
-  void EventDisplay::preProcessEvent(art::Event const & evt) 
+
+  void EventDisplay::preProcessEvent(art::Event const & evt)
   {
     evdb::DisplayWindow::SetRunEventAll(evt.id().run(), evt.id().event());
   }
 
   //......................................................................
 
-  void EventDisplay::postProcessEvent(art::Event const& evt )
+  void EventDisplay::postProcessEvent(art::Event const& evt)
   {
     // stuff the event into the holder
     evdb::EventHolder *holder = evdb::EventHolder::Instance();
@@ -170,7 +170,7 @@ namespace evdb
       // Hold here for user input from the GUI...
       app->Run(kTRUE);
     }
-    
+
     //
     // Apply edits to any services that may have been reconfigured
     //
@@ -213,9 +213,9 @@ namespace evdb
         << fEchoPrintFile;
       else
         mf::LogWarning("EventDisplayBase") << "Error renaming file "
-					   << fEchoPrintTempFile
-					   << " to " << fEchoPrintFile
-					   << " " << strerror(errno) <<"\n";
+                                           << fEchoPrintTempFile
+                                           << " to " << fEchoPrintFile
+                                           << " " << strerror(errno) <<"\n";
     }
 
     art::RootInput* rootInput = dynamic_cast<art::RootInput*>(fInputSource);
@@ -253,8 +253,8 @@ namespace evdb
       if(rootInput){
         if (!rootInput->seekToEvent(id)) { // Couldn't find event
           mf::LogWarning("EventDisplayBase") << "Unable to find "
-					     << id
-					     << " -- reloading current event.";
+                                             << id
+                                             << " -- reloading current event.";
             // Reload current event.
           rootInput->seekToEvent(evt.id());
         }

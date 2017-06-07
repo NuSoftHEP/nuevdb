@@ -69,10 +69,10 @@ static const std::vector<std::string> gsGUITAG = {
 // ParameterSetEditRow methods
 //
 ParameterSetEditRow::ParameterSetEditRow(ParameterSetEditFrame* frame,
-					 TGHorizontalFrame* lhs,
-					 TGHorizontalFrame* rhs,
-					 const fhicl::ParameterSet& ps,
-					 const std::string& key) :
+                                         TGHorizontalFrame* lhs,
+                                         TGHorizontalFrame* rhs,
+                                         const fhicl::ParameterSet& ps,
+                                         const std::string& key) :
   fFrame(frame),
   fRightLH(0),
   fLeftLH(0),
@@ -113,17 +113,17 @@ ParameterSetEditRow::ParameterSetEditRow(ParameterSetEditFrame* frame,
 
   fLeftLH  = new TGLayoutHints(kLHintsLeft, 1,1,0,0);
   fRightLH = new TGLayoutHints(kLHintsRight,1,1,0,0);
-  
+
   fLabel = new TGTextButton(lhs,
-			    key.c_str(),
-			    -1,
-			    TGButton::GetDefaultGC()(),
-			    TGTextButton::GetDefaultFontStruct(),
-			    0);
+                            key.c_str(),
+                            -1,
+                            TGButton::GetDefaultGC()(),
+                            TGTextButton::GetDefaultFontStruct(),
+                            0);
   lhs->AddFrame(fLabel);
   fLabel->SetToolTipText(fDOC.c_str());
   fLabel->SetTextJustify(kTextRight);
-  
+
   if (tag==kTEXT_ENTRY) {
     this->SetupTextEntry(rhs, fParamFlags, values);
   }
@@ -150,7 +150,7 @@ ParameterSetEditRow::ParameterSetEditRow(ParameterSetEditFrame* frame,
 
 //......................................................................
 
-ParameterSetEditRow::~ParameterSetEditRow() 
+ParameterSetEditRow::~ParameterSetEditRow()
 {
   unsigned int i;
   for (i=0; i<fCheckButton.size(); ++i) {
@@ -170,19 +170,19 @@ ParameterSetEditRow::~ParameterSetEditRow()
 //......................................................................
 
 void ParameterSetEditRow::UnpackParameter(const fhicl::ParameterSet& p,
-					  const std::string&         key,
-					  unsigned int&              flag,
-					  std::string&               tag,
-					  std::vector<std::string>&  choice,
-					  std::vector<std::string>&  value,
-					  std::string&               gui,
-					  std::string&               doc)
+                                          const std::string&         key,
+                                          unsigned int&              flag,
+                                          std::string&               tag,
+                                          std::vector<std::string>&  choice,
+                                          std::vector<std::string>&  value,
+                                          std::string&               gui,
+                                          std::string&               doc)
 {
   std::string guikey = key; guikey += ".gui";
   std::string dockey = key; dockey += ".doc";
-  
+
   flag = 0;
-  
+
   //
   // Try to extract GUI tags
   //
@@ -191,7 +191,7 @@ void ParameterSetEditRow::UnpackParameter(const fhicl::ParameterSet& p,
     doc = p.get< std::string >(dockey);
     flag |= kHAVE_GUI_TAGS;
   }
-  catch (...) { 
+  catch (...) {
     //
     // If they aren't there, try extracting it as a normal
     // parameter. Default to providing the user with a text entry box.
@@ -200,7 +200,7 @@ void ParameterSetEditRow::UnpackParameter(const fhicl::ParameterSet& p,
     doc = "See .fcl file for documentation...";
     flag |= kNO_GUI_TAGS;
   }
-  
+
   //
   // Parse out the GUI string to find out what type of frame to build
   // and the choices we should present to the user
@@ -237,47 +237,47 @@ void ParameterSetEditRow::UnpackParameter(const fhicl::ParameterSet& p,
       // Yikes - vector of vectors, perhaps?
       //
       try {
-	std::vector< std::vector <std::string> > vv;
-	vv = p.get<std::vector<std::vector<std::string> > >(valkey);
-	//
-	// Vectors of vectors are treated as vectors of
-	// std::strings. The strings assigned to the values are
-	// strings that FHICL will parse as vectors. So, this:
-	//
-	// [ [0,0], [1,1] ]
-	//
-	// is represented as:
-	//
-	// value.size()=2, value[0]="[0,0]", value[1]="[1,1]"
-	//
-	unsigned int i, j;
-	flag |= kVECTOR_PARAM;
-	for (i=0; i<vv.size(); ++i) {
-	  std::string s;
-	  s += "[";
-	  for (j=0; j<vv[i].size(); ++j) {
-	    s += vv[i][j];
-	    if (j+2<vv[i].size()) s += ",";
-	    else s += "]";
-	  }
-	  value.push_back(s);
-	}
-	if (vv.size()==0) value.push_back("[[]]");
+        std::vector< std::vector <std::string> > vv;
+        vv = p.get<std::vector<std::vector<std::string> > >(valkey);
+        //
+        // Vectors of vectors are treated as vectors of
+        // std::strings. The strings assigned to the values are
+        // strings that FHICL will parse as vectors. So, this:
+        //
+        // [ [0,0], [1,1] ]
+        //
+        // is represented as:
+        //
+        // value.size()=2, value[0]="[0,0]", value[1]="[1,1]"
+        //
+        unsigned int i, j;
+        flag |= kVECTOR_PARAM;
+        for (i=0; i<vv.size(); ++i) {
+          std::string s;
+          s += "[";
+          for (j=0; j<vv[i].size(); ++j) {
+            s += vv[i][j];
+            if (j+2<vv[i].size()) s += ",";
+            else s += "]";
+          }
+          value.push_back(s);
+        }
+        if (vv.size()==0) value.push_back("[[]]");
       }
       catch (...) {
-	// what about another fhicl::ParameterSet?
-	try{
-	  fhicl::ParameterSet v = p.get< fhicl::ParameterSet >(valkey);
-	  flag |= kPARAMETER_SET_PARAM;
-	  value.push_back(v.to_string());
-	}
-	catch(...){
-	  //
-	  // If that fails we are very stuck. Print a message and fail.
-	  //
-	  LOG_ERROR("ParameterSetEditDialog") << "Failed to parse " << key
-					      << "\n" << p.to_string();
-	}
+        // what about another fhicl::ParameterSet?
+        try{
+          fhicl::ParameterSet v = p.get< fhicl::ParameterSet >(valkey);
+          flag |= kPARAMETER_SET_PARAM;
+          value.push_back(v.to_string());
+        }
+        catch(...){
+          //
+          // If that fails we are very stuck. Print a message and fail.
+          //
+          LOG_ERROR("ParameterSetEditDialog") << "Failed to parse " << key
+                                              << "\n" << p.to_string();
+        }
       }
     }
   }
@@ -289,8 +289,8 @@ void ParameterSetEditRow::UnpackParameter(const fhicl::ParameterSet& p,
 // "frame_tag:choice1,choice2,choice3"
 //
 void ParameterSetEditRow::ParseGUItag(const std::string&        guitag,
-				      std::string&              frame,
-				      std::vector<std::string>& choice)
+                                      std::string&              frame,
+                                      std::vector<std::string>& choice)
 {
   //
   // Get the frame name. Should be piece just before the ":"
@@ -300,7 +300,7 @@ void ParameterSetEditRow::ParseGUItag(const std::string&        guitag,
   if (icolon == std::string::npos) frame = guitag;
   else                             frame = guitag.substr(0,icolon);
   if (!IsLegalGUItag(frame))       frame = kTEXT_ENTRY;
-  
+
   //
   // Get the list of choices. Should be comma separated.
   //
@@ -317,7 +317,7 @@ void ParameterSetEditRow::ParseGUItag(const std::string&        guitag,
 
 //......................................................................
 
-bool ParameterSetEditRow::IsLegalGUItag(const std::string& s) 
+bool ParameterSetEditRow::IsLegalGUItag(const std::string& s)
 {
   for(unsigned int i=0; i<gsGUITAG.size(); ++i) {
     if (s==gsGUITAG[i]) return true;
@@ -328,7 +328,7 @@ bool ParameterSetEditRow::IsLegalGUItag(const std::string& s)
 
 //......................................................................
 
-void ParameterSetEditRow::SetupTextEntry(TGCompositeFrame* f, 
+void ParameterSetEditRow::SetupTextEntry(TGCompositeFrame* f,
                                         unsigned int flags,
                                         const std::vector<std::string>& value)
 {
@@ -342,7 +342,7 @@ void ParameterSetEditRow::SetupTextEntry(TGCompositeFrame* f,
                       "evdb::ParameterSetEditRow",
                       this,
                       "TextEntryReturnPressed()");
-  
+
   std::string buff;
   if (flags&kVECTOR_PARAM) buff += "[";
   if (flags&kPARAMETER_SET_PARAM) buff += "{";
@@ -358,7 +358,7 @@ void ParameterSetEditRow::SetupTextEntry(TGCompositeFrame* f,
 
 //......................................................................
 
-void ParameterSetEditRow::SetupListBox(TGCompositeFrame* f, 
+void ParameterSetEditRow::SetupListBox(TGCompositeFrame* f,
                                       const std::vector<std::string>& choice,
                                       const std::vector<std::string>& value,
                                       bool ismulti)
@@ -366,7 +366,7 @@ void ParameterSetEditRow::SetupListBox(TGCompositeFrame* f,
   fListBox = new TGListBox(f);
   f->AddFrame(fListBox);
   if (ismulti) fListBox->SetMultipleSelections();
-  
+
   for (size_t i=0; i<choice.size(); ++i) {
     fListBox->AddEntry(choice[i].c_str(), i);
     for (size_t j=0; j<value.size(); ++j) {
@@ -390,33 +390,33 @@ void ParameterSetEditRow::SetupListBox(TGCompositeFrame* f,
 
 //......................................................................
 
-void ParameterSetEditRow::SetupRadioButtons(TGCompositeFrame* f, 
-					    const std::vector<std::string>& choice,
-					    const std::vector<std::string>& value)
+void ParameterSetEditRow::SetupRadioButtons(TGCompositeFrame* f,
+                                            const std::vector<std::string>& choice,
+                                            const std::vector<std::string>& value)
 {
   unsigned int v = atoi(value[0].c_str());
-  
+
   for (size_t i=0; i<choice.size(); ++i) {
     TGRadioButton* b = new TGRadioButton(f, choice[i].c_str(), i);
     f->AddFrame(b);
-    
+
     b->SetTextJustify(kTextLeft);
     b->Connect("Clicked()",
                "evdb::ParameterSetEditRow",
                this,
                "RadioButtonClicked()");
-    
+
     if (i==v) b->SetState(kButtonDown);
-    
+
     fRadioButton.push_back(b);
   }
 }
 
 //......................................................................
 
-void ParameterSetEditRow::SetupCheckButton(TGCompositeFrame* f, 
-					   const std::vector<std::string>& choice,
-					   const std::vector<std::string>& value)
+void ParameterSetEditRow::SetupCheckButton(TGCompositeFrame* f,
+                                           const std::vector<std::string>& choice,
+                                           const std::vector<std::string>& value)
 {
   unsigned int mask;
   unsigned int v = atoi(value[0].c_str());
@@ -427,7 +427,7 @@ void ParameterSetEditRow::SetupCheckButton(TGCompositeFrame* f,
                "evdb::ParameterSetEditRow",
                this,
                "CheckButtonClicked()");
-    
+
     mask = (0x1)<<i;
     if (v&mask) b->SetState(kButtonDown);
 
@@ -435,20 +435,20 @@ void ParameterSetEditRow::SetupCheckButton(TGCompositeFrame* f,
   }
 }
 //......................................................................
-void ParameterSetEditRow::SetupSlider(TGCompositeFrame* f, 
-				      const std::vector<std::string>& choice,
-				      const std::vector<std::string>& value)
+void ParameterSetEditRow::SetupSlider(TGCompositeFrame* f,
+                                      const std::vector<std::string>& choice,
+                                      const std::vector<std::string>& value)
 {
   fTextEntry = new TGTextEntry(f);
   f->AddFrame(fTextEntry);
-  
+
   std::string t;
   if (value.size()==1) { t = value[0]; }
-  if (value.size()==2) { 
+  if (value.size()==2) {
     t = "["; t += value[0]; t += ","; t += value[1]; t += "]";
   }
   fTextEntry->SetText(t.c_str());
-  
+
   fTextEntry->Connect("ReturnPressed()",
                       "evdb::ParameterSetEditRow",
                       this,
@@ -473,12 +473,12 @@ void ParameterSetEditRow::SetupSlider(TGCompositeFrame* f,
 
   fSlider->SetRange(min, max);
   fSlider->SetPosition(pos1, pos2);
-  
+
   fSlider->Connect("PositionChanged()",
                    "evdb::ParameterSetEditRow",
                    this,
                    "SliderPositionChanged()");
-  
+
   fTextEntry->Resize(kRowW*1/5,   kRowH);
   fSlider->   Resize(kRowW*4/5,10*kRowH);
 }
@@ -488,9 +488,9 @@ void ParameterSetEditRow::SetupSlider(TGCompositeFrame* f,
 void ParameterSetEditRow::TextEntryReturnPressed()
 {
   if (fTextEntry==0) return;
-  
+
   const char* text = fTextEntry->GetBuffer()->GetString();
-  
+
   static TColor* c = gROOT->GetColor(1);
   fTextEntry->SetTextColor(c);
 
@@ -521,7 +521,7 @@ void ParameterSetEditRow::ListBoxSelectionChanged()
   // allowed here.
   //
   if (fListBox->GetMultipleSelections()==0) return;
-  
+
   fValue = "[";
   TList selections;
   fListBox->GetSelectedEntries(&selections);
@@ -533,7 +533,7 @@ void ParameterSetEditRow::ListBoxSelectionChanged()
     if (!isfirst) fValue += ",";
     fValue += fChoice[sel->EntryId()];
     isfirst = false;
-  }    
+  }
   fValue += "]";
   fFrame->Modified();
 }
@@ -551,7 +551,7 @@ void ParameterSetEditRow::ListBoxSelected(int id)
 }
 //......................................................................
 
-void ParameterSetEditRow::RadioButtonClicked() 
+void ParameterSetEditRow::RadioButtonClicked()
 {
   unsigned int value = 0;
   TGButton* b = (TGButton*)gTQSender;
@@ -570,7 +570,7 @@ void ParameterSetEditRow::RadioButtonClicked()
 
 //......................................................................
 
-void ParameterSetEditRow::CheckButtonClicked() 
+void ParameterSetEditRow::CheckButtonClicked()
 {
   int value = 0;
   for (unsigned int i=0; i<fCheckButton.size(); ++i) {
@@ -584,15 +584,15 @@ void ParameterSetEditRow::CheckButtonClicked()
 
 //......................................................................
 
-void ParameterSetEditRow::SliderPositionChanged() 
+void ParameterSetEditRow::SliderPositionChanged()
 {
   char buff[1024];
   float mn, mx, ave;
   fSlider->GetPosition(mn, mx);
-  
+
   ave = 0.5*(mn+mx);
 
-  if (fParamFlags & kINTEGER_PARAM) {  
+  if (fParamFlags & kINTEGER_PARAM) {
     int mni  = rint(mn);
     int mxi  = rint(mx);
     int avei = rint(ave);
@@ -618,7 +618,7 @@ void ParameterSetEditRow::SliderPositionChanged()
 
 //......................................................................
 
-void ParameterSetEditRow::Finalize() 
+void ParameterSetEditRow::Finalize()
 {
   if (fTextEntry) {
     if (fValue != fTextEntry->GetBuffer()->GetString()) {
@@ -636,7 +636,7 @@ std::string ParameterSetEditRow::AsFHICL() const
     s << fKEY << ":" << fValue << " ";
   }
   else {
-    s << fKEY 
+    s << fKEY
       << ": { "
       << "val:" << fValue << " "
       << "gui:\"" << fGUI << "\" "
@@ -651,7 +651,7 @@ std::string ParameterSetEditRow::AsFHICL() const
 // ParameterSetEditFrame methods
 //
 ParameterSetEditFrame::ParameterSetEditFrame(TGCompositeFrame* mother,
-					     unsigned int psetid) :
+                                             unsigned int psetid) :
   fParameterSetID(psetid),
   fIsModified(false)
 {
@@ -660,10 +660,10 @@ ParameterSetEditFrame::ParameterSetEditFrame(TGCompositeFrame* mother,
   fCanvas  = new TGCanvas(mother, kWidth-6, kHeight-50);
   fCanvasH = new TGLayoutHints(kLHintsExpandX|kLHintsExpandY);
   mother->AddFrame(fCanvas, fCanvasH);
-  
+
   fContainer = new TGCompositeFrame(fCanvas->GetViewPort());
   fCanvas->SetContainer(fContainer);
-  
+
   //
   // Locate the parameter set connected to this frame
   //
@@ -671,7 +671,7 @@ ParameterSetEditFrame::ParameterSetEditFrame(TGCompositeFrame* mother,
   const fhicl::ParameterSet& pset = st.GetParameterSet(psetid);
   std::vector<std::string>   key  = pset.get_names();
   unsigned int               nkey = key.size();
-  
+
   //
   // Count the number of "non system" parameters - each of these will
   // need an row in the dialog window.
@@ -679,12 +679,12 @@ ParameterSetEditFrame::ParameterSetEditFrame(TGCompositeFrame* mother,
   unsigned int nparam = 0;
   for (i=0; i<nkey; ++i) {
     if (!((key[i]=="service_type") ||
-	  (key[i]=="module_type")  ||
-	  (key[i]=="module_label"))) {
+          (key[i]=="module_type")  ||
+          (key[i]=="module_label"))) {
       ++nparam;
     }
   }
-  
+
   //
   // Build the layout
   //
@@ -693,38 +693,38 @@ ParameterSetEditFrame::ParameterSetEditFrame(TGCompositeFrame* mother,
 
   for (i=0, j=0; i<nkey; ++i) {
     if (!((key[i]=="service_type") ||
-	  (key[i]=="module_type")  ||
-	  (key[i]=="module_label"))) {
-      
+          (key[i]=="module_type")  ||
+          (key[i]=="module_label"))) {
+
       TGHorizontalFrame*  lhs  = new TGHorizontalFrame(fContainer);
       TGHorizontalFrame*  rhs  = new TGHorizontalFrame(fContainer);
 
       TGTableLayoutHints* lhsh = new TGTableLayoutHints(0,1,j,j+1);
       TGTableLayoutHints* rhsh = new TGTableLayoutHints(1,2,j,j+1);
-      
+
       fContainer->AddFrame(lhs, lhsh);
       fContainer->AddFrame(rhs, rhsh);
-      
+
       fLHS.     push_back(lhs);
       fRHS.     push_back(rhs);
       fLHSHints.push_back(lhsh);
       fRHSHints.push_back(rhsh);
-      
+
       fRow.push_back(new ParameterSetEditRow(this, lhs, rhs, pset, key[i]));
       ++j;
     }
   }
 
-  fCanvas->Connect("ProcessedEvent(Event_t*)", "evdb::ParameterSetEditFrame", 
-		   this,
-		   "HandleMouseWheel(Event_t*)");
+  fCanvas->Connect("ProcessedEvent(Event_t*)", "evdb::ParameterSetEditFrame",
+                   this,
+                   "HandleMouseWheel(Event_t*)");
 
   fCanvas->Resize();
 }
 
 //......................................................................
 
-ParameterSetEditFrame::~ParameterSetEditFrame() 
+ParameterSetEditFrame::~ParameterSetEditFrame()
 {
   unsigned int i;
   for (i=0; i<fRow.size(); ++i)      delete fRow[i];
@@ -745,17 +745,17 @@ ParameterSetEditFrame::~ParameterSetEditFrame()
 //......................................................................
 void ParameterSetEditFrame::HandleMouseWheel(Event_t *event)
 {
-  // Handle mouse wheel to scroll.                                      
+  // Handle mouse wheel to scroll.
   if (event->fType != kButtonPress && event->fType != kButtonRelease)
     return;
-  
+
   Int_t page = 0;
   if (event->fCode == kButton4 || event->fCode == kButton5) {
     if (!fCanvas) return;
     if (fCanvas->GetContainer()->GetHeight())
       page = Int_t(Float_t(fCanvas->GetViewPort()->GetHeight() *
-			   fCanvas->GetViewPort()->GetHeight()) /
-		   fCanvas->GetContainer()->GetHeight());
+                           fCanvas->GetViewPort()->GetHeight()) /
+                   fCanvas->GetContainer()->GetHeight());
   }
 
   if (event->fCode == kButton4) {
@@ -777,7 +777,7 @@ void ParameterSetEditFrame::HandleMouseWheel(Event_t *event)
 void ParameterSetEditFrame::Modified() { fIsModified = true; }
 
 //......................................................................
-void ParameterSetEditFrame::Finalize() 
+void ParameterSetEditFrame::Finalize()
 {
   unsigned int i;
   for (i=0; i<fRow.size(); ++i) fRow[i]->Finalize();
@@ -804,22 +804,22 @@ ParameterSetEditDialog::ParameterSetEditDialog(unsigned int psetid) :
 {
   fTGTab = new TGTab(this);
   this->AddFrame(fTGTab);
-  
+
   fButtons = new TGHorizontalFrame(this);
   this->AddFrame(fButtons);
-  
+
   fApply  = new TGTextButton(fButtons, " Apply  ");
   fCancel = new TGTextButton(fButtons, " Cancel ");
   fDone   = new TGTextButton(fButtons, " Done   ");
-  
+
   fButtons->AddFrame(fApply);
   fButtons->AddFrame(fCancel);
   fButtons->AddFrame(fDone);
-  
+
   fApply-> Connect("Clicked()","evdb::ParameterSetEditDialog",this,"Apply()");
   fCancel->Connect("Clicked()","evdb::ParameterSetEditDialog",this,"Cancel()");
   fDone->  Connect("Clicked()","evdb::ParameterSetEditDialog",this,"Done()");
-  
+
   //
   // Loop over all the parameter sets and build tabs for them
   //
@@ -838,16 +838,13 @@ ParameterSetEditDialog::ParameterSetEditDialog(unsigned int psetid) :
     }
   }
   fTGTab->SetTab(top);
-  
+
   switch (which) {
   case kDRAWING_SERVICE:
     this->SetWindowName("Drawing Services");
     break;
   case kEXPERIMENT_SERVICE:
     this->SetWindowName("Experiment Services");
-    break;
-  case kART_SERVICE:
-    this->SetWindowName("ART Services");
     break;
   default:
     this->SetWindowName("Services Configuration");
@@ -860,7 +857,7 @@ ParameterSetEditDialog::ParameterSetEditDialog(unsigned int psetid) :
 
 //......................................................................
 
-ParameterSetEditDialog::~ParameterSetEditDialog() 
+ParameterSetEditDialog::~ParameterSetEditDialog()
 {
   unsigned int i;
   for (i=0; i<fFrames.size(); ++i) delete fFrames[i];
@@ -873,7 +870,7 @@ ParameterSetEditDialog::~ParameterSetEditDialog()
 
 //......................................................................
 
-void ParameterSetEditDialog::Apply() 
+void ParameterSetEditDialog::Apply()
 {
   //
   // We're not in control of the event loop so what we can do is write
@@ -889,7 +886,7 @@ void ParameterSetEditDialog::Apply()
 
       fFrames[i]->Finalize();
       std::string p = fFrames[i]->AsFHICL();
-      
+
       p += "service_type:";
       p += st.fServices[psetid].fName;
 
@@ -906,7 +903,7 @@ void ParameterSetEditDialog::Cancel() { this->SendCloseMessage(); }
 
 //......................................................................
 
-void ParameterSetEditDialog::Done() 
+void ParameterSetEditDialog::Done()
 {
   this->Apply();
   this->SendCloseMessage();
@@ -923,10 +920,10 @@ void ParameterSetEditDialog::CloseWindow() { delete this; }
 std::string ParameterSetEditDialog::TabName(const std::string& s)
 {
   size_t n = 0;
-  
+
   n = s.find("DrawingOptions");
   if (n!=std::string::npos) return s.substr(0,n);
-  
+
   return s;
 }
 
