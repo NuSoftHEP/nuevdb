@@ -824,6 +824,7 @@ ParameterSetEditDialog::ParameterSetEditDialog(unsigned int psetid) :
   // Loop over all the parameter sets and build tabs for them
   //
   const ServiceTable& st = ServiceTable::Instance();
+  assert(psetid < st.fServices.size());
   int which = st.fServices[psetid].fCategory;
 
   unsigned int i;

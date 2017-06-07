@@ -129,10 +129,6 @@ namespace evdb
 
   //......................................................................
 
-  EventDisplay::~EventDisplay() { }
-
-  //......................................................................
-
   void EventDisplay::postBeginJobWorkers(art::InputSource* input_source,
                                          std::vector<art::Worker*> const&)
   {
@@ -143,7 +139,6 @@ namespace evdb
 
   void EventDisplay::postBeginJob()
   {
-    ServiceTable::Instance().Discover();
     DisplayWindow::SetServicesAll();
   }
 

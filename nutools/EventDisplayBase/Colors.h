@@ -5,31 +5,32 @@
 ///
 #ifndef EVDB_COLORS_H
 #define EVDB_COLORS_H
-#ifndef __CINT__ // root 5
+
 #include <vector>
 #include <string>
 
-#include "fhiclcpp/ParameterSet.h"
 #include "art/Framework/Services/Registry/ActivityRegistry.h"
 #include "art/Framework/Services/Registry/ServiceHandle.h"
 #include "art/Framework/Services/Registry/ServiceMacros.h"
+#include "fhiclcpp/ParameterSet.h"
+#include "nutools/EventDisplayBase/Reconfigurable.h"
 
-namespace evdb 
+namespace evdb
 {
   class ColorScale;
-  class Colors 
+  class Colors : public Reconfigurable
   {
   public:
-    Colors(fhicl::ParameterSet const& p, art::ActivityRegistry& r);
+    Colors(fhicl::ParameterSet const& p);
     ~Colors();
     void reconfigure(fhicl::ParameterSet const& p);
-    
+
     ///
     /// Set foreground and background colors for white text on black
     /// background
     ///
     void WhiteOnBlack();
-    
+
     ///
     /// Set foreground and background colors for black text on black
     /// background
@@ -49,7 +50,7 @@ namespace evdb
     /// least
     ///
     int Background(int i=0);
-    
+
     ///
     /// Look up a color scale by name
     ///
@@ -60,7 +61,7 @@ namespace evdb
     /// Unpack the parameters for a named color scale
     ///
     void UnpackColorScale(fhicl::ParameterSet const& p,
-			  const std::string&         c);
+                          const std::string&         c);
     ///
     /// Push the colors off to the ROOT style
     ///
@@ -76,7 +77,7 @@ namespace evdb
     std::map<std::string,ColorScale*> fColorScales;
   };
 }
-#endif // __CINT__
+
 DECLARE_ART_SERVICE(evdb::Colors, LEGACY)
 #endif // EVDB_COLORS
 ////////////////////////////////////////////////////////////////////////
