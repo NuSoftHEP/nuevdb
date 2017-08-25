@@ -80,6 +80,7 @@ void ServiceTable::ApplyEdits()
       fhicl::make_ParameterSet(s.fParamSet, pset);
       s.fParamSet.clear();
       s.fService->do_reconfigure(pset);
+      s.fCurrentParamSet = pset;
     }
     catch (fhicl::exception const& e) {
       LOG_ERROR("ServiceTable") << "Error parsing the new configuration:\n"
