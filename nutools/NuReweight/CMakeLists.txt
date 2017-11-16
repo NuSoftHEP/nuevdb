@@ -1,52 +1,12 @@
 
 ##cet_add_compiler_flags(CXX -DSETDIFFXSEC_1ARG )
 
-art_make( LIB_LIBRARIES 
+art_make( LIB_LIBRARIES
                         ${LOG4CPP}
                         ${XML2}
                         ${PYTHIA6}
                         ${LHAPDF}
-                        ${GALGORITHM}
-                        ${GBARYONRESONANCE}
-                        ${GBASE}
-                        ${GBODEKYANG}
-                        ${GCHARM}
-                        ${GCOH}
-                        ${GDFRC}
-                        ${GDIS}
-                        ${GCROSSSECTIONS}
-                        ${GDECAY}
-                        ${GELAS}
-                        ${GELFF}
-                        ${GHEP}
-                        ${GEVGCORE}
-                        ${GEVGMODULES}
-                        ${GEVGDRIVERS}
-                        ${GGIBUU}
-                        ${GHADRONTRANSP}
-                        ${GFRAGMENTATION}
-                        ${GINTERACTION}
-                        ${GLLEWELLYNSMITH}
-                        ${GMEC}
-                        ${GMESSENGER}
-                        ${GNUGAMMA}
-                        ${GNUE}
-                        ${GNTUPLE}
-                        ${GNUCLEAR}
-                        ${GNUMERICAL}
-                        ${GQPM}
-                        ${GPDG}
-                        ${GPDF}
-                        ${GQEL}
-                        ${GRES}
-                        ${GREGISTRY}
-                        ${GREINSEHGAL}
-                        ${GUTILS}
-                        ${GGEO}
-                        ${GFLUXDRIVERS}
-                        ${GMUELOSS}
-                        ${GREWEIGHT}
-                        ${GNUCLEONDECAY}
+                        ${GENIE_LIB_LIST}
                         ${ROOT_CORE}
                         ${ROOT_CINT}
                         ${ROOT_RIO}

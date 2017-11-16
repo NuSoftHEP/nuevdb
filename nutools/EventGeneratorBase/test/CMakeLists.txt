@@ -3,7 +3,7 @@ art_make( MODULE_LIBRARIES nusimdata_SimulationBase
                            nutools_EventGeneratorBase_CRY
                            nutools_EventGeneratorBase_GENIE
                         art_Framework_Services_Optional_RandomNumberGenerator_service
-			art_Framework_Services_Registry
+                        art_Framework_Services_Registry
                         ${MF_MESSAGELOGGER}
                         ${MF_UTILITIES}
                         ${FHICLCPP}
@@ -12,47 +12,7 @@ art_make( MODULE_LIBRARIES nusimdata_SimulationBase
                         ${XML2}
                         ${PYTHIA6}
                         ${LHAPDF}
-                        ${GALGORITHM}
-                        ${GBARYONRESONANCE}
-                        ${GBASE}
-                        ${GBODEKYANG}
-                        ${GCHARM}
-                        ${GCOH}
-                        ${GDFRC}
-                        ${GDIS}
-                        ${GCROSSSECTIONS}
-                        ${GDECAY}
-                        ${GELAS}
-                        ${GELFF}
-                        ${GHEP}
-                        ${GEVGCORE}
-                        ${GEVGMODULES}
-                        ${GEVGDRIVERS}
-                        ${GGIBUU}
-                        ${GHADRONTRANSP}
-                        ${GFRAGMENTATION}
-                        ${GINTERACTION}
-                        ${GLLEWELLYNSMITH}
-                        ${GMEC}
-                        ${GMESSENGER}
-                        ${GNUGAMMA}
-                        ${GNUE}
-                        ${GNTUPLE}
-                        ${GNUCLEAR}
-                        ${GNUMERICAL}
-                        ${GQPM}
-                        ${GPDG}
-                        ${GPDF}
-                        ${GQEL}
-                        ${GRES}
-                        ${GREGISTRY}
-                        ${GREINSEHGAL}
-                        ${GUTILS}
-                        ${GGEO}
-                        ${GFLUXDRIVERS}
-                        ${GMUELOSS}
-                        ${GREWEIGHT}
-                        ${GNUCLEONDECAY}
+                        ${GENIE_LIB_LIST}
                         ${CRY}
                         ${ROOT_CORE}
                         ${ROOT_CINT}

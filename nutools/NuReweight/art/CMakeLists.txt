@@ -10,62 +10,22 @@ set( NURW_LIBS ${ART_FRAMEWORK_SERVICES_REGISTRY}
                ${ART_FRAMEWORK_PRINCIPAL}
                art_Persistency_Provenance
                art_Utilities
-	       canvas
+               canvas
                ${MF_MESSAGELOGGER}
                ${MF_UTILITIES}
                ${FHICLCPP}
                cetlib
-	       cetlib_except
+               cetlib_except
                ${LOG4CPP}
                ${XML2}
                ${PYTHIA6}
                ${LHAPDF}
-               ${GALGORITHM}
-               ${GBARYONRESONANCE}
-               ${GBASE}
-               ${GBODEKYANG}
-               ${GCHARM}
-               ${GCOH}
-               ${GDFRC}
-               ${GDIS}
-               ${GCROSSSECTIONS}
-               ${GDECAY}
-               ${GELAS}
-               ${GELFF}
-               ${GHEP}
-               ${GEVGCORE}
-               ${GEVGMODULES}
-               ${GEVGDRIVERS}
-               ${GGIBUU}
-               ${GHADRONTRANSP}
-               ${GFRAGMENTATION}
-               ${GINTERACTION}
-               ${GLLEWELLYNSMITH}
-               ${GMEC}
-               ${GMESSENGER}
-               ${GNUGAMMA}
-               ${GNUE}
-               ${GNTUPLE}
-               ${GNUCLEAR}
-               ${GNUMERICAL}
-               ${GQPM}
-               ${GPDG}
-               ${GPDF}
-               ${GQEL}
-               ${GRES}
-               ${GREGISTRY}
-               ${GREINSEHGAL}
-               ${GUTILS}
-               ${GGEO}
-               ${GFLUXDRIVERS}
-               ${GMUELOSS}
-               ${GREWEIGHT}
-               ${GNUCLEONDECAY}
+               ${GENIE_LIB_LIST}
                ${ROOT_CORE}
-               ${ROOT_CINT} 
+               ${ROOT_CINT}
                ${ROOT_RIO}
                ${ROOT_NET}
-               ${ROOT_HIST} 
+               ${ROOT_HIST}
                ${ROOT_GRAF}
                ${ROOT_GRAF3D}
                ${ROOT_GPAD}
@@ -77,7 +37,7 @@ set( NURW_LIBS ${ART_FRAMEWORK_SERVICES_REGISTRY}
                ${ROOT_MATHCORE}
                ${ROOT_THREAD}
                ${ROOT_EG}
-               ${ROOT_TREEPLAYER} 
+               ${ROOT_TREEPLAYER}
                ${ROOT_FFTW}
                ${ROOT_REFLEX}
                ${ROOTSYS}/lib/libEGPythia6.so
