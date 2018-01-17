@@ -21,21 +21,7 @@ set( NURW_LIBS ${ART_FRAMEWORK_SERVICES_REGISTRY}
                ${PYTHIA6}
                ${LHAPDF}
                ${GENIE_LIB_LIST}
-               ${ROOT_CORE}
-               ${ROOT_CINT}
-               ${ROOT_RIO}
-               ${ROOT_NET}
-               ${ROOT_HIST}
-               ${ROOT_GRAF}
-               ${ROOT_GRAF3D}
-               ${ROOT_GPAD}
-               ${ROOT_TREE}
-               ${ROOT_RINT}
-               ${ROOT_POSTSCRIPT}
-               ${ROOT_MATRIX}
-               ${ROOT_PHYSICS}
-               ${ROOT_MATHCORE}
-               ${ROOT_THREAD}
+               ${ROOT_BASIC_LIB_LIST}
                ${ROOT_EG}
                ${ROOT_TREEPLAYER}
                ${ROOT_FFTW}
