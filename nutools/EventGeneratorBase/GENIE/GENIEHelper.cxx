@@ -99,7 +99,7 @@
 
 #include "nutools/EventGeneratorBase/GENIE/GENIE2ART.h"
 #include "nutools/EventGeneratorBase/GENIE/EvtTimeShiftFactory.h"
-#include "nutools/EventGeneratorBase/GENIE/EvtTimeSHiftI.h"
+#include "nutools/EventGeneratorBase/GENIE/EvtTimeShiftI.h"
 
 // nusimdata includes
 #include "nusimdata/SimulationBase/MCTruth.h"
