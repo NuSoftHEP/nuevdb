@@ -66,18 +66,18 @@
 
 //---------------------------------------------------------------------------
 //choose a spill time (ns) to shift the vertex times by:
-// double spillTime = fGlobalTimeOffset + 
+// double spillTime = fGlobalTimeOffset +
 //    fHelperRandom->Uniform()*fRandomTimeOffset;
 
 void evgb::FillMCTruth(const genie::EventRecord *record, double spillTime,
                        simb::MCTruth &truth)
-{   
+{
   TLorentzVector *vertex = record->Vertex();
-  
+
   // get the Interaction object from the record - this is the object
   // that talks to the event information objects and is in m
   const genie::Interaction *inter = record->Summary();
-  
+
   // get the different components making up the interaction
   const genie::InitialState &initState  = inter->InitState();
   const genie::ProcessInfo  &procInfo   = inter->ProcInfo();
@@ -85,7 +85,7 @@ void evgb::FillMCTruth(const genie::EventRecord *record, double spillTime,
   //const genie::Kinematics   &kine       = inter->Kine();
   //const genie::XclsTag      &exclTag    = inter->ExclTag();
   //const genie::KPhaseSpace  &phaseSpace = inter->PhaseSpace();
-  
+
   // add the particles from the interaction
   TIter partitr(record);
   genie::GHepParticle *part = 0;
@@ -94,18 +94,18 @@ void evgb::FillMCTruth(const genie::EventRecord *record, double spillTime,
   // add the vertex X/Y/Z to the V_i for status codes 0 and 1
   int trackid = 0;
   std::string primary("primary");
-  
+
   while( (part = dynamic_cast<genie::GHepParticle *>(partitr.Next())) ){
-    
-    simb::MCParticle tpart(trackid, 
+
+    simb::MCParticle tpart(trackid,
                            part->Pdg(),
                            primary,
                            part->FirstMother(),
-                           part->Mass(), 
+                           part->Mass(),
                            part->Status());
     double vtx[4] = {part->Vx(), part->Vy(), part->Vz(), part->Vt()};
     /*
-    if ( vtx[0] == 0 && 
+    if ( vtx[0] == 0 &&
          vtx[1] == 0 &&
          vtx[2] == 0 &&
          vtx[3] == 0 ) {
@@ -115,7 +115,7 @@ void evgb::FillMCTruth(const genie::EventRecord *record, double spillTime,
     */
     tpart.SetGvtx(vtx);
     tpart.SetRescatter(part->RescatterCode());
-    
+
     // set the vertex location for the neutrino, nucleus and everything
     // that is to be tracked.  vertex returns values in meters.
     if (part->Status() == 0 || part->Status() == 1){
@@ -133,17 +133,17 @@ void evgb::FillMCTruth(const genie::EventRecord *record, double spillTime,
       tpart.SetPolarization(polz);
     }
     truth.Add(tpart);
-    
-    ++trackid;        
+
+    ++trackid;
   }// end loop to convert GHepParticles to MCParticles
-  
+
   // is the interaction NC or CC
   int CCNC = simb::kCC;
   if (procInfo.IsWeakNC()) CCNC = simb::kNC;
-  
+
   // what is the interaction type
   int mode = simb::kUnknownInteraction;
-  
+
   if     (procInfo.IsQuasiElastic()       ) mode = simb::kQE;
   else if (procInfo.IsDeepInelastic()      ) mode = simb::kDIS;
   else if (procInfo.IsResonant()           ) mode = simb::kRes;
@@ -160,17 +160,17 @@ void evgb::FillMCTruth(const genie::EventRecord *record, double spillTime,
   else if (procInfo.IsDiffractive()        ) mode = simb::kDiffractive;
   else if (procInfo.IsEM()                 ) mode = simb::kEM;
   else if (procInfo.IsWeakMix()            ) mode = simb::kWeakMix;
-  
+
   int itype = simb::kNuanceOffset + genie::utils::ghep::NuanceReactionCode(record);
-  
+
   // set the neutrino information in MCTruth
   truth.SetOrigin(simb::kBeamNeutrino);
-  
+
 #ifdef OLD_KINE_CALC
-  // The genie event kinematics are subtle different from the event 
+  // The genie event kinematics are subtle different from the event
   // kinematics that a experimentalist would calculate
-  // Instead of retriving the genie values for these kinematic variables 
-  // calcuate them from the the final state particles 
+  // Instead of retriving the genie values for these kinematic variables
+  // calcuate them from the the final state particles
   // while ingnoring the fermi momentum and the off-shellness of the bound nucleon.
   genie::GHepParticle * hitnucl = record->HitNucleon();
   TLorentzVector pdummy(0, 0, 0, 0);
@@ -181,8 +181,8 @@ void evgb::FillMCTruth(const genie::EventRecord *record, double spillTime,
   const TLorentzVector & k1 = ( probe ? *(probe->P4()) : v4_null );
   const TLorentzVector & k2 = ( finallepton ? *(finallepton->P4()) : v4_null );
   //const TLorentzVector & p1 = (hitnucl) ? *(hitnucl->P4()) : pdummy;
-  
-  double M  = genie::constants::kNucleonMass; 
+
+  double M  = genie::constants::kNucleonMass;
   TLorentzVector q  = k1-k2;                     // q=k1-k2, 4-p transfer
   double Q2 = -1 * q.M2();                       // momemtum transfer
   double v  = (hitnucl) ? q.Energy()       : -1; // v (E transfer to the nucleus)
@@ -200,25 +200,25 @@ void evgb::FillMCTruth(const genie::EventRecord *record, double spillTime,
   genie::GHepParticle * hitnucl = record->HitNucleon();
   const TLorentzVector & k1 = *((record->Probe())->P4());
   const TLorentzVector & k2 = *((record->FinalStatePrimaryLepton())->P4());
-  
+
   // also note that since most of these variables are calculated purely from the leptonic system,
   // they have meaning reactions that didn't strike a nucleon (or even a hadron) as well.
   TLorentzVector q  = k1-k2;      // q=k1-k2, 4-p transfer
-  
+
   double Q2 = -1 * q.M2();        // momemtum transfer
   double v  = q.Energy();         // v (E transfer to the had system)
   double y  = v/k1.Energy();      // Inelasticity, y = q*P1/k1*P1
   double x, W2, W;
   x = W2 = W = -1;
-  
+
   if ( hitnucl || procInfo.IsCoherent() ) {
     const double M  = genie::constants::kNucleonMass;
-    // Bjorken x.  
+    // Bjorken x.
     // Rein & Sehgal use this same formulation of x even for Coherent
     x  = 0.5*Q2/(M*v);
-    // Hadronic Invariant mass ^ 2.  
+    // Hadronic Invariant mass ^ 2.
     // ("wrong" for Coherent, but it's "experimental", so ok?)
-    W2 = M*M + 2*M*v - Q2;   
+    W2 = M*M + 2*M*v - Q2;
     W  = std::sqrt(W2);
   }
 #endif
@@ -237,20 +237,20 @@ void evgb::FillMCTruth(const genie::EventRecord *record, double spillTime,
 }
 
 //---------------------------------------------------------------------------
-void evgb::FillGTruth(const genie::EventRecord* record, 
+void evgb::FillGTruth(const genie::EventRecord* record,
                       simb::GTruth& truth) {
-    
+
   //interactions info
   genie::Interaction *inter = record->Summary();
   const genie::ProcessInfo  &procInfo = inter->ProcInfo();
-  truth.fGint = (int)procInfo.InteractionTypeId(); 
-  truth.fGscatter = (int)procInfo.ScatteringTypeId(); 
-  
+  truth.fGint = (int)procInfo.InteractionTypeId();
+  truth.fGscatter = (int)procInfo.ScatteringTypeId();
+
   //Event info
-  truth.fweight = record->Weight(); 
-  truth.fprobability = record->Probability(); 
-  truth.fXsec = record->XSec(); 
-  truth.fDiffXsec = record->DiffXSec(); 
+  truth.fweight = record->Weight();
+  truth.fprobability = record->Probability();
+  truth.fXsec = record->XSec();
+  truth.fDiffXsec = record->DiffXSec();
   // needs change to GTruth
   // truth.fPhaseSpace (type KinePhaseSpace_t) = record->DiffXSecVars();
 
@@ -258,11 +258,11 @@ void evgb::FillGTruth(const genie::EventRecord* record,
   TLorentzVector *erVtx = record->Vertex();
   vtx.SetXYZT(erVtx->X(), erVtx->Y(), erVtx->Z(), erVtx->T() );
   truth.fVertex = vtx;
-  
+
   //true reaction information and byproducts
   //(PRE FSI)
   const genie::XclsTag &exclTag = inter->ExclTag();
-  truth.fIsCharm = exclTag.IsCharmEvent();   
+  truth.fIsCharm = exclTag.IsCharmEvent();
   truth.fResNum = (int)exclTag.Resonance();
 
   //note that in principle this information could come from the XclsTag,
@@ -293,9 +293,9 @@ void evgb::FillGTruth(const genie::EventRecord* record,
     else if (pdg == genie::kPdgProton)
       truth.fNumProton++;
   } // for (idx)
-  
-  // Get the GENIE kinematics info 
-  const genie::Kinematics &kine = inter->Kine();  
+
+  // Get the GENIE kinematics info
+  const genie::Kinematics &kine = inter->Kine();
   // RWH: really should be looping of GENIE Conventions/KineVar_t enum
   // and only recording/resetting those that were originally there ...
   truth.fgQ2 = kine.Q2(true);
@@ -308,21 +308,21 @@ void evgb::FillGTruth(const genie::EventRecord* record,
   }
   truth.fgX = kine.x(true);
   truth.fgY = kine.y(true);
-    
+
   /*
-    truth.fgQ2 = kine.Q2(false); 
+    truth.fgQ2 = kine.Q2(false);
     truth.fgW = kine.W(false);
     truth.fgT = kine.t(false);
     truth.fgX = kine.x(false);
     truth.fgY = kine.y(false);
   */
   truth.fFShadSystP4 = kine.HadSystP4();
-  
+
   //Initial State info
   const genie::InitialState &initState  = inter->InitState();
   truth.fProbePDG = initState.ProbePdg();
   truth.fProbeP4 = *initState.GetProbeP4();
-  
+
   //Target info
   const genie::Target &tgt = initState.Tgt();
   truth.fIsSeaQuark = tgt.HitSeaQrk();
@@ -330,31 +330,31 @@ void evgb::FillGTruth(const genie::EventRecord* record,
   truth.ftgtZ = tgt.Z();
   truth.ftgtA = tgt.A();
   truth.ftgtPDG = tgt.Pdg();
-  
+
   return;
-  
+
 }
 
 //---------------------------------------------------------------------------
-genie::EventRecord* evgb::RetrieveGHEP(const simb::MCTruth& mctruth, 
+genie::EventRecord* evgb::RetrieveGHEP(const simb::MCTruth& mctruth,
                                        const simb::GTruth&  gtruth,
                                        bool useFirstTrajPosition)
 {
   genie::EventRecord* newEvent = new genie::EventRecord;
-  
+
   newEvent->SetWeight(gtruth.fweight);
   newEvent->SetProbability(gtruth.fprobability);
   newEvent->SetXSec(gtruth.fXsec);
 #ifndef SETDIFFXSEC_1ARG
   genie::KinePhaseSpace_t space = genie::kPSNull; // kPSQ2fE; // ????
   // dsig/dQ2, dsig/dQ2dW, dsig/dxdy ...
-  
+
   // needs change to GTruth
   // space = truth.fPhaseSpace (type KinePhaseSpace_t)
 
   newEvent->SetDiffXSec(gtruth.fDiffXsec,space);
-  
-  // TODO:  we don't know currently know what to use ... 
+
+  // TODO:  we don't know currently know what to use ...
   // for now just to get things to compile ... Nate needs to look at this
   static int nmsg = 2;
   if ( nmsg > 0 ) {
@@ -372,23 +372,23 @@ genie::EventRecord* evgb::RetrieveGHEP(const simb::MCTruth& mctruth,
 #endif
   TLorentzVector vtx = gtruth.fVertex;
   newEvent->SetVertex(vtx);
-  
+
   //mf::LogWarning("GENIE2ART")
   //  << "####### mctruth.NParticles() " << mctruth.NParticles();
 
   for (int i = 0; i < mctruth.NParticles(); i++) {
     simb::MCParticle mcpart = mctruth.GetParticle(i);
-    
+
     int gmid = mcpart.PdgCode();
     genie::GHepStatus_t gmst = (genie::GHepStatus_t)mcpart.StatusCode();
     int gmmo = mcpart.Mother();
     int gmfd = -1;
     int gmld = -1;
 
-    /* 
+    /*
        // GENIE will update daughter references as particles are added
        // without a need to jump through these hoops ... which gets
-       // it wrong anyway (always sets 0th particles daughter to 
+       // it wrong anyway (always sets 0th particles daughter to
        // mctruth.NParticles()-1, and leave the others at -1 (which then
        // GENIE handles correctly ...
 
@@ -406,7 +406,7 @@ genie::EventRecord* evgb::RetrieveGHEP(const simb::MCTruth& mctruth,
       }
     }
 
-    // Genie uses the index in the particle array to reference 
+    // Genie uses the index in the particle array to reference
     // the daughter particles.
     // MCTruth keeps the particles in the same order so use the
     // track ID to find the proper index.
@@ -431,10 +431,10 @@ genie::EventRecord* evgb::RetrieveGHEP(const simb::MCTruth& mctruth,
     double gmvz = mcpart.Gvz();
     double gmvt = mcpart.Gvt();
     bool GvtxFunky = false;
-    if ( gmvx == 0 && gmvy == 0 && 
+    if ( gmvx == 0 && gmvy == 0 &&
          gmvz == 0 && gmvt == 0 ) GvtxFunky = true;
-    if ( gmvx == simb::GTruth::kUndefinedValue && 
-         gmvy == simb::GTruth::kUndefinedValue && 
+    if ( gmvx == simb::GTruth::kUndefinedValue &&
+         gmvy == simb::GTruth::kUndefinedValue &&
          gmvz == simb::GTruth::kUndefinedValue &&
          gmvt == simb::GTruth::kUndefinedValue    ) GvtxFunky = true;
     if (GvtxFunky) {
@@ -451,7 +451,7 @@ genie::EventRecord* evgb::RetrieveGHEP(const simb::MCTruth& mctruth,
       }
       // MCParticle Vx(), Vy(), Vz() implicitly are  index=0
       // put it's likely we want the _last_ position ...
-      const TLorentzVector mcpartTrjPos = 
+      const TLorentzVector mcpartTrjPos =
         ( useFirstTrajPosition ) ? mcpart.Position() : // default indx=0
                                    mcpart.EndPosition();
       unsigned int nTrj = mcpart.NumberTrajectoryPoints();
@@ -481,8 +481,8 @@ genie::EventRecord* evgb::RetrieveGHEP(const simb::MCTruth& mctruth,
     } // if Gv[xyzt] seem unset
 
     int gmri = mcpart.Rescatter();
-    
-    genie::GHepParticle gpart(gmid, gmst, gmmo, -1, gmfd, gmld, 
+
+    genie::GHepParticle gpart(gmid, gmst, gmmo, -1, gmfd, gmld,
                               gmpx, gmpy, gmpz, gme, gmvx, gmvy, gmvz, gmvt);
     gpart.SetRescatterCode(gmri);
     TVector3 polz = mcpart.Polarization();
@@ -495,24 +495,24 @@ genie::EventRecord* evgb::RetrieveGHEP(const simb::MCTruth& mctruth,
   genie::ProcessInfo proc_info;
   genie::ScatteringType_t  gscty = (genie::ScatteringType_t)gtruth.fGscatter;
   genie::InteractionType_t ginty = (genie::InteractionType_t)gtruth.fGint;
-  
+
   proc_info.Set(gscty,ginty);
-  
+
   genie::XclsTag gxt;
-  
+
   //Set Exclusive Final State particle numbers
   genie::Resonance_t gres = (genie::Resonance_t)gtruth.fResNum;
   gxt.SetResonance(gres);
   gxt.SetNPions(gtruth.fNumPiPlus, gtruth.fNumPi0, gtruth.fNumPiMinus);
   gxt.SetNNucleons(gtruth.fNumProton, gtruth.fNumNeutron);
-  
+
   if (gtruth.fIsCharm) {
     gxt.SetCharm(0);
   }
   else {
     gxt.UnsetCharm();
   }
-  
+
   // Set the GENIE kinematics info
   genie::Kinematics gkin;
   // RWH: really should be looping of GENIE Conventions/KineVar_t enum
@@ -530,12 +530,12 @@ genie::EventRecord* evgb::RetrieveGHEP(const simb::MCTruth& mctruth,
   if ( lep.NumberTrajectoryPoints() > 0 ) {
     gkin.SetFSLeptonP4(lep.Px(), lep.Py(), lep.Pz(), lep.E());
   }
-  gkin.SetHadSystP4(gtruth.fFShadSystP4.Px(), 
+  gkin.SetHadSystP4(gtruth.fFShadSystP4.Px(),
                     gtruth.fFShadSystP4.Py(),
                     gtruth.fFShadSystP4.Pz(),
                     gtruth.fFShadSystP4.E());
 
-  // reordering this to avoid warning (A=0,Z=0) 
+  // reordering this to avoid warning (A=0,Z=0)
   int probe_pdgc = gtruth.fProbePDG;
   int tgtZ       = gtruth.ftgtZ;
   int tgtA       = gtruth.ftgtA;
@@ -550,7 +550,7 @@ genie::EventRecord* evgb::RetrieveGHEP(const simb::MCTruth& mctruth,
 
   //std::cerr << " tgtZ " << tgtZ << " tgtA " << tgtA << " probe " << probe_pdgc << std::endl;
 
-  int target_pdgc = genie::pdg::IonPdgCode(tgtA,tgtZ);  
+  int target_pdgc = genie::pdg::IonPdgCode(tgtA,tgtZ);
 
   /*
   TParticlePDG * t = genie::PDGLibrary::Instance()->Find(target_pdgc);
@@ -561,7 +561,7 @@ genie::EventRecord* evgb::RetrieveGHEP(const simb::MCTruth& mctruth,
 
   int targetNucleon = nu.HitNuc();
   int struckQuark   = nu.HitQuark();
-  
+
   //genie::Target tmptgt(gtruth.ftgtZ, gtruth.ftgtA, targetNucleon);
   // this ctor doesn't copy the state of the Target beyond the PDG value!
   // so don't bother creating a tmptgt ...
@@ -574,7 +574,7 @@ genie::EventRecord* evgb::RetrieveGHEP(const simb::MCTruth& mctruth,
   tgtptr->SetHitNucPdg(targetNucleon);
   tgtptr->SetHitQrkPdg(struckQuark);
   tgtptr->SetHitSeaQrk(gtruth.fIsSeaQuark);
-  
+
   if (newEvent->HitNucleonPosition() >= 0) {
     genie::GHepParticle * hitnucleon = newEvent->HitNucleon();
     std::unique_ptr<TLorentzVector> p4hitnucleon(hitnucleon->GetP4());
@@ -582,7 +582,7 @@ genie::EventRecord* evgb::RetrieveGHEP(const simb::MCTruth& mctruth,
   } else {
     if ( targetNucleon != 0 ) {
       mf::LogWarning("GENIE2ART")
-        << "evgb::RetrieveGHEP() no hit nucleon position " 
+        << "evgb::RetrieveGHEP() no hit nucleon position "
         << " but targetNucleon is " << targetNucleon
         << " at " << __FILE__ << ":" << __LINE__
         << std::endl << std::flush;
@@ -602,7 +602,7 @@ genie::EventRecord* evgb::RetrieveGHEP(const simb::MCTruth& mctruth,
       if ( ptmp ) Erest = ptmp->Mass();
     } else {
       mf::LogWarning("GENIE2ART")
-        << "evgb::RetrieveGHEP() no target nucleus position " 
+        << "evgb::RetrieveGHEP() no target nucleus position "
         << " but gtruth.ftgtPDG is " << gtruth.ftgtPDG
         << " at " << __FILE__ << ":" << __LINE__
         << std::endl << std::flush;
@@ -610,7 +610,7 @@ genie::EventRecord* evgb::RetrieveGHEP(const simb::MCTruth& mctruth,
     TLorentzVector dummy(0.,0.,0.,Erest);
     ginitstate.SetTgtP4(dummy);
   }
-  
+
   genie::GHepParticle * probe = newEvent->Probe();
   if ( probe ) {
     std::unique_ptr<TLorentzVector> p4probe(probe->GetP4());
@@ -624,14 +624,14 @@ genie::EventRecord* evgb::RetrieveGHEP(const simb::MCTruth& mctruth,
     TLorentzVector dummy(0.,0.,0.,0.);
     ginitstate.SetProbeP4(dummy);
   }
-  
+
   genie::Interaction * p_gint = new genie::Interaction(ginitstate,proc_info);
-  
+
   p_gint->SetProcInfo(proc_info);
   p_gint->SetKine(gkin);
   p_gint->SetExclTag(gxt);
   newEvent->AttachSummary(p_gint);
-  
+
   /*
   //For temporary debugging purposes
   genie::Interaction *inter = newEvent->Summary();
@@ -640,11 +640,11 @@ genie::EventRecord* evgb::RetrieveGHEP(const simb::MCTruth& mctruth,
   std::cout << "TargetPDG as Recorded: " << gtruth.ftgtPDG << std::endl;
   std::cout << "TargetZ as Recorded:   " << gtruth.ftgtZ << std::endl;
   std::cout << "TargetA as Recorded:   " << gtruth.ftgtA << std::endl;
-  std::cout << "TargetPDG as Recreated: " << tgt.Pdg() << std::endl;   
-  std::cout << "TargetZ as Recreated: " << tgt.Z() << std::endl;   
-  std::cout << "TargetA as Recreated: " << tgt.A() << std::endl;   
+  std::cout << "TargetPDG as Recreated: " << tgt.Pdg() << std::endl;
+  std::cout << "TargetZ as Recreated: " << tgt.Z() << std::endl;
+  std::cout << "TargetA as Recreated: " << tgt.A() << std::endl;
   */
-  
+
   return newEvent;
 
 }
@@ -659,27 +659,27 @@ void evgb::FillMCFlux(genie::GFluxI* fdriver, simb::MCFlux& mcflux)
     // it is, it is ... proceed with that ...
     fdriver = gblender->GetFluxGenerator();
   }
-  
-  genie::flux::GNuMIFlux* gnumi = 
+
+  genie::flux::GNuMIFlux* gnumi =
     dynamic_cast<genie::flux::GNuMIFlux *>(fdriver);
   if ( gnumi ) {
     FillMCFlux(gnumi,mcflux);
     return;
   } else {
-    genie::flux::GSimpleNtpFlux* gsimple = 
+    genie::flux::GSimpleNtpFlux* gsimple =
       dynamic_cast<genie::flux::GSimpleNtpFlux *>(fdriver);
     if ( gsimple ) {
       FillMCFlux(gsimple,mcflux);
       return;
     } else {
-      genie::flux::GDk2NuFlux* gdk2nu = 
+      genie::flux::GDk2NuFlux* gdk2nu =
         dynamic_cast<genie::flux::GDk2NuFlux *>(fdriver);
       if ( gdk2nu ) {
         FillMCFlux(gdk2nu,mcflux);
         return;
       } else {
         mf::LogProblem("GENIE2ART")
-          << "no FillMCFlux for this flux driver " 
+          << "no FillMCFlux for this flux driver "
           ///<< fdriver->GetClass()->GetName()
           << std::endl;
         abort();
@@ -693,7 +693,7 @@ void evgb::FillMCFlux(genie::GFluxI* fdriver, simb::MCFlux& mcflux)
 void evgb::FillMCFlux(genie::flux::GNuMIFlux* gnumi,
                       simb::MCFlux& flux)
 {
-  const genie::flux::GNuMIFluxPassThroughInfo& numiflux = 
+  const genie::flux::GNuMIFluxPassThroughInfo& numiflux =
     gnumi->PassThroughInfo();
   const genie::flux::GNuMIFluxPassThroughInfo* nflux = &numiflux;
   double dk2gen = gnumi->GetDecayDist();
@@ -710,14 +710,14 @@ void evgb::FillMCFlux(const genie::flux::GNuMIFluxPassThroughInfo* nflux,
   //  nflux->pcodes: 0=original GEANT particle codes, 1=converted to PDG
   //  nflux->units:  0=original GEANT cm, 1=meters
   if (nflux->pcodes != 1 && nflux->units != 0) {
-    mf::LogError("FillMCFlux") 
+    mf::LogError("FillMCFlux")
       << "either wrong particle codes or units "
       << "from flux object - beware!!";
-  }  
+  }
 
   // maintained variable names from gnumi ntuples
   // see http://www.hep.utexas.edu/~zarko/wwwgnumi/v19/[/v19/output_gnumi.html]
-  
+
   flux.frun      = nflux->run;
   flux.fevtno    = nflux->evtno;
   flux.fndxdz    = nflux->ndxdz;
@@ -779,10 +779,10 @@ void evgb::FillMCFlux(const genie::flux::GNuMIFluxPassThroughInfo* nflux,
   flux.fbeamz    = nflux->beamz;
   flux.fbeampx   = nflux->beampx;
   flux.fbeampy   = nflux->beampy;
-  flux.fbeampz   = nflux->beampz;    
-  
+  flux.fbeampz   = nflux->beampz;
+
   flux.fdk2gen   = dk2gen;
-  
+
   return;
 }
 
@@ -794,7 +794,7 @@ void evgb::FillMCFlux(genie::flux::GSimpleNtpFlux* gsimple,
     gsimple->GetCurrentEntry();
   const genie::flux::GSimpleNtpNuMI*  nflux_numi  =
     gsimple->GetCurrentNuMI();
-  const genie::flux::GSimpleNtpAux*   nflux_aux   = 
+  const genie::flux::GSimpleNtpAux*   nflux_aux   =
     gsimple->GetCurrentAux();
   const genie::flux::GSimpleNtpMeta*  nflux_meta  =
     gsimple->GetCurrentMeta();
@@ -808,16 +808,16 @@ void evgb::FillMCFlux(const genie::flux::GSimpleNtpEntry* nflux_entry,
 {
   flux.Reset();
   flux.fFluxType = simb::kSimple_Flux;
-  
+
   // maintained variable names from gnumi ntuples
   // see http://www.hep.utexas.edu/~zarko/wwwgnumi/v19/[/v19/output_gnumi.html]
-  
-  
+
+
   flux.fntype  = nflux_entry->pdg;
   flux.fnimpwt = nflux_entry->wgt;
   flux.fdk2gen = nflux_entry->dist;
   flux.fnenergyn = flux.fnenergyf = nflux_entry->E;
-  
+
   if ( nflux_numi ) {
     flux.frun      = nflux_numi->run;
     flux.fevtno    = nflux_numi->evtno;
@@ -828,35 +828,35 @@ void evgb::FillMCFlux(const genie::flux::GSimpleNtpEntry* nflux_entry,
     flux.fvx       = nflux_numi->vx;
     flux.fvy       = nflux_numi->vy;
     flux.fvz       = nflux_numi->vz;
-    
+
     flux.fndecay   = nflux_numi->ndecay;
     flux.fppmedium = nflux_numi->ppmedium;
-    
+
     flux.fpdpx     = nflux_numi->pdpx;
     flux.fpdpy     = nflux_numi->pdpy;
     flux.fpdpz     = nflux_numi->pdpz;
-    
+
     double apppz = nflux_numi->pppz;
     if ( TMath::Abs(nflux_numi->pppz) < 1.0e-30 ) apppz = 1.0e-30;
     flux.fppdxdz   = nflux_numi->pppx / apppz;
     flux.fppdydz   = nflux_numi->pppy / apppz;
     flux.fpppz     = nflux_numi->pppz;
-    
+
     flux.fptype    = nflux_numi->ptype;
-    
+
   }
-  
+
   // anything useful stuffed into vdbl or vint?
   // need to check the metadata  auxintname, auxdblname
-  
+
   if ( nflux_aux && nflux_meta ) {
-    
+
     // references just for reducing complexity
     const std::vector<std::string>& auxdblname = nflux_meta->auxdblname;
     const std::vector<std::string>& auxintname = nflux_meta->auxintname;
     const std::vector<int>&    auxint = nflux_aux->auxint;
     const std::vector<double>& auxdbl = nflux_aux->auxdbl;
-    
+
     for (size_t id=0; id<auxdblname.size(); ++id) {
       if ("muparpx"   == auxdblname[id]) flux.fmuparpx  = auxdbl[id];
       if ("muparpy"   == auxdblname[id]) flux.fmuparpy  = auxdbl[id];
@@ -865,16 +865,16 @@ void evgb::FillMCFlux(const genie::flux::GSimpleNtpEntry* nflux_entry,
       if ("necm"      == auxdblname[id]) flux.fnecm     = auxdbl[id];
       if ("nimpwt"    == auxdblname[id]) flux.fnimpwt   = auxdbl[id];
       if ("fgXYWgt"   == auxdblname[id]) {
-        flux.fnwtnear = flux.fnwtfar = auxdbl[id]; 
+        flux.fnwtnear = flux.fnwtfar = auxdbl[id];
       }
     }
     for (size_t ii=0; ii<auxintname.size(); ++ii) {
       if ("tgen"      == auxintname[ii]) flux.ftgen     = auxint[ii];
       if ("tgptype"   == auxintname[ii]) flux.ftgptype  = auxint[ii];
     }
-    
+
   }
-  
+
 //#define RWH_TEST
 #ifdef RWH_TEST
   static bool first = true;
@@ -904,7 +904,7 @@ void evgb::FillMCFlux(const genie::flux::GSimpleNtpEntry* nflux_entry,
   if ( nflux_aux  ) mf::LogDebug("GENIE2ART") << *nflux_aux << "\n";
   else              mf::LogDebug("GENIE2ART") << "no GSimpleNtpAux\n";
 #endif
-  
+
   //   flux.fndxdz    = nflux.ndxdz;
   //   flux.fndydz    = nflux.ndydz;
   //   flux.fnpz      = nflux.npz;
@@ -953,8 +953,8 @@ void evgb::FillMCFlux(const genie::flux::GSimpleNtpEntry* nflux_entry,
   //   flux.fbeamz    = nflux.beamz;
   //   flux.fbeampx   = nflux.beampx;
   //   flux.fbeampy   = nflux.beampy;
-  //   flux.fbeampz   = nflux.beampz; 
-  
+  //   flux.fbeampz   = nflux.beampz;
+
   return;
 }
 
@@ -971,13 +971,13 @@ void evgb::FillMCFlux(const bsim::Dk2Nu* dk2nu,
                       simb::MCFlux& flux)
 {
   flux.Reset();
-  flux.fFluxType = simb::kDk2Nu;  
+  flux.fFluxType = simb::kDk2Nu;
 
   flux.fntype  = nuchoice->pdgNu;
   flux.fnimpwt = nuchoice->impWgt;
   ///flux.fdk2gen = nflux_entry->dist;
   flux.fnenergyn = flux.fnenergyf = nuchoice->p4NuUser.E();
-  
+
   if ( dk2nu ) {
       flux.frun      = dk2nu->job;
       flux.fevtno    = dk2nu->potnum;
@@ -988,10 +988,10 @@ void evgb::FillMCFlux(const bsim::Dk2Nu* dk2nu,
       flux.fvx       = dk2nu->decay.vx;
       flux.fvy       = dk2nu->decay.vy;
       flux.fvz       = dk2nu->decay.vz;
-      
+
       flux.fndecay   = dk2nu->decay.ndecay;
       flux.fppmedium = dk2nu->decay.ppmedium;
-      
+
       flux.fpdpx     = dk2nu->decay.pdpx;
       flux.fpdpy     = dk2nu->decay.pdpy;
       flux.fpdpz     = dk2nu->decay.pdpz;
@@ -1004,7 +1004,7 @@ void evgb::FillMCFlux(const bsim::Dk2Nu* dk2nu,
 
     }
 
-  /*    
+  /*
     // anything useful stuffed into vdbl or vint?
     // need to check the metadata  auxintname, auxdblname
 
@@ -1024,7 +1024,7 @@ void evgb::FillMCFlux(const bsim::Dk2Nu* dk2nu,
         if ("necm"      == auxdblname[id]) flux.fnecm     = auxdbl[id];
         if ("nimpwt"    == auxdblname[id]) flux.fnimpwt   = auxdbl[id];
         if ("fgXYWgt"   == auxdblname[id]) {
-          flux.fnwtnear = flux.fnwtfar = auxdbl[id]; 
+          flux.fnwtnear = flux.fnwtfar = auxdbl[id];
         }
       }
       for (size_t ii=0; ii<auxintname.size(); ++ii) {
@@ -1087,12 +1087,11 @@ void evgb::FillMCFlux(const bsim::Dk2Nu* dk2nu,
     //   flux.fbeamz    = nflux.beamz;
     //   flux.fbeampx   = nflux.beampx;
     //   flux.fbeampy   = nflux.beampy;
-    //   flux.fbeampz   = nflux.beampz; 
-    
+    //   flux.fbeampz   = nflux.beampz;
+
   return;
 }
 
 //---------------------------------------------------------------------------
-
 
 
