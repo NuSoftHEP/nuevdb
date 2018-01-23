@@ -166,7 +166,6 @@ void evgb::FillMCTruth(const genie::EventRecord *record, double spillTime,
   // set the neutrino information in MCTruth
   truth.SetOrigin(simb::kBeamNeutrino);
 
-#ifdef OLD_KINE_CALC
   // The genie event kinematics are subtle different from the event
   // kinematics that a experimentalist would calculate
   // Instead of retriving the genie values for these kinematic variables
@@ -180,6 +179,8 @@ void evgb::FillMCTruth(const genie::EventRecord *record, double spillTime,
   genie::GHepParticle* finallepton = record->FinalStatePrimaryLepton();
   const TLorentzVector & k1 = ( probe ? *(probe->P4()) : v4_null );
   const TLorentzVector & k2 = ( finallepton ? *(finallepton->P4()) : v4_null );
+
+#ifdef OLD_KINE_CALC
   //const TLorentzVector & p1 = (hitnucl) ? *(hitnucl->P4()) : pdummy;
 
   double M  = genie::constants::kNucleonMass;
@@ -191,18 +192,11 @@ void evgb::FillMCTruth(const genie::EventRecord *record, double spillTime,
   double W2 = (hitnucl) ? M*M + 2*M*v - Q2 : -1; // Hadronic Invariant mass ^ 2
   double W  = (hitnucl) ? std::sqrt(W2)    : -1;
 #else
-  // The internal GENIE event kinematics are subtly different from the event
-  // kinematics that a experimentalist would calculate.
-  // Instead of retriving the genie values for these kinematic variables ,
-  // calculate them from the the final state particles
-  // while ignoring the Fermi momentum and the off-shellness of the bound nucleon.
   // (same strategy as in gNtpConv.cxx::ConvertToGST().)
-  genie::GHepParticle * hitnucl = record->HitNucleon();
-  const TLorentzVector & k1 = *((record->Probe())->P4());
-  const TLorentzVector & k2 = *((record->FinalStatePrimaryLepton())->P4());
 
-  // also note that since most of these variables are calculated purely from the leptonic system,
-  // they have meaning reactions that didn't strike a nucleon (or even a hadron) as well.
+  // also note that since most of these variables are calculated purely
+  // from the leptonic system,  they have meaning in reactions that didn't
+  // strike a nucleon (or even a hadron) as well.
   TLorentzVector q  = k1-k2;      // q=k1-k2, 4-p transfer
 
   double Q2 = -1 * q.M2();        // momemtum transfer
