@@ -38,6 +38,7 @@
 // ROOT includes
 #include "TChain.h"
 #include "TBranchElement.h"
+#include "TBranchObject.h"
 
 // CLHEP
 #include "CLHEP/Random/RandFlat.h"
@@ -346,15 +347,25 @@ evg::AddGenieEventsToArt::AddGenieEventsToArt(const Parameters& params)
   TObject* obj;
   while ( ( obj = next() ) ) {
     std::string bname = obj->GetName();
-    //  should be a list of TBranchElement items
-    TBranchElement* belement = dynamic_cast<TBranchElement*>(obj);
-    if ( ! belement ) {
+    //  should be a list of TBranchElement or TBranchObject items
+    //  TBranchObject are ancient ... should have been replaced by Elements
+    const TBranchElement* belement = dynamic_cast<const TBranchElement*>(obj);
+    const TBranchObject*  bobject  = dynamic_cast<const TBranchObject*>(obj);
+    if ( ! belement && ! bobject ) {
+      std::string reallyIsA = obj->ClassName();
       mf::LogError("AddGenieEventsToArt")
         << "### supposed branch element '" << bname
-        << "' wasn't a TBranchElement " << std::endl;
+        << "' wasn't a TBranchElement/TBranchObject but instead a "
+        << reallyIsA << std::endl;
+      if ( bname == "gmcrec" ) {
+        mf::LogError("AddGenieEventsToArt")
+          << "### since this is '" << bname
+          << "' this is likely to end very badly badly" << std::endl;
+      }
       continue;
     }
-    std::string bclass = belement->GetClassName();
+    std::string bclass = (belement) ? belement->GetClassName()
+                                    : bobject->GetClassName();
     if ( bclass == "genie::NtpMCEventRecord" ) {
       fGTreeChain->SetBranchAddress(bname.c_str(),&fMCRec);
     } else if ( bclass == "genie::flux::GNuMIFluxPassThroughInfo" ) {
