@@ -70,7 +70,7 @@ outputs:
   {
     module_type:  RootOutput
     fileName:     "addgenie.root"   # default name, override w/ -o --output
-    SelectEvents:  { SelectEvents: [ simulate ] }
+    SelectEvents: [ simulate ]
   }
 }
 
