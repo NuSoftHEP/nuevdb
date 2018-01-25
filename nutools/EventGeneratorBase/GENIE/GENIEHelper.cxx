@@ -117,8 +117,10 @@
 #include "fhiclcpp/ParameterSet.h"
 #include "messagefacility/MessageLogger/MessageLogger.h"
 
+#include "cetlib/exception.h"
+
 // can't find IFDH_service.h header ... unless ups depends on ifdh_art
-// 
+//
 //  #undef USE_IFDH_SERVICE
 
 #ifndef NO_IFDH_LIB
@@ -230,7 +232,7 @@ namespace evgb {
     mf::LogInfo("GENIEHelper") << "Init HelperRandom with seed " << seedval;
     fHelperRandom = new TRandom3(seedval);
 
-    // regularize fFluxType string
+    // regularize fFluxType string ...
     // remove lead/trailing whitespace
     size_t ftlead  = fFluxType.find_first_not_of(" \t\n");
     if ( ftlead )    fFluxType.erase( 0, ftlead );
@@ -240,6 +242,7 @@ namespace evgb {
 
     if ( fFluxType.find("simple") != std::string::npos ) fFluxType = "simple";
     if ( fFluxType.find("ntuple") != std::string::npos ) fFluxType = "numi";
+    if ( fFluxType.find("numi")   != std::string::npos ) fFluxType = "numi";
 
     /// Determine which flux files to use
     /// Do this after random number seed initialization for stability
@@ -478,8 +481,8 @@ namespace evgb {
     if ( ! fDriver || ! fFluxD ) {
       mf::LogInfo("GENIEHelper")
         << "~GENIEHelper called, but previously failed to construct "
-        << ( (fDriver) ? " genie::GMCJDriver":"" )
-        << ( (fFluxD)  ? " genie::GFluxI":"" );
+        << ( (fDriver) ? "":" genie::GMCJDriver" )
+        << ( (fFluxD)  ? "":" genie::GFluxI" );
     } else {
 
       double probscale = fDriver->GlobProbScale();
@@ -975,7 +978,10 @@ namespace evgb {
     // that support the GFluxFileConfig mix-in
     // not the atmos, histo or mono versions
     std::string fluxName = "";
-    if      ( fFluxType.compare("numi")    == 0 )
+    // what looks like the start of a fully qualified class name
+    if ( fFluxType.find("genie::flux::")   != std::string::npos )
+      fluxName = fFluxType;
+    else if ( fFluxType.compare("numi")    == 0 )
       fluxName = "genie::flux::GNuMIFlux";
     else if ( fFluxType.compare("simple")  == 0 )
       fluxName = "genie::flux::GSimpleNtpFlux";
@@ -1190,6 +1196,15 @@ namespace evgb {
       fFluxD = atmo_flux_driver;//dynamic_cast<genie::GFluxI *>(atmo_flux_driver);
     } //end if using atmospheric fluxes
 
+    if ( ! fFluxD ) {
+      mf::LogError("GENIEHelper")
+        << "Failed to contruct base flux driver for FluxType '"
+        << fFluxType << "'";
+      throw cet::exception("GENIEHelper")
+        << "Failed to contruct base flux driver for FluxType '"
+        << fFluxType << "'\n"
+        << __FILE__ << ":" << __LINE__ << "\n";
+    }
 
     //
     // Is the user asking to do flavor mixing?
