@@ -9,6 +9,13 @@ services:
                            closeFileFast: false }
   RandomNumberGenerator: {} #ART native random number generator
   scheduler:             { wantTracer: true wantSummary: true }
+
+  # using IFDH as a service, so it needs something here
+  # we don't actually use this URI in this job
+  IFDH: {
+    IFDH_BASE_URI: "http://samweb.fnal.gov:8480/sam/nova/api"
+  }
+
 }
 
 # Start each new event with an empty event.
