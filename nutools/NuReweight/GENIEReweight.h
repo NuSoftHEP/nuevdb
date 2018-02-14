@@ -30,15 +30,15 @@ namespace rwgt{
     ~GENIEReweight();
 
 #ifndef __GCCXML__
-    
+
     void AddReweightValue(ReweightLabel_t rLabel, double value);
     void ChangeParameterValue(ReweightLabel_t rLabel, double value);
 
     double NominalParameterValue(ReweightLabel_t rLabel);
     double ReweightParameterValue(ReweightLabel_t rLabel);
-    
+
     genie::rew::GReWeight* WeightCalculator() {return fWcalc;}
-    
+
     void Configure();
     void Reconfigure();
 
@@ -52,9 +52,9 @@ namespace rwgt{
     void ReweightResGanged(double ma, double mv=0.0);
     void ReweightCCRes(double ma, double mv=0.0);
     void ReweightNCRes(double ma, double mv=0.0);
-    
+
     void ReweightCoh(double ma, double r0);
-    
+
     void ReweightNonResRvp1pi(double sigma);
     void ReweightNonResRvbarp1pi(double sigma);
     void ReweightNonResRvp2pi(double sigma);
@@ -71,20 +71,20 @@ namespace rwgt{
 
     void ReweightIntraNuke(ReweightLabel_t name, double sigma);
     void ReweightIntraNuke(int name, double sigma);
-    
+
     //General Reweight Configurations
     void MaQEshape() {fMaQEshape=true;}
     void MaQErate()  {fMaQEshape=false;}
-    
+
     void CCRESshape() {fMaCCResShape=true;}
     void CCRESrate()  {fMaCCResShape=false;}
-    
+
     void NCRESshape() {fMaNCResShape=true;}
     void NCRESrate()  {fMaNCResShape=false;}
-    
+
     void DIS_BYshape() {fDISshape=true;}
     void DIS_BYrate()  {fDISshape=false;}
-    
+
     void UseSigmaDef()    {fUseSigmaDef=true;}
     void UseStandardDef() {fUseSigmaDef=false;}
 
@@ -92,9 +92,9 @@ namespace rwgt{
     double CalculateSigma(ReweightLabel_t label, double value);
 
     double CalculateWeight(const genie::EventRecord& evr) const;
-      
+
     //genie::EventRecord RetrieveGHEP(simb::MCTruth truth, simb::GTruth gtruth);
-    
+
     //Functions to configure individual weight calculators
     void ConfigureNCEL();
     void ConfigureQEMA();
@@ -116,7 +116,7 @@ namespace rwgt{
 
   protected:
 
-    //Reweight configuration bools it is possible to use all simultaneously 
+    //Reweight configuration bools it is possible to use all simultaneously
     bool fReweightNCEL;
     bool fReweightQEMA;
     bool fReweightQEVec;
@@ -141,14 +141,14 @@ namespace rwgt{
     bool fDISshape;
 
     bool fUseSigmaDef;
-       
+
     std::vector<int> fReWgtParameterName;
     std::vector<double> fReWgtParameterValue;
 
     std::map<int, double> fNominalParameters;
 
     genie::rew::GReWeight* fWcalc;
-    
+
 
   };
 }
