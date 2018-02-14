@@ -1,0 +1,15 @@
+BEGIN_PROLOG
+
+standard_genie_output:
+{
+   module_type:           GenieOutput          # name of modules
+   inputModuleLabels:     [ ]                  # list of input module labels
+   outputGHEPFile:        "gntp.%l.ghep.root"  # genie::EventRecord file name
+   dumpFilePattern:       "gntp.%l.ghep.txt"   # genie record dump
+   dumpGeniePrintLevel:   13                   # 13 is a good choice, -1=off
+   dumpMCTruth:           false                # dump main MCTruth
+   dumpGTruth:            false                # print assoc GTruth (if avail)
+   dumpMCFlux:            false                # print assoc MCFlux (if avail)
+}
+
+END_PROLOG
