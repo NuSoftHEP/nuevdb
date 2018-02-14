@@ -45,6 +45,14 @@ namespace mag {
     MagneticFieldDescription fieldDescription;
     for(auto itr : fieldDescriptions){
       fieldDescription.fMode   = (mag::MagFieldMode_t)(itr.get<int>("UseField"));
+
+      // if the mode is turned to off, no point looking for a volume or 
+      // trying to put a description into the fFieldDescriptions data member.
+      // if all input field descriptions are set to fMode = kNoBFieldMode, then the 
+      // methods to return the fields will not go into the loop over fFieldDescriptions
+      // and will just return a 0 field.
+      if(fieldDescription.fMode == mag::kNoBFieldMode) continue;
+
       fieldDescription.fVolume = itr.get<std::string>("MagnetizedVolume");
       fieldDescription.fGeoVol = gGeoManager->FindVolumeFast(fieldDescription.fVolume.c_str());
 
