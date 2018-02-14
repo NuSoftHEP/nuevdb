@@ -68,11 +68,8 @@
 namespace rwgt {
 
   ///<constructor
-  NuReweight::NuReweight()
-  {
-    
+  NuReweight::NuReweight() {
     //mf::LogVerbatim("GENIEReweight") << "Create GENIEReweight object";
-    
   }
 
   ///<destructor
@@ -107,7 +104,7 @@ namespace rwgt {
 
     for(int i = 0; i < truth.NParticles(); i++) {
       simb::MCParticle mcpart = truth.GetParticle(i);
-      
+
       int gmid = mcpart.PdgCode();
       genie::GHepStatus_t gmst = (genie::GHepStatus_t)mcpart.StatusCode();
       int gmmo = mcpart.Mother();

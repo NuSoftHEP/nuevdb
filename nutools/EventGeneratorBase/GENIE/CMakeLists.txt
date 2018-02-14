@@ -1,62 +1,32 @@
 
+set( IFDH_AS_SERVICE_LIB_LIST
+           art_Framework_Services_Registry
+           ${Boost_SYSTEM_LIBRARY}
+           ${IFDH_SERVICE} )
 
 art_make( LIB_LIBRARIES nusimdata_SimulationBase
+                        art_Framework_Principal
                         art_Utilities
-			canvas
+                        ${IFDH_AS_SERVICE_LIB_LIST}
+                        canvas
                         ${MF_MESSAGELOGGER}
                         ${MF_UTILITIES}
                         ${FHICLCPP}
                         ${CETLIB}
-			cetlib_except
+                        cetlib_except
                         ${XML2}
                         ${LOG4CPP}
                         ${PYTHIA6}
                         ${LHAPDF}
-                        ${GALGORITHM}
-                        ${GBARYONRESONANCE}
-                        ${GBASE}
-                        ${GBODEKYANG}
-                        ${GCHARM}
-                        ${GCOH}
-                        ${GDFRC}
-                        ${GDIS}
-                        ${GCROSSSECTIONS}
-                        ${GDECAY}
-                        ${GELAS}
-                        ${GELFF}
-                        ${GHEP}
-                        ${GEVGCORE}
-                        ${GEVGMODULES}
-                        ${GEVGDRIVERS}
-                        ${GGIBUU}
-                        ${GHADRONTRANSP}
-                        ${GFRAGMENTATION}
-                        ${GINTERACTION}
-                        ${GLLEWELLYNSMITH}
-                        ${GMEC}
-                        ${GMESSENGER}
-                        ${GNUGAMMA}
-                        ${GNUE}
-                        ${GNTUPLE}
-                        ${GNUCLEAR}
-                        ${GNUMERICAL}
-                        ${GQPM}
-                        ${GPDG}
-                        ${GPDF}
-                        ${GQEL}
-                        ${GRES}
-                        ${GREGISTRY}
-                        ${GREINSEHGAL}
-                        ${GUTILS}
-                        ${GGEO}
-                        ${GFLUXDRIVERS}
-                        ${GMUELOSS}
-                        ${GREWEIGHT}
-                        ${GNUCLEONDECAY}
+                        ${GENIE_LIB_LIST}
+                        ${DK2NU_TREE}
+                        ${DK2NU_GENIE}
+                        ${CLHEP}
                         ${IFDH}
                         ${ROOT_GEOM}
                         ${ROOT_GEOMPAINTER}
                         ${ROOT_BASIC_LIB_LIST} )
+
 
 install_headers()
 install_fhicl()

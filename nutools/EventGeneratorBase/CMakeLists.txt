@@ -2,16 +2,15 @@
 simple_plugin( GeneratedEventTimestamp "plugin"
                                        ${ART_FRAMEWORK_CORE}
                                        art_Persistency_Provenance
-				       canvas
+                                       canvas
                                        ${MF_MESSAGELOGGER}
                                        ${MF_UTILITIES}
                                        cetlib
-				       cetlib_except
-				       ${Boost_FILESYSTEM_LIBRARY}
-				       ${Boost_SYSTEM_LIBRARY}
-               
+                                       cetlib_except
+                                       ${Boost_FILESYSTEM_LIBRARY}
+                                       ${Boost_SYSTEM_LIBRARY}
              )
- 
+
 install_headers()
 install_fhicl()
 install_source()
