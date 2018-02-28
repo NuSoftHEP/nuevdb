@@ -2529,7 +2529,7 @@ namespace evgb {
     // start with fGXMLPATH set from pset "GXMLPATH" value
 
     // find it in the vector, if it exists
-    size_t indxGXMLPATH = -1;
+    int indxGXMLPATH = -1;
     for (size_t i = 0; i < fEnvironment.size(); i += 2) {
       if ( fEnvironment[i].compare("GXMLPATH") == 0 ) {
         if ( fGXMLPATH != "" ) fGXMLPATH += ":";
