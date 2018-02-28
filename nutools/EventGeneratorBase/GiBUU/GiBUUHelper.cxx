@@ -39,12 +39,12 @@
 
 namespace evgb {
 
-  static const int kNue      = 0;
-  static const int kNueBar   = 1;
-  static const int kNuMu     = 2;
-  static const int kNuMuBar  = 3;
-  static const int kNuTau    = 4;
-  static const int kNuTauBar = 5;
+  //static const int kNue      = 0; // unused
+  //static const int kNueBar   = 1; // unused
+  //static const int kNuMu     = 2; // unused
+  //static const int kNuMuBar  = 3; // unused
+  //static const int kNuTau    = 4; // unused
+  //static const int kNuTauBar = 5; // unused
 
   //--------------------------------------------------
   GiBUUHelper::GiBUUHelper(fhicl::ParameterSet const& pset,
