@@ -36,7 +36,7 @@ static const unsigned int kRowH   = 18;
 //
 static const int kSINGLE_VALUED_PARAM    = 1<<0; // Expect single value
 static const int kVECTOR_PARAM           = 1<<1; // Expect multiple values
-static const int kVECTOR_OF_VECTOR_PARAM = 1<<2; // Expect multiple values
+//static const int kVECTOR_OF_VECTOR_PARAM = 1<<2; // Expect multiple values - never used
 static const int kHAVE_GUI_TAGS          = 1<<3; // GUI tags are present
 static const int kNO_GUI_TAGS            = 1<<4; // GUI tags are not present
 static const int kINTEGER_PARAM          = 1<<5; // Force the value to be int

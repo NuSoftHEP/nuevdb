@@ -29,7 +29,7 @@ namespace evdb {
     void WipeMenu(TGPopupMenu* m);
 
   private:
-    TGMainFrame*   fMainFrame;   ///< Main graphics frame
+    // TGMainFrame*   fMainFrame;   ///< Main graphics frame - apparently not used in .cxx
     TGPopupMenu*   fEditMenu;    ///< The file menu
     TGPopupMenu*   fDrawingMenu; ///< Drawing options
     TGPopupMenu*   fExpMenu;     ///< Experiment services

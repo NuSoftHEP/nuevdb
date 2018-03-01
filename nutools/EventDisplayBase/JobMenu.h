@@ -39,7 +39,7 @@ namespace evdb {
     void ResetJob();
     
   private:
-    TGMainFrame*   fMainFrame;   ///< Main graphics frame
+    // TGMainFrame*   fMainFrame;   ///< Main graphics frame - never used in .cxx file except to set it
     TGPopupMenu*   fJobMenu;     ///< The file menu
     TGPopupMenu*   fConfigMenu;  ///< The module configuration menu
     TGPopupMenu*   fServiceMenu; ///< The user service configuration menu
