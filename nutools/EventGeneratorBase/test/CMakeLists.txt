@@ -1,3 +1,6 @@
+# FIXME: these are needed for c++17
+# This reflects a problem in genie
+cet_add_compiler_flags(-Wno-overloaded-virtual)
 
 art_make( MODULE_LIBRARIES nusimdata_SimulationBase
                            nutools_EventGeneratorBase_CRY

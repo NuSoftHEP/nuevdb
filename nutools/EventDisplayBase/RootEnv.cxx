@@ -218,7 +218,8 @@ namespace evdb{
     gStyle->SetFuncColor(2);
     gStyle->SetGridColor(18);
     gStyle->SetGridStyle(1);
-    gStyle->SetGridWidth(0.5);
+    // SetGridWidth expects a short, the default value is 1, just use that
+    gStyle->SetGridWidth();
   
     // Set margins -- I like to shift the plot a little up and to the
     // right to make more room for axis labels

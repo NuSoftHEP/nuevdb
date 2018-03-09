@@ -1,4 +1,8 @@
 
+# FIXME: these are needed for c++17
+# The code in EventDisplayBase needs to be revisited by an expert
+#cet_add_compiler_flags(-Wno-unused-private-field -Wno-unused-const-variable)
+
 set( PACKAGE EventDisplayBase )
 FILE( GLOB src_files *.cxx )
 
