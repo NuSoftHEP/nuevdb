@@ -1,6 +1,3 @@
-# FIXME: these are needed for c++17
-# This reflects a problem in genie
-cet_add_compiler_flags(-Wno-overloaded-virtual)
 
 set( IFDH_AS_SERVICE_LIB_LIST
            art_Framework_Services_Registry
