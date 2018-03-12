@@ -32,8 +32,8 @@ namespace evdb{
 
   //......................................................................
 
-  JobMenu::JobMenu(TGMenuBar* menubar, TGMainFrame* mf) :
-    fMainFrame(mf)
+  JobMenu::JobMenu(TGMenuBar* menubar, TGMainFrame* /*mf*/) 
+  //: fMainFrame(mf)
   {
     //======================================================================
     // Build the help menu
