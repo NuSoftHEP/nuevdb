@@ -32,6 +32,9 @@
 #ifndef G4BASE_PrimaryParticleInformation_h
 #define G4BASE_PrimaryParticleInformation_h
 
+// nutools
+#include "nusimdata/SimulationBase/simb.h" // simb::GeneratedParticleIndex_t
+
 // G4 Includes
 #include "Geant4/G4VUserPrimaryParticleInformation.hh"
 #include "Geant4/G4Allocator.hh"
@@ -40,10 +43,13 @@
 #include "canvas/Persistency/Common/Ptr.h"
 #include "canvas/Persistency/Common/PtrVector.h"
 
+// C++ standard library
+#include <limits> // std::numeric_limits<>
 
 // Forward declaration for this namespace.
 namespace simb {
   class MCTruth;
+  class MCParticle;
 }
 
 namespace g4b {
@@ -51,14 +57,44 @@ namespace g4b {
   class PrimaryParticleInformation : public G4VUserPrimaryParticleInformation {
 
   public:
+    
+    /// Type of the stored index of particle within the truth record.
+    using GeneratedParticleIndex_t = simb::GeneratedParticleIndex_t;
+    
     inline void* operator new(size_t);
     inline void operator delete(void*);
     
     // Accessors:
     const simb::MCTruth* GetMCTruth() const { return fMCTruth; }
     size_t const& MCTruthIndex()      const { return fMCTIndex; }
-    void SetMCTruth(const simb::MCTruth* m,
-		    const size_t         idx=0) { fMCTruth = m; fMCTIndex = idx; }
+    
+    /**
+     * @brief Returns the index of the corresponding particle in truth record.
+     * @return an index within truth record, `NotInMCTruth` otherwise
+     * @see IsInMCTruth(), GetMCTruth()
+     * 
+     * This method returns the index in the truth record pointed by
+     * `GetMCTruth()` of the particle (`simb::MCParticle`) corresponding to this
+     * object. If this information is not set, or if there is no such a
+     * particle at all, the special value `NotInMCTruth` is returned.
+     * This can be checked with the `IsInMCTruth()` method. T
+     */
+    GeneratedParticleIndex_t MCParticleIndex() const
+      { return fMCParticleIndex; }
+    
+    /// Returns the original particle in the truth record.
+    /// @return pointer to the original particle, or `nullptr` if not available
+    /// @see MCParticleIndex(), GetMCTruth()
+    simb::MCParticle const* GetMCParticle() const;
+    
+    /// Returns whether this particle has a corresponding truth record item.
+    /// @see MCParticleIndex(), GetMCTruth()
+    bool IsInMCTruth()                const; // inline implementation below
+    
+    void SetMCTruth(const simb::MCTruth*     m,
+                    size_t                   idx=0,
+                    GeneratedParticleIndex_t indexInTruth = simb::NoGeneratedParticleIndex
+                    );
 
     // Required by Geant4:
     virtual void Print() const override;
@@ -74,6 +110,8 @@ namespace g4b {
     // of the ConvertMCTruthToG4 creating this object
     const simb::MCTruth* fMCTruth  = nullptr;
           size_t         fMCTIndex = 0;
+    /// Index within the truth record.
+    GeneratedParticleIndex_t fMCParticleIndex = simb::NoGeneratedParticleIndex;
   };
 
   // It's not likely, but there could be memory issues with these
@@ -81,6 +119,21 @@ namespace g4b {
   // and quickly, use Geant4's memory allocation mechanism.
   
   extern G4Allocator<PrimaryParticleInformation> PrimaryParticleInformationAllocator;
+  
+  inline bool PrimaryParticleInformation::IsInMCTruth() const
+    { return MCParticleIndex() != simb::NoGeneratedParticleIndex; }
+  
+  
+  inline void PrimaryParticleInformation::SetMCTruth(
+    const simb::MCTruth*     m,
+    size_t                   idx /* = 0 */,
+    GeneratedParticleIndex_t indexInTruth /* = simb::NoGeneratedParticleIndex */
+    )
+  { 
+    fMCTruth = m;
+    fMCTIndex = idx;
+    fMCParticleIndex = indexInTruth;
+  }
   
   inline void* PrimaryParticleInformation::operator new(size_t)
   {

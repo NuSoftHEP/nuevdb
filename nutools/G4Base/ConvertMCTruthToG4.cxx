@@ -219,7 +219,7 @@ namespace g4b{
 	// ParticleActionList class to access MCTruth
 	// information during Geant4's tracking.
 	PrimaryParticleInformation* primaryParticleInfo = new PrimaryParticleInformation;
-	primaryParticleInfo->SetMCTruth( mct, index );
+	primaryParticleInfo->SetMCTruth( mct, index, p );
 	  
 	// Save the PrimaryParticleInformation in the
 	// G4PrimaryParticle for access during tracking.
