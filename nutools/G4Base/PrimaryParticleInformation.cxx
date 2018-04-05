@@ -13,17 +13,6 @@ namespace g4b{
   G4Allocator<PrimaryParticleInformation> PrimaryParticleInformationAllocator;
 
   //-------------------------------------------------
-  PrimaryParticleInformation::PrimaryParticleInformation()
-    : fMCTruth(0)
-  {
-  }
-
-  //-------------------------------------------------
-  PrimaryParticleInformation::~PrimaryParticleInformation()
-  {
-  }
-
-  //-------------------------------------------------
   void PrimaryParticleInformation::Print() const
   {
     if ( fMCTruth )

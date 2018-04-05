@@ -51,9 +51,6 @@ namespace g4b {
   class PrimaryParticleInformation : public G4VUserPrimaryParticleInformation {
 
   public:
-    PrimaryParticleInformation();    
-    virtual ~PrimaryParticleInformation();
-
     inline void* operator new(size_t);
     inline void operator delete(void*);
     
@@ -64,7 +61,7 @@ namespace g4b {
 		    const size_t         idx=0) { fMCTruth = m; fMCTIndex = idx; }
 
     // Required by Geant4:
-    void Print() const;
+    virtual void Print() const override;
 
   private:
 
@@ -75,8 +72,8 @@ namespace g4b {
     // created in the first place.)
     // The MCTIndex is the index of the MCTruth object in the vector
     // of the ConvertMCTruthToG4 creating this object
-    const simb::MCTruth* fMCTruth;
-          size_t         fMCTIndex;
+    const simb::MCTruth* fMCTruth  = nullptr;
+          size_t         fMCTIndex = 0;
   };
 
   // It's not likely, but there could be memory issues with these
