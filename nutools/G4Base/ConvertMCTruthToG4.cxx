@@ -117,7 +117,7 @@ namespace g4b{
 	// Implementation note: the following statement copies the
 	// MCParticle from the MCTruth, instead of getting a
 	// const reference.    
-	simb::MCParticle particle = mct->GetParticle(p);
+	simb::MCParticle const& particle = mct->GetParticle(p);
 
 	// status code == 1 means "track this particle."  Any
 	// other status code should be ignored by the Monte Carlo.
@@ -219,7 +219,7 @@ namespace g4b{
 	// ParticleActionList class to access MCTruth
 	// information during Geant4's tracking.
 	PrimaryParticleInformation* primaryParticleInfo = new PrimaryParticleInformation;
-	primaryParticleInfo->SetMCTruth( mct, index );
+	primaryParticleInfo->SetMCTruth( mct, index, p );
 	  
 	// Save the PrimaryParticleInformation in the
 	// G4PrimaryParticle for access during tracking.
