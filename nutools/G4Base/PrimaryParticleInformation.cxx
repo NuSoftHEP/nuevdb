@@ -13,16 +13,17 @@ namespace g4b{
   G4Allocator<PrimaryParticleInformation> PrimaryParticleInformationAllocator;
 
   //-------------------------------------------------
-  PrimaryParticleInformation::PrimaryParticleInformation()
-    : fMCTruth(0)
+  simb::MCParticle const* PrimaryParticleInformation::GetMCParticle() const
   {
-  }
-
-  //-------------------------------------------------
-  PrimaryParticleInformation::~PrimaryParticleInformation()
-  {
-  }
-
+    if (!IsInMCTruth()) return nullptr;
+    auto const* truth = GetMCTruth();
+    if (!truth) return nullptr;
+    auto const index = MCParticleIndex();
+    if (index >= (std::size_t) truth->NParticles()) return nullptr; // or should we throw?
+    return &(truth->GetParticle(index));
+  } // PrimaryParticleInformation::GetMCParticle()
+  
+  
   //-------------------------------------------------
   void PrimaryParticleInformation::Print() const
   {
