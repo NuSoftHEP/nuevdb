@@ -23,7 +23,7 @@
 #include "TSysEvtHandler.h"
 #include "TInterpreter.h"
 
-#include "cetlib/exception.h"
+#include "cetlib_except/exception.h"
 
 namespace evdb{
 

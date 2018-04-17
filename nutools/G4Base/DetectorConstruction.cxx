@@ -7,7 +7,7 @@
 ////////////////////////////////////////////////////////////////////////
 
 #include "messagefacility/MessageLogger/MessageLogger.h"
-#include "cetlib/exception.h"
+#include "cetlib_except/exception.h"
 
 #include "nutools/G4Base/DetectorConstruction.h"
 #include "nutools/MagneticField/MagneticField.h"
