@@ -113,11 +113,11 @@
 #include "cetlib/search_path.h"
 #include "cetlib/getenv.h"
 #include "cetlib/split_path.h"
-#include "cetlib/exception.h"
+#include "cetlib_except/exception.h"
 #include "fhiclcpp/ParameterSet.h"
 #include "messagefacility/MessageLogger/MessageLogger.h"
 
-#include "cetlib/exception.h"
+#include "cetlib_except/exception.h"
 
 // can't find IFDH_service.h header ... unless ups depends on ifdh_art
 //

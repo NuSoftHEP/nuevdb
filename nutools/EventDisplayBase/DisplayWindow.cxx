@@ -25,7 +25,7 @@
 #include "nutools/EventDisplayBase/StatusBar.h"
 #include "nutools/EventDisplayBase/EventHolder.h"
 
-#include "cetlib/exception.h"
+#include "cetlib_except/exception.h"
 
 namespace evdb{
 

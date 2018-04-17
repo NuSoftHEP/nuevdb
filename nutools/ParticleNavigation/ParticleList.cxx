@@ -13,7 +13,7 @@
 #include "nutools/ParticleNavigation/ParticleList.h"
 #include "nutools/ParticleNavigation/EveIdCalculator.h"
 
-#include "cetlib/exception.h"
+#include "cetlib_except/exception.h"
 #include "messagefacility/MessageLogger/MessageLogger.h"
 
 #include <TLorentzVector.h>
