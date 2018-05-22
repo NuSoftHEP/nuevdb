@@ -17,7 +17,7 @@ TIMESHIFTREG3(evgb,EvtTimeFNALBeam,evgb::EvtTimeFNALBeam)
 
 namespace evgb {
 
-  EvtTimeFNALBeam::EvtTimeFNALBeam(const std::string& config) 
+  EvtTimeFNALBeam::EvtTimeFNALBeam(const std::string& config)
     : EvtTimeShiftI(config)
     , fTimeBetweenBuckets(1e9/53.103e6)
     , fBucketTimeSigma(0.750)
@@ -25,10 +25,10 @@ namespace evgb {
     , fNFilledBucketsPerBatch(81)  // 81 for both eras
     , fDisallowedBatchMask(6,0)    // don't disallow any
     , fGlobalOffset(0)
-  { 
+  {
     std::vector<double> bi(6,1.0); // 6 equal batches
     SetBatchIntensities(bi);
-    Config(config); 
+    Config(config);
   }
 
   EvtTimeFNALBeam::~EvtTimeFNALBeam() { ; }
@@ -36,15 +36,17 @@ namespace evgb {
   void EvtTimeFNALBeam::Config(const std::string& config)
   {
     // parse config string
-    if ( config != "" )
-    std::cerr << "!!!!! EvtTimeFNALBeam - not yet up to parsing Config string "
-              << ", ignoring:"
-              << std::endl
-              << "\"" << config << "\""
-              << std::endl
-              << "Starting with: "
-              << std::endl;
-    PrintConfig();
+    if ( config != "" ) {
+      std::cerr
+        << "!!!!! EvtTimeFNALBeam - not yet up to parsing Config string "
+        << ", ignoring:"
+        << std::endl
+        << "\"" << config << "\""
+        << std::endl
+        << "Starting with: "
+        << std::endl;
+      PrintConfig();
+    }
   }
 
   double EvtTimeFNALBeam::TimeOffset()
@@ -56,7 +58,7 @@ namespace evgb {
 
     // pick a bucket within a batch
     // assume all ~ buckets constant in batch until we have another model
-    offset +=  fTimeBetweenBuckets * 
+    offset +=  fTimeBetweenBuckets *
                (double)fRndmGen->Integer(fNFilledBucketsPerBatch);
 
     // pick a bucket
@@ -106,7 +108,7 @@ namespace evgb {
   }
 
 
-  void EvtTimeFNALBeam::SetBatchIntensities(std::vector<double> bi) 
+  void EvtTimeFNALBeam::SetBatchIntensities(std::vector<double> bi)
   {
     CalculateCPDF(bi);
   }
@@ -134,7 +136,7 @@ namespace evgb {
     for (size_t i=0; i < nbi; ++i) fCummulativeBatchPDF[i] /= sum;
     // make sure the mask vector keeps up (but never make it smaller)
     // allowing all new batches
-    if ( nbi > fDisallowedBatchMask.size() ) 
+    if ( nbi > fDisallowedBatchMask.size() )
       fDisallowedBatchMask.resize(nbi,0);
 
     /*
