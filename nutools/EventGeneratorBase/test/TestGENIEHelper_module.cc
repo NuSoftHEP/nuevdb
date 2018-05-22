@@ -45,6 +45,8 @@
 #include "dk2nu/genie/GDk2NuFlux.h"
 //--- END
 
+#include "GENIE/EVGCore/EventRecord.h"
+
 //#undef  PUT_DK2NU_ASSN
 #define PUT_DK2NU_ASSN 1
 
@@ -69,6 +71,7 @@ namespace evgen {
     evgb::GENIEHelper  *fGENIEHelp;        ///< GENIEHelper object
     TStopwatch          fStopwatch;
     int                 fEventsPerSpill;   ///< negative for Poisson()
+    unsigned int        fDebugFlags;
 
   };
 }
@@ -84,6 +87,7 @@ namespace evgen {
       , fEventsPerSpill  (pset.get< double >("EventsPerSpill", 1))
       //, fTotalExposure   (0)
       //, fTotalPOTLimit   (pset.get< double >("TotalPOTLimit"))
+      , fDebugFlags      (pset.get< unsigned int >("DebugFlags", 0))
   {
     fStopwatch.Start();
 
@@ -120,9 +124,9 @@ namespace evgen {
                                        geomFileName,
                                        detectorMass);
                                        /*
-				       geo->ROOTGeoManager(),
-				       geo->ROOTFile(),
-				       geo->TotalMass(pset.get< std::string>("TopVolume").c_str()));
+                                       geo->ROOTGeoManager(),
+                                       geo->ROOTFile(),
+                                       geo->TotalMass(pset.get< std::string>("TopVolume").c_str()));
                                        */
   }
 
@@ -131,7 +135,7 @@ namespace evgen {
   {
     fStopwatch.Stop();
     mf::LogInfo("TestGENIEHelper") << "real time to produce file: "
-			    << fStopwatch.RealTime();
+                            << fStopwatch.RealTime();
     delete fGENIEHelp; // clean up, and let dtor do its thing
   }
 
@@ -271,6 +275,19 @@ namespace evgen {
           const bsim::NuChoice& nuchoiceObj = dk2nuDriver->GetNuChoice();
           nuchoicecol->push_back(nuchoiceObj);
 
+          if ( (fDebugFlags & 0x10 ) != 0 ) {
+            std::cout << "---------==== creation dump" << std::endl;
+            genie::EventRecord* gevtrec = fGENIEHelp->GetGenieEventRecord();
+            if ( gevtrec     ) std::cout << *gevtrec << std::endl;
+            std::cout << dk2nuObj << std::endl;
+            const bsim::Decay& decay = dk2nuObj.decay;
+            std::cout << " necm " << decay.necm
+                      << " muparp4 " << decay.muparpx << " "
+                      << decay.muparpy << " " << decay.muparpz << " "
+                      << decay.mupare << std::endl;
+            std::cout << nuchoiceObj << std::endl;
+          }
+
 #ifdef PUT_DK2NU_ASSN
           evgb::util::CreateAssn(*this, evt, *truthcol, *dk2nucol, *dk2nuassn,
                                  dk2nucol->size()-1, dk2nucol->size());
@@ -310,7 +327,7 @@ namespace evgen {
     // ... so we have to put them in the record, even if just empty
     evt.put(std::move(dk2nucol));
     evt.put(std::move(nuchoicecol));
-    
+
 #ifdef PUT_DK2NU_ASSN
     std::cerr << " *** TestGENIEHelper::produce()"
               << " put dk2nuAssn + nuchoiceAssn ** "
@@ -331,4 +348,3 @@ namespace evgen {
 }// namespace
 
 namespace evgen { DEFINE_ART_MODULE(TestGENIEHelper) }
-
