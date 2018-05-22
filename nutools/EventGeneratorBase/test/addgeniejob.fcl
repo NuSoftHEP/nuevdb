@@ -40,13 +40,13 @@ physics:
     # when fetched from file by dump module they'll come back
     # ordered alphabetically by label, so for convenience put
     # them in in that order (easing comparisons)
-    cosmic:   @local::standard_add_genie
-#####    dk2nu:    @local::standard_add_genie
-    gnumi:    @local::standard_add_genie
-    gsimple:  @local::standard_add_genie
-    nuone:    @local::standard_add_genie
-    protondk: @local::standard_add_genie
-    rock:     @local::standard_add_genie
+##    cosmic:   @local::standard_add_genie
+    dk2nu:    @local::standard_add_genie
+#    gnumi:    @local::standard_add_genie
+#    gsimple:  @local::standard_add_genie
+##    nuone:    @local::standard_add_genie
+#    protondk: @local::standard_add_genie
+##    rock:     @local::standard_add_genie
   }
 
   analyzers:
@@ -54,9 +54,11 @@ physics:
     outputgenie:  @local::standard_genie_output
   }
 
-#  simulate: [ cosmic, dk2nu, gnumi, gsimple, nuone, protondk, rock ]
-  simulate: [ cosmic, gnumi, gsimple, nuone, protondk, rock ]
-#  simulate: [ cosmic ]
+##  simulate: [ cosmic, dk2nu, gnumi, gsimple, nuone, protondk, rock ]
+#  simulate: [ dk2nu, gnumi, gsimple, protondk ]
+#  simulate: [ protondk ]
+   simulate: [ dk2nu ]
+
   stream1:  [ outputgenie, out1 ]
 
   trigger_paths:   [ simulate ]
@@ -74,44 +76,59 @@ outputs:
   }
 }
 
-physics.producers.cosmic.fileList: [ "cosmic/cosmic*.ghep.root" ]
-physics.producers.cosmic.timeConfig: "none"
-physics.producers.cosmic.addMCFlux: false
-physics.producers.cosmic.countConfig:  "fixed: 1"  # always exactly 1
+##physics.producers.cosmic.fileList: [ "genie_samples/*cosmic*.ghep.root" ]
+##physics.producers.cosmic.timeConfig: "none"
+##physics.producers.cosmic.addMCFlux: false
+##physics.producers.cosmic.countConfig:  "fixed: 1"  # always exactly 1
 
-# these fake files should have dk2nu flux info
-#physics.producers.dk2nu.fileList: [ "annie/*dk2nu*.ghep.root" ]
-#physics.producers.dk2nu.timeConfig: "NuMI"
-#physics.producers.dk2nu.addMCFlux: true
-#physics.producers.dk2nu.countConfig:  "gauss: 2.0 1.5"
+### these fake files should have dk2nu flux info
+physics.producers.dk2nu.fileList: [ "genie_samples/*dk2nu*.ghep.root" ]
+physics.producers.dk2nu.timeConfig: "NuMI"
+physics.producers.dk2nu.addMCFlux: true
+physics.producers.dk2nu.countConfig:  "gauss: 2.0 1.5"
 
-# these fake files should have gnumi flux info
-physics.producers.gnumi.fileList: [ "annie/*gnumi*.ghep.root" ]
-physics.producers.gnumi.timeConfig: "NuMI"
-physics.producers.gnumi.addMCFlux: true
-physics.producers.gnumi.countConfig:  "poisson: 1.25"
+### these fake files should have gnumi flux info
+#physics.producers.gnumi.fileList: [ "genie_samples/*gnumi*.ghep.root" ]
+#physics.producers.gnumi.timeConfig: "NuMI"
+#physics.producers.gnumi.addMCFlux: true
+#physics.producers.gnumi.countConfig:  "poisson: 1.25"
 
-# these fake files should have gsimple flux info
-physics.producers.gsimple.fileList: [ "annie/*gsimple*.ghep.root" ]
-physics.producers.gsimple.timeConfig: "NuMI"
-physics.producers.gsimple.addMCFlux: true
-physics.producers.gsimple.countConfig:  "poisson-1: 2.4"
+### these fake files should have gsimple flux info
+#physics.producers.gsimple.fileList: [ "genie_samples/*gsimple*.ghep.root" ]
+#physics.producers.gsimple.timeConfig: "NuMI"
+#physics.producers.gsimple.addMCFlux: true
+#physics.producers.gsimple.countConfig:  "poisson-1: 2.4"
 
-# these nu on electron files should have gsimple flux info
-physics.producers.nuone.fileList: [ "annie/*nuone*.ghep.root" ]
-physics.producers.nuone.timeConfig: "NuMI"
-physics.producers.nuone.addMCFlux: true
-physics.producers.nuone.countConfig:  "fixed: 1"
+### these nu on electron files should have gsimple flux info
+##physics.producers.nuone.fileList: [ "genie_samples/*nuone*.ghep.root" ]
+##physics.producers.nuone.timeConfig: "NuMI"
+##physics.producers.nuone.addMCFlux: true
+##physics.producers.nuone.countConfig:  "fixed: 1"
 
-# obviously no flux ...
-physics.producers.protondk.fileList: [ "protondk/protondk*.ghep.root" ]
-physics.producers.protondk.timeConfig: "flat 100000"
-physics.producers.protondk.addMCFlux: false
-physics.producers.protondk.countConfig:  "flat 4 8"
+### obviously no flux ...
+#physics.producers.protondk.fileList: [ "genie_samples/*protondk*.ghep.root" ]
+#physics.producers.protondk.timeConfig: "flat 100000"
+#physics.producers.protondk.addMCFlux: false
+#physics.producers.protondk.countConfig:  "flat 4 8"
+### also need to be scattered about
+#physics.producers.protondk.vtxOffsets: {
+#   xlo: -1 # meters
+#   xhi:  1
+#   ylo: -1
+#   yhi:  1
+#   zlo:  1
+#   zhi:  5
+#}
 
-# these fake files don't have flux info (generated w/ gevgen)
-physics.producers.rock.fileList: [ "rock/rock*.ghep.root" ]
-physics.producers.rock.timeConfig: "NuMI"
-physics.producers.rock.addMCFlux: false # true
-physics.producers.rock.countConfig:  "poisson: 4.2"
+### these fake files don't have flux info (generated w/ gevgen)
+##physics.producers.rock.fileList: [ "genie_samples/*rock*.ghep.root" ]
+##physics.producers.rock.timeConfig: "NuMI"
+##physics.producers.rock.addMCFlux: false # true
+##physics.producers.rock.countConfig:  "poisson: 4.2"
 
+physics.analyzers.outputgenie.dumpFilePattern: "cout"
+physics.analyzers.outputgenie.dumpMCTruth: true
+physics.analyzers.outputgenie.dumpGTruth:  true
+physics.analyzers.outputgenie.dumpMCFlux:  true
+
+# end-of-fcl
