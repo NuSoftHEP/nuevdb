@@ -36,6 +36,9 @@ physics:
  producers:
  {
    generator: @local::geniehelpertest_nova_dk2nu
+### alternative tests
+#   generator: @local::geniehelpertest_dune_dk2nu
+#   generator: @local::geniehelpertest_dune_atmos
  }
 
  filters:
