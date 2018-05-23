@@ -11,8 +11,8 @@
 #define EVGB_GENIE2ART_H
 
 /// GENIE neutrino interaction simulation objects
-namespace genie { 
-  class EventRecord; 
+namespace genie {
+  class EventRecord;
   class GFluxI;
   namespace flux {
     class GNuMIFlux;
@@ -31,35 +31,40 @@ namespace bsim {
   class DkMeta;
 }
 
-
 /// ART objects
-namespace simb { 
+namespace simb {
   class MCTruth;
   class GTruth;
   class MCFlux;
 }
 
+/// ROOT objects
+class TLorentzVector;
+
 namespace evgb {
 
   // adapted from GENIEHelper
   void FillMCTruth(const genie::EventRecord* grec,
-                   double spillTime, 
+                   double spillTime,
+                   simb::MCTruth& mctruth);
+  void FillMCTruth(const genie::EventRecord* grec,
+                   TLorentzVector& vtxOffset,
                    simb::MCTruth& mctruth);
   void FillGTruth(const genie::EventRecord* grec,
                   simb::GTruth& gtruth);
 
-  /// return genie::EventRecord pointer; callee takes possession 
+  /// return genie::EventRecord pointer; callee takes possession
   // adapted from NuReweight
-  // 
+  //
   genie::EventRecord* RetrieveGHEP(const simb::MCTruth& truth,
                                    const simb::GTruth&  gtruth,
                                    bool useFirstTrajPosition = true);
 
   void FillMCFlux(genie::GFluxI* fdriver, simb::MCFlux& mcflux);
 
-  void FillMCFlux(genie::flux::GNuMIFlux* gnumi, 
+  void FillMCFlux(genie::flux::GNuMIFlux* gnumi,
                   simb::MCFlux& mcflux);
-  void FillMCFlux(const genie::flux::GNuMIFluxPassThroughInfo* nflux, 
+  void FillMCFlux(const genie::flux::GNuMIFluxPassThroughInfo* nflux,
                   double dk2gen,
                   simb::MCFlux& flux);
 

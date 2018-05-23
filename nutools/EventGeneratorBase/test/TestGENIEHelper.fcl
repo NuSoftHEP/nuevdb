@@ -10,32 +10,32 @@ standard_geniehelpertest:
    # the rest are used by GENIEHelper itself
 
    # GENIEHelper::Stop() uses this
-   EventsPerSpill:   1   # events per spill generated 
+   EventsPerSpill:   1   # events per spill generated
 
    # one of:   ntuple, [g]simple, dk2nu, mono, histogram (cylinder)
    FluxType:         mono
    # name of file with flux histos or flux file extension, where to find them
    FluxFiles:        [ "*.root" ]
    FluxSearchPaths:   "${PNFS_NOVA_DATA}/flux/gsimple/${NOVA_FLUX_VERSION}"
-   FluxCopyMethod:   "IFDH"         # IFDH or old "DIRECT" method. 
+   FluxCopyMethod:   "IFDH"         # IFDH or old "DIRECT" method.
    FluxCleanup:      ""             # "ALWAYS", "NEVER" or "/var/tmp/"
    ### MaxFluxFileMB:    2000        # 2 GB limit per job
    MaxFluxFileNumber:   99999        # max # of flux files per job
 
    # configure how GENIE scans the geometry for maximum path lengths
-   # "box: 200 200 1.1 0"       # default 
+   # "box: 200 200 1.1 0"       # default
    #           #  200 points, 200 rays, 1.1 safety factor, no XML output
    # "flux: 10000 1.1 0"        # 10k rays, 1.1 fudge
                # #0 don't write result as XML
    # "file: maxpathlength.xml"  # read XML file
    GeomScan:         "default"
 
-   # BeamName is just a label ... not really used ("numi", "booster") 
+   # BeamName is just a label ... not really used ("numi", "booster")
    BeamName:         numi
 
    # volume in which to produce interactions
    # look at geometry to determine volume names
-   TopVolume:        vDetEnclosure    
+   TopVolume:        vDetEnclosure
 
    # config string for fiducial cut (ROOT geom units cm) at GENIE level
    # e.g. "mzcyl:(20,30),50,{200,600}"
@@ -43,48 +43,48 @@ standard_geniehelpertest:
 
    # timing of the interaction(s) relative to start of record
    #in ns - 10000 means the spill appears 10 us into the readout window
-   GlobalTimeOffset: 218500.0         
+   GlobalTimeOffset: 218500.0
    RandomTimeOffset:   9600.0         # length of spill in ns
    SpillTimeConfig:    "evgb::EvtTimeFNALBeam"   # overrides RandomTimeOffset
 
    # pdg code for which neutrinos to generate (at flux level)
    # use of flavor mixing might result in others in actual interactions
-   GenFlavors:       [12,14,16,-12,-14,-16]  
+   GenFlavors:       [12,14,16,-12,-14,-16]
 
    XSecTable:        "gxspl-FNALsmall.xml"
-   DetectorLocation: "NOvA-ND"        # location name for flux window. 
-   # name of detector see GNuMIFlux.xml from $GENIE/src/FluxDrivers 
+   DetectorLocation: "NOvA-ND"        # location name for flux window.
+   # name of detector see GNuMIFlux.xml from $GENIE/src/FluxDrivers
    # for list of allowed locations (only for "ntuple" & "dk2nu" fluxes)
 
    # Configuration string for GFlavorMixerI (as part of GFluxBlender).
    # If first word is other than "none" then use the GFluxBlender GENIE
-   # flux adapter to modify the neutrino flavors coming from the 
-   # real flux generator.  Currently "none", "swap", "fixedfrac" are 
+   # flux adapter to modify the neutrino flavors coming from the
+   # real flux generator.  Currently "none", "swap", "fixedfrac" are
    # the supported schemes, e.g. " swap 12:16 14:16 -12:-16 -14:-16 "
    MixerConfig:      "none"
-    
+
    # distance from tgt to flux window needs to be set if using histogram flx
    MixerBaseline:    0.0
 
 
-   DebugFlags:       0          # no debug flags on by default
+   DebugFlags:       16          # 0x10 = dump as generate  # no debug flags on by default
    ProductionMode:   "true"     # for GENIE 2.10.X uses Messenger_whisper.xml
    # for GENIE 2.10.X uses Messenger_production.xml from genie_phyopt
-   GENIEMsgThresholds: "Messenger_production.xml" 
+   GENIEMsgThresholds: "Messenger_production.xml"
 
    # leftover kruft ... ancient GENIE versions
    Environment:      [ "obsolete", "obsolete" ]
 
    # these only for "mono" or "histogram"
-   # center of the beam in cm relative to detector coordinate origin, 
+   # center of the beam in cm relative to detector coordinate origin,
    #   in meters for GENIE
-   BeamCenter:       [0.25, 0.0, 0.0] 
+   BeamCenter:       [0.25, 0.0, 0.0]
    BeamDirection:    [0.0 , 0.0, 1.0] #all in the z direction
    BeamRadius:       3.0              #in meters for GENIE
 
    SurroundingMass:  0.0              # mass surrounding the detector to use
    #energy for monoenergetic neutrinos if generating those in GEV
-   MonoEnergy:       2.0              
+   MonoEnergy:       2.0
 
 }
 
@@ -98,7 +98,6 @@ geniehelpertest_nova_nd.GeomFileName: "/nova/app/home/novasoft/slf6/novasoft/rel
 geniehelpertest_nova_nd.GeomScan: "file: /nova/app/home/novasoft/slf6/novasoft/releases/development/Geometry/maxpathlengths/NOvA_NEAR-ROCK.maxpl.xml"
 geniehelpertest_nova_nd.FluxSearchPaths:   "/nova/ana/users/rhatcher/flux/sample"
 
-
 geniehelpertest_nova_gsimple:  @local::geniehelpertest_nova_nd
 geniehelpertest_nova_gsimple.FluxType:  gsimple
 geniehelpertest_nova_gsimple.FluxCopyMethod: "DIRECT" # IFDH or "DIRECT" method.
@@ -108,17 +107,46 @@ geniehelpertest_nova_gsimple.FluxFiles:        [ "gsimple/nd/mn/fhc/*.root" ]
 
 geniehelpertest_nova_gnumi:  @local::geniehelpertest_nova_nd
 geniehelpertest_nova_gnumi.FluxType:  ntuple
-geniehelpertest_nova_gnumi.FluxCopyMethod: "DIRECT" # IFDH or "DIRECT" method. 
+geniehelpertest_nova_gnumi.FluxCopyMethod: "DIRECT" # IFDH or "DIRECT" method.
 geniehelpertest_nova_gnumi.MaxFluxFileNumber:  2
 geniehelpertest_nova_gnumi.FluxFiles:        [ "flugg/*.root" ]
 
-
 geniehelpertest_nova_dk2nu:  @local::geniehelpertest_nova_nd
 geniehelpertest_nova_dk2nu.FluxType:  dk2nu
-geniehelpertest_nova_dk2nu.FluxCopyMethod: "DIRECT" # IFDH or "DIRECT" method. 
+geniehelpertest_nova_dk2nu.FluxCopyMethod: "DIRECT" # IFDH or "DIRECT" method.
 geniehelpertest_nova_dk2nu.MaxFluxFileNumber:  2
 #geniehelpertest_nova_dk2nu.FluxFiles:        [ "dk2nu_flugg/*.dk2nu.root" ]
 geniehelpertest_nova_dk2nu.FluxFiles:        [ "dk2nu_minerva/*dk2nu*.root" ]
 
+#=========================================================================
+
+## bad form to hardcode version & full path here
+## but trying to make it independent of setup of other products
+#
+geniehelpertest_dune_fd:  @local::standard_geniehelpertest
+geniehelpertest_dune_fd.TopVolume: "volCryostat"
+geniehelpertest_dune_fd.EventsPerSpill:  1
+geniehelpertest_dune_fd.GeomFileName: "/cvmfs/dune.opensciencegrid.org/products/dune/dunetpc/v06_77_00/gdml/dune10kt_v1_1x2x6.gdml"
+geniehelpertest_dune_nd.GeomScan: "default"
+geniehelpertest_dune_nd.FluxSearchPaths:  "/dune/ana/users/rhatcher/flux/sample"
+
+geniehelpertest_dune_dk2nu:  @local::geniehelpertest_dune_fd
+geniehelpertest_dune_dk2nu.FluxType:  "dk2nu"
+geniehelpertest_dune_dk2nu.GenFlavors:       [12,14,-12,-14]
+geniehelpertest_dune_dk2nu.FluxCopyMethod: "DIRECT" # IFDH or "DIRECT" method.
+geniehelpertest_dune_dk2nu.MaxFluxFileNumber:  2
+geniehelpertest_dune_dk2nu.FluxSearchPaths: "/pnfs/dune/persistent/TaskForce_Flux/opt_03/neutrino/dk2nu"
+geniehelpertest_dune_dk2nu.FluxFiles: [ "*dk2nu.root" ]
+geniehelpertest_dune_dk2nu.DetectorLocation: "LBNE-FarDet_01"
+geniehelpertest_dune_dk2nu.SpillTimeConfig:  "evgb::EvtTimeFNALBeam"
+
+geniehelpertest_dune_atmos:  @local::geniehelpertest_dune_fd
+geniehelpertest_dune_atmos.FluxType:  "atmo_BARTOL"
+geniehelpertest_dune_atmos.GenFlavors:       [12,14,-12,-14]
+geniehelpertest_dune_atmos.FluxCopyMethod: "DIRECT" # IFDH or "DIRECT" method.
+geniehelpertest_dune_atmos.MaxFluxFileNumber:  4
+geniehelpertest_dune_atmos.FluxSearchPaths: "/pnfs/dune/persistent/TaskForce_Flux/atmos/Bartol"
+geniehelpertest_dune_atmos.FluxFiles: ["fmax10_0401z.sou_nue","fmax10_0401z.sou_num","fmax10_0401z.sou_nbe","fmax10_0401z.sou_nbm"]
+geniehelpertest_dune_atmos.SpillTimeConfig:  "evgb::EvtTimeFlat" # no beam structure
 
 END_PROLOG
