@@ -1,4 +1,3 @@
-
 #include "art/Framework/Core/EDAnalyzer.h"
 #include "art/Framework/Core/ModuleMacros.h"
 
@@ -153,7 +152,7 @@ private:
 
 
 //evg::GenieOutput::GenieOutput(fhicl::ParameterSet const & pset)
-// : EDAnalyzer(pset)  
+// : EDAnalyzer(pset)
 evg::GenieOutput::GenieOutput(const Parameters& params)
   : EDAnalyzer(params)
   , fParams(params)
@@ -168,9 +167,9 @@ evg::GenieOutput::GenieOutput(const Parameters& params)
   fDumpFilePattern       = fParams().dumpFilePattern();
   fDumpGeniePrintLevel   = fParams().dumpGeniePrintLevel();
 
-  fSeparateOutputNtpWriters = 
+  fSeparateOutputNtpWriters =
     ( fOutputGHEPFilePattern.find("%l") != std::string::npos );
-  fSeparateDumpStreams = 
+  fSeparateDumpStreams =
     ( fDumpFilePattern.find("%l") != std::string::npos );
 
   fDumpMCTruth           = fParams().dumpMCTruth();
@@ -178,9 +177,9 @@ evg::GenieOutput::GenieOutput(const Parameters& params)
   fDumpMCFlux            = fParams().dumpMCFlux();
 
   /*
-  mf::LogInfo("GenieOutput") << "##### Dump options " 
-                             << fDumpMCTruth << " " 
-                             << fDumpGTruth << " " 
+  mf::LogInfo("GenieOutput") << "##### Dump options "
+                             << fDumpMCTruth << " "
+                             << fDumpGTruth << " "
                              << fDumpMCFlux << " " ;
   */
 
@@ -190,7 +189,7 @@ evg::GenieOutput::~GenieOutput()
 {
 
   // release resources
-  std::map<std::string,genie::NtpWriter*>::iterator mitro = 
+  std::map<std::string,genie::NtpWriter*>::iterator mitro =
     fOutputNtpWriters.begin();
   for ( ; mitro != fOutputNtpWriters.end(); ++mitro ) {
     std::string       label = mitro->first;
@@ -258,20 +257,28 @@ void evg::GenieOutput::analyze(art::Event const & evt)
 
     if ( fDumpMCTruth || fDumpGTruth || fDumpMCFlux ) {
       std::ostringstream dumpSimBaseObj;
-      dumpSimBaseObj << " after Next() " << indx << " " << flag 
-                     << std::endl;; 
-      if ( fDumpMCTruth ) dumpSimBaseObj << *pmctruth << std::endl;
-      //if ( fDumpGTruth  ) dumpSimBaseObj << *pgtruth << std::endl;
-      if ( fDumpGTruth  ) 
-        dumpSimBaseObj << "sorry no operator<< exists for simb::GTruth" 
-                       << " - someone should write one" << std::endl;
-      if ( fDumpMCFlux  ) dumpSimBaseObj << *pmcflux << std::endl;
-
+      dumpSimBaseObj << " after Next() " << indx << " " << flag
+                     << std::endl;;
+      if ( fDumpMCTruth ) {
+        if ( pmctruth ) dumpSimBaseObj << *pmctruth << std::endl;
+        else            dumpSimBaseObj << "no simb::MCTruth available" << std::endl;
+      }
+      if ( fDumpGTruth ) {
+        if ( pgtruth ) {
+          dumpSimBaseObj << *pgtruth << std::endl;
+          //dumpSimBaseObj << "sorry no operator<< exists for simb::GTruth"
+          //               << " - someone should write one" << std::endl;
+        } else dumpSimBaseObj << "no simb::GTruth available" << std::endl;
+      }
+      if ( fDumpMCFlux ) {
+        if ( pmcflux ) dumpSimBaseObj << *pmcflux << std::endl;
+        else           dumpSimBaseObj << "no simb::MCFlux available" << std::endl;
+      }
       mf::LogInfo("GenieOutput") << dumpSimBaseObj.str();
     }
 
     delete grec;  // don't leak stuff
-  } // loop over MCTruthAndFriends 
+  } // loop over MCTruthAndFriends
 
 }
 

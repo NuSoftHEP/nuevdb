@@ -13,6 +13,7 @@
 //#include <map>
 //#include <fstream>
 #include <memory>   // for unique_ptr
+#include <typeinfo>
 
 // ROOT includes
 #include "TVector3.h"
@@ -72,6 +73,14 @@
 void evgb::FillMCTruth(const genie::EventRecord *record, double spillTime,
                        simb::MCTruth &truth)
 {
+  TLorentzVector vtxOffset(0,0,0,spillTime);
+  FillMCTruth(record,vtxOffset,truth);
+}
+
+void evgb::FillMCTruth(const genie::EventRecord *record,
+                       TLorentzVector &vtxOffset,
+                       simb::MCTruth  &truth)
+{
   TLorentzVector *vertex = record->Vertex();
 
   // get the Interaction object from the record - this is the object
@@ -119,10 +128,10 @@ void evgb::FillMCTruth(const genie::EventRecord *record, double spillTime,
     // set the vertex location for the neutrino, nucleus and everything
     // that is to be tracked.  vertex returns values in meters.
     if (part->Status() == 0 || part->Status() == 1){
-      vtx[0] = 100.*(part->Vx()*1.e-15 + vertex->X());
-      vtx[1] = 100.*(part->Vy()*1.e-15 + vertex->Y());
-      vtx[2] = 100.*(part->Vz()*1.e-15 + vertex->Z());
-      vtx[3] = part->Vt() + spillTime;
+      vtx[0] = 100.*(part->Vx()*1.e-15 + vertex->X() + vtxOffset.X());
+      vtx[1] = 100.*(part->Vy()*1.e-15 + vertex->Y() + vtxOffset.Y());
+      vtx[2] = 100.*(part->Vz()*1.e-15 + vertex->Z() + vtxOffset.Z());
+      vtx[3] = part->Vt() + vtxOffset.T();
     }
     TLorentzVector pos(vtx[0], vtx[1], vtx[2], vtx[3]);
     TLorentzVector mom(part->Px(), part->Py(), part->Pz(), part->E());
@@ -672,11 +681,20 @@ void evgb::FillMCFlux(genie::GFluxI* fdriver, simb::MCFlux& mcflux)
         FillMCFlux(gdk2nu,mcflux);
         return;
       } else {
-        mf::LogProblem("GENIE2ART")
-          << "no FillMCFlux for this flux driver "
-          ///<< fdriver->GetClass()->GetName()
-          << std::endl;
-        abort();
+        static bool first = true;
+        if ( first ) {
+          first = false;
+          std::string dname = typeid(*fdriver).name();
+          // can't use fdriver->GetClass()->GetName(); not derived from TObject
+          mf::LogInfo("GENIE2ART")
+            << "   " << __FILE__ << ":" << __LINE__ << "\n"
+            << "   no FillMCFlux() for this flux driver: "
+            << dname
+            << " (typeid.name, use \"c++filt -t\" to demangle)"
+            << std::endl;
+          // atmospheric fluxes don't have a method for FillMCFLux
+          // don't abort ... just note the problem, once // abort();
+        }
       }
     }
   }
@@ -959,6 +977,8 @@ void evgb::FillMCFlux(genie::flux::GDk2NuFlux* gdk2nu,
   const bsim::Dk2Nu&    dk2nu    = gdk2nu->GetDk2Nu();
   const bsim::NuChoice& nuchoice = gdk2nu->GetNuChoice();
   evgb::FillMCFlux(&dk2nu,&nuchoice,flux);
+  // do this after Fill as that does a Reset()
+  flux.fdk2gen = gdk2nu->GetDecayDist();
 }
 void evgb::FillMCFlux(const bsim::Dk2Nu* dk2nu,
                       const bsim::NuChoice* nuchoice,
@@ -967,25 +987,22 @@ void evgb::FillMCFlux(const bsim::Dk2Nu* dk2nu,
   flux.Reset();
   flux.fFluxType = simb::kDk2Nu;
 
-  flux.fntype  = nuchoice->pdgNu;
-  flux.fnimpwt = nuchoice->impWgt;
-  ///flux.fdk2gen = nflux_entry->dist;
-  flux.fnenergyn = flux.fnenergyf = nuchoice->p4NuUser.E();
-
   if ( dk2nu ) {
       flux.frun      = dk2nu->job;
       flux.fevtno    = dk2nu->potnum;
-      flux.ftpx      = dk2nu->tgtexit.tpx;
-      flux.ftpy      = dk2nu->tgtexit.tpy;
-      flux.ftpz      = dk2nu->tgtexit.tpz;
-      flux.ftptype   = dk2nu->tgtexit.tptype;   // converted to PDG
+
+      // ignore vector<bsim::NuRay> (see nuchoice above)
+
+      // bsim::Decay object
+      flux.fnorig    = dk2nu->decay.norig;
+      flux.fndecay   = dk2nu->decay.ndecay;
+      flux.fntype    = dk2nu->decay.ntype;
+      flux.fppmedium = dk2nu->decay.ppmedium;
+      flux.fptype    = dk2nu->decay.ptype;
+
       flux.fvx       = dk2nu->decay.vx;
       flux.fvy       = dk2nu->decay.vy;
       flux.fvz       = dk2nu->decay.vz;
-
-      flux.fndecay   = dk2nu->decay.ndecay;
-      flux.fppmedium = dk2nu->decay.ppmedium;
-
       flux.fpdpx     = dk2nu->decay.pdpx;
       flux.fpdpy     = dk2nu->decay.pdpy;
       flux.fpdpz     = dk2nu->decay.pdpz;
@@ -993,10 +1010,44 @@ void evgb::FillMCFlux(const bsim::Dk2Nu* dk2nu,
       flux.fppdxdz   = dk2nu->decay.ppdxdz;
       flux.fppdydz   = dk2nu->decay.ppdydz;
       flux.fpppz     = dk2nu->decay.pppz;
+      flux.fppenergy = dk2nu->decay.ppenergy;
 
-      flux.fptype    = dk2nu->decay.ptype;
+      flux.fmuparpx  = dk2nu->decay.muparpx;
+      flux.fmuparpy  = dk2nu->decay.muparpy;
+      flux.fmuparpz  = dk2nu->decay.muparpz;
+      flux.fmupare   = dk2nu->decay.mupare;
 
-    }
+      flux.fnecm     = dk2nu->decay.necm;
+      flux.fnimpwt   = dk2nu->decay.nimpwt;
+
+      // no place for:  vector<bsim::Ancestor>
+
+      // production vertex of nu parent
+      flux.fppvx      = dk2nu->ppvx;
+      flux.fppvy      = dk2nu->ppvy;
+      flux.fppvz      = dk2nu->ppvz;
+
+      // bsim::TgtExit object
+      flux.ftvx      = dk2nu->tgtexit.tvx;
+      flux.ftvy      = dk2nu->tgtexit.tvy;
+      flux.ftvz      = dk2nu->tgtexit.tvz;
+      flux.ftpx      = dk2nu->tgtexit.tpx;
+      flux.ftpy      = dk2nu->tgtexit.tpy;
+      flux.ftpz      = dk2nu->tgtexit.tpz;
+      flux.ftptype   = dk2nu->tgtexit.tptype;   // converted to PDG
+      flux.ftgen     = dk2nu->tgtexit.tgen;
+
+      // ignore vector<bsim::Traj>
+
+  }
+
+  if ( nuchoice ) {
+    flux.fntype  = nuchoice->pdgNu;
+    flux.fnimpwt = nuchoice->impWgt;
+
+    flux.fnenergyn = flux.fnenergyf = nuchoice->p4NuUser.E();
+    flux.fnwtnear  = flux.fnwtfar   = nuchoice->xyWgt;
+  }
 
   /*
     // anything useful stuffed into vdbl or vint?

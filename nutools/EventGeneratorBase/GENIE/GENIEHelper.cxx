@@ -316,7 +316,7 @@ namespace evgb {
     mf::LogInfo("GENIEHelper") << envlisttext.str();
 #endif
 
-    if ( fFluxType.compare("atmo") == 0 ) {
+    if ( fFluxType.find("atmo") == 0 ) {
 
       if(fGenFlavors.size() != fSelectedFluxFiles.size()){
         mf::LogInfo("GENIEHelper") <<  "ERROR: The number of generated neutrino flavors ("
@@ -324,10 +324,13 @@ namespace evgb {
                                    << fSelectedFluxFiles.size() << ")!!!";
         exit(1);
       } else {
+        std::ostringstream atmofluxmatch;
         for (size_t indx=0; indx < fGenFlavors.size(); ++indx ) {
-          mf::LogInfo("GENIEHelper")
-            <<  "atmo flux assignment : " << fGenFlavors[indx] << " " << fSelectedFluxFiles[indx];
+          atmofluxmatch << "   " << std::setw(3) << fGenFlavors[indx] << " " << fSelectedFluxFiles[indx] << "\n";
         }
+        mf::LogInfo("GENIEHelper")
+          <<  "atmo flux assignment : \n"
+          << atmofluxmatch.str();
       }
 
       if(fEventsPerSpill !=1){
@@ -336,35 +339,38 @@ namespace evgb {
         exit(1);
       }
 
-      if (fFluxType.compare("atmo_FLUKA") == 0 ){
-        mf::LogInfo("GENIEHelper") << "The sims are from FLUKA";
-      }
+      std::ostringstream atmofluxinfo;
 
-      else if (fFluxType.compare("atmo_BARTOL") == 0 ||
-               fFluxType.compare("atmo_BGLRS")  == 0    ){
-        mf::LogInfo("GENIEHelper") << "The sims are from BARTOL/BGLRS";
+      if (fFluxType.find("FLUKA") != std::string::npos ){
+        atmofluxinfo << "  The fluxes are from FLUKA";
       }
-
-      else if (fFluxType.compare("atmo_HONDA") == 0 ||
-               fFluxType.compare("atmo_HAKKM") == 0 ){
-        mf::LogInfo("GENIEHelper") << "The sims are from HONDA/HAKKM";
+      else if (fFluxType.find("BARTOL") != std::string::npos ||
+               fFluxType.find("BGLRS")  != std::string::npos    ){
+        atmofluxinfo << "  The fluxes are from BARTOL/BGLRS";
       }
-
+      else if (fFluxType.find("HONDA") != std::string::npos ||
+               fFluxType.find("HAKKM") != std::string::npos    ){
+        atmofluxinfo << "  The fluxes are from HONDA/HAKKM";
+      }
       else {
-        mf::LogInfo("GENIEHelper") << "Uknown flux simulation: " << fFluxType;
+        mf::LogInfo("GENIEHelper") << "Unknown atmo flux simulation: " << fFluxType;
         exit(1);
       }
 
-      mf::LogInfo("GENIEHelper") << "The energy range is between:  " << fAtmoEmin << " GeV and "
-                                 << fAtmoEmax << " GeV.";
+      atmofluxinfo << '\n'
+                   << "  The energy range is between:  " << fAtmoEmin << " GeV and "
+                   << fAtmoEmax << " GeV.";
 
-      mf::LogInfo("GENIEHelper") << "Generation surface of: (" << fAtmoRl << ","
-                                 << fAtmoRt << ")";
+      atmofluxinfo << '\n'
+                   << "  Generation surface of: (" << fAtmoRl << ","
+                   << fAtmoRt << ")";
+
+      mf::LogInfo("GENIEHelper") << atmofluxinfo.str();
 
     }// end if atmospheric fluxes
 
     // make the histograms
-    if(fFluxType.compare("histogram") == 0 ){
+    if ( fFluxType.compare("histogram") == 0 ){
       mf::LogInfo("GENIEHelper") << "setting beam direction and center at "
                                  << fBeamDirection.X() << " " << fBeamDirection.Y() << " " << fBeamDirection.Z()
                                  << " (" << fBeamCenter.X() << "," << fBeamCenter.Y() << "," << fBeamCenter.Z()
@@ -2305,15 +2311,16 @@ namespace evgb {
       size_t nfiles = fSelectedFluxFiles.size();
       if ( nfiles == 0 ) {
         mf::LogError("GENIEHelper")
-          << "For \"ntuple\" or \"simple_flux\", specification "
-          << "must resolve to at least one file"
+          << "For \"dk2nu\', \"ntuple\" (\"numi\") or \"simple_flux\","
+          << " specification must resolve to at least one file"
           << "\n  none were found user pattern: "
           << patterntext.str()
           << "\n  using FluxSearchPaths of: "
           << dirstext.str();
         //\"" << cet::getenv("FW_SEARCH_PATH") << "\"";
         throw cet::exception("NoFluxFiles")
-          << "no flux files found for: " << patterntext.str();
+          << "no flux files found for: " << patterntext.str() << "\n"
+          << " in: " << dirstext.str();
 
       }
     }
