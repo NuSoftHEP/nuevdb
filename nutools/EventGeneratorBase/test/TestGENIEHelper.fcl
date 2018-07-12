@@ -66,7 +66,6 @@ standard_geniehelpertest:
    # distance from tgt to flux window needs to be set if using histogram flx
    MixerBaseline:    0.0
 
-
    DebugFlags:       16          # 0x10 = dump as generate  # no debug flags on by default
    ProductionMode:   "true"     # for GENIE 2.10.X uses Messenger_whisper.xml
    # for GENIE 2.10.X uses Messenger_production.xml from genie_phyopt
