@@ -23,15 +23,29 @@
 #include "nutools/EventGeneratorBase/GENIE/EvtTimeShiftFactory.h"
 
 // GENIE includes
-#include "Ntuple/NtpMCEventRecord.h"
-#include "Ntuple/NtpMCTreeHeader.h"
-#include "PDG/PDGLibrary.h"
-// -- GENIE Messenger conflict LOG_INFO w/ ART messagefacility
-//#include "Messenger/Messenger.h"
-#include "GHEP/GHepRecord.h"
+#ifdef GENIE_PRE_R3
+  #include "Ntuple/NtpMCEventRecord.h"
+  #include "Ntuple/NtpMCTreeHeader.h"
+  #include "PDG/PDGLibrary.h"
+  // -- GENIE Messenger conflict LOG_INFO w/ ART messagefacility
+  //#include "Messenger/Messenger.h"
+  #include "GHEP/GHepRecord.h"
 
-#include "FluxDrivers/GNuMIFlux.h"
-#include "FluxDrivers/GSimpleNtpFlux.h"
+  #include "FluxDrivers/GNuMIFlux.h"
+  #include "FluxDrivers/GSimpleNtpFlux.h"
+#else
+  #include "GENIE/Framework/ParticleData/PDGLibrary.h"
+  #include "GENIE/Framework/GHEP/GHepRecord.h"
+  #include "GENIE/Framework/Ntuple/NtpMCFormat.h"
+  #include "GENIE/Framework/Ntuple/NtpWriter.h"
+  #include "GENIE/Framework/Ntuple/NtpMCEventRecord.h"
+  // #include "GENIE/Framework/Ntuple/NtpMCTreeHeader.h"
+  // #include "GENIE/Framework/Messenger/Messenger.h" -- conflict LOG_INFO w/ messagefacility
+
+  #include "GENIE/Tools/Flux/GNuMIFlux.h"
+  #include "GENIE/Tools/Flux/GSimpleNtpFlux.h"
+#endif
+
 #include "dk2nu/tree/dk2nu.h"
 #include "dk2nu/tree/NuChoice.h"
 
