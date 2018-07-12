@@ -37,9 +37,10 @@ physics:
  {
 #   generator: @local::geniehelpertest_nova_dk2nu
 ### alternative tests
-#   generator: @local::geniehelpertest_dune_dk2nu
+   generator: @local::geniehelpertest_dune_dk2nu
 #   generator: @local::geniehelpertest_dune_atmos # BARTOL
-   generator: @local::geniehelpertest_dune_atmos_honda_alt0
+#   generator: @local::geniehelpertest_dune_atmos_honda_alt0
+
  }
 
  filters:
