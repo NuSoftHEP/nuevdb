@@ -21,27 +21,52 @@
 #include "TSystem.h"
 
 //GENIE includes
-#include "Conventions/Units.h"
-#include "EVGCore/EventRecord.h"
-#include "GHEP/GHepUtils.h"
-#include "PDG/PDGCodes.h"
-#include "PDG/PDGLibrary.h"
+#ifdef GENIE_PRE_R3
+  #include "Conventions/GVersion.h"
+  #include "Conventions/Units.h"
+  #include "EVGCore/EventRecord.h"
+  #include "GHEP/GHepUtils.h"
+  #include "PDG/PDGCodes.h"
+  #include "PDG/PDGLibrary.h"
 
-#include "Interaction/InitialState.h"
-#include "Interaction/Interaction.h"
-#include "Interaction/Kinematics.h"
-#include "Interaction/KPhaseSpace.h"
-#include "Interaction/ProcessInfo.h"
-#include "Interaction/XclsTag.h"
-#include "GHEP/GHepParticle.h"
-#include "PDG/PDGCodeList.h"
-#include "Conventions/Constants.h" //for calculating event kinematics
+  #include "Interaction/InitialState.h"
+  #include "Interaction/Interaction.h"
+  #include "Interaction/Kinematics.h"
+  #include "Interaction/KPhaseSpace.h"
+  #include "Interaction/ProcessInfo.h"
+  #include "Interaction/XclsTag.h"
+  #include "GHEP/GHepParticle.h"
+  #include "PDG/PDGCodeList.h"
+  #include "Conventions/Constants.h" //for calculating event kinematics
 
-// GENIE
-#include "EVGDrivers/GFluxI.h"
-#include "FluxDrivers/GFluxBlender.h"
-#include "FluxDrivers/GNuMIFlux.h"
-#include "FluxDrivers/GSimpleNtpFlux.h"
+  #include "EVGDrivers/GFluxI.h"
+  #include "FluxDrivers/GFluxBlender.h"
+  #include "FluxDrivers/GNuMIFlux.h"
+  #include "FluxDrivers/GSimpleNtpFlux.h"
+#else
+  // GENIE R-3 reorganized headers
+  #include "GENIE/Framework/Conventions/GVersion.h"
+  #include "GENIE/Framework/Conventions/Units.h"
+  #include "GENIE/Framework/Conventions/Constants.h" //for calculating event kinematics
+  #include "GENIE/Framework/ParticleData/PDGCodes.h"
+  #include "GENIE/Framework/ParticleData/PDGCodeList.h"
+  #include "GENIE/Framework/ParticleData/PDGLibrary.h"
+  #include "GENIE/Framework/GHEP/GHepUtils.h"
+  #include "GENIE/Framework/GHEP/GHepParticle.h"
+
+  #include "GENIE/Framework/Interaction/InitialState.h"
+  #include "GENIE/Framework/Interaction/Interaction.h"
+  #include "GENIE/Framework/Interaction/Kinematics.h"
+  #include "GENIE/Framework/Interaction/KPhaseSpace.h"
+  #include "GENIE/Framework/Interaction/ProcessInfo.h"
+  #include "GENIE/Framework/Interaction/XclsTag.h"
+
+  #include "GENIE/Framework/EventGen/EventRecord.h"
+  #include "GENIE/Framework/EventGen/GFluxI.h"
+  #include "GENIE/Tools/Flux/GFluxBlender.h"
+  #include "GENIE/Tools/Flux/GNuMIFlux.h"
+  #include "GENIE/Tools/Flux/GSimpleNtpFlux.h"
+#endif
 
 #ifndef ART_V1
   #include "nusimdata/SimulationBase/MCTruth.h"
