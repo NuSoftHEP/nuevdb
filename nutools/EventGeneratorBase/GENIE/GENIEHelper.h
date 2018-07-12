@@ -11,16 +11,24 @@
 #include <vector>
 #include <set>
 
-#include "TGeoManager.h"
 
-#include "EVGDrivers/GFluxI.h"
-#include "EVGDrivers/GeomAnalyzerI.h"
-#include "EVGDrivers/GMCJDriver.h"
+// GENIE
+//#include "EVGDrivers/GFluxI.h"         # R-3 "Framework/EventGen/GFluxI.h"
+//#include "EVGDrivers/GeomAnalyzerI.h"  # R-3 "Framework/EventGen/GeomAnalyzerI.h"
+//#include "EVGDrivers/GMCJDriver.h"     # R-3 "Framework/EventGen/GMCJDriver.h"
+namespace genie {
+  class GFluxI;
+  class GeomAnalyzerI;
+  class GMCJDriver;
+}
 
+// ROOT
 class TH1D;
 class TH2D;
 class TF1;
 class TRandom3;
+class TGeoManager;
+#include "TVector3.h"
 
 ///parameter set interface
 namespace fhicl {
@@ -85,6 +93,10 @@ namespace evgb {
     genie::GFluxI*        GetFluxDriver(bool base = true )
       { return ( (base) ? fFluxD : fFluxD2GMCJD ); }
 
+    // these might be updated after parsing the parameter set in init()
+    std::string           GetTuneName()           const { return fTuneName; }
+    std::string           GetEventGeneratorList() const { return fEventGeneratorList; }
+
   private:
 
     void InitializeGeometry();
@@ -106,6 +118,7 @@ namespace evgb {
     void SetGXMLPATH();
     void SetGMSGLAYOUT();
     void StartGENIEMessenger(std::string prodmode);
+    void FindTune();
     void FindEventGeneratorList();
     void ReadXSecTable();
 
@@ -171,6 +184,7 @@ namespace evgb {
                                                  ///< where the neutrinos are generated
     std::vector<std::string> fEnvironment;       ///< environmental variables and settings used by genie
     std::string              fXSecTable;         ///< cross section file (was $GSPLOAD)
+    std::string              fTuneName;          ///< GENIE R-3 Tune name (defines model configuration)
     std::string              fEventGeneratorList;///< control over event topologies, was $GEVGL [Default]
     std::string              fGXMLPATH;          ///< locations for GENIE XML files
     std::string              fGMSGLAYOUT;        ///< format for GENIE log message [BASIC]|SIMPLE (SIMPLE=no timestamps)

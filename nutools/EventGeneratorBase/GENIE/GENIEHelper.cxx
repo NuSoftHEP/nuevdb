@@ -35,57 +35,112 @@
 #include "TStopwatch.h"
 
 //GENIE includes
-#include "GENIE/Conventions/GVersion.h"
-#include "GENIE/Conventions/Units.h"
-#include "GENIE/EVGCore/EventRecord.h"
-#include "GENIE/EVGDrivers/GMCJDriver.h"
-#include "GENIE/GHEP/GHepUtils.h"
-#include "GENIE/FluxDrivers/GCylindTH1Flux.h"
-#include "GENIE/FluxDrivers/GMonoEnergeticFlux.h"
-#include "GENIE/FluxDrivers/GNuMIFlux.h"
-#include "GENIE/FluxDrivers/GSimpleNtpFlux.h"
-#include "GENIE/FluxDrivers/GFluxDriverFactory.h"
-#if __GENIE_RELEASE_CODE__ >= GRELCODE(2,11,0)
-  #include "GENIE/FluxDrivers/GBGLRSAtmoFlux.h"  //for atmo nu generation
-  #include "GENIE/FluxDrivers/GFLUKAAtmoFlux.h"  //for atmo nu generation
-#else
-  #include "GENIE/FluxDrivers/GBartolAtmoFlux.h"  //for atmo nu generation
-  #include "GENIE/FluxDrivers/GFlukaAtmo3DFlux.h" //for atmo nu generation
-#endif
-#if __GENIE_RELEASE_CODE__ >= GRELCODE(2,12,2)
-  #include "GENIE/FluxDrivers/GHAKKMAtmoFlux.h" // for atmo nu generation
-#endif
-#include "GENIE/FluxDrivers/GAtmoFlux.h"        //for atmo nu generation
+#ifdef GENIE_PRE_R3
+  #include "GENIE/Conventions/GVersion.h"
+  #include "GENIE/Conventions/Units.h"
+  #include "GENIE/EVGCore/EventRecord.h"
+  #include "GENIE/EVGDrivers/GMCJDriver.h"
+  #include "GENIE/GHEP/GHepUtils.h"
+  #include "GENIE/FluxDrivers/GCylindTH1Flux.h"
+  #include "GENIE/FluxDrivers/GMonoEnergeticFlux.h"
+  #include "GENIE/FluxDrivers/GNuMIFlux.h"
+  #include "GENIE/FluxDrivers/GSimpleNtpFlux.h"
+  #include "GENIE/FluxDrivers/GFluxDriverFactory.h"
+  #if __GENIE_RELEASE_CODE__ >= GRELCODE(2,11,0)
+    #include "GENIE/FluxDrivers/GBGLRSAtmoFlux.h"  //for atmo nu generation
+    #include "GENIE/FluxDrivers/GFLUKAAtmoFlux.h"  //for atmo nu generation
+  #else
+    #include "GENIE/FluxDrivers/GBartolAtmoFlux.h"  //for atmo nu generation
+    #include "GENIE/FluxDrivers/GFlukaAtmo3DFlux.h" //for atmo nu generation
+  #endif
+  #if __GENIE_RELEASE_CODE__ >= GRELCODE(2,12,2)
+    #include "GENIE/FluxDrivers/GHAKKMAtmoFlux.h" // for atmo nu generation
+  #endif
+  #include "GENIE/FluxDrivers/GAtmoFlux.h"        //for atmo nu generation
 
-#pragma GCC diagnostic push
-#pragma GCC diagnostic ignored "-Wunused-variable"
-#include "GENIE/Conventions/Constants.h" //for calculating event kinematics
-#pragma GCC diagnostic pop
+  #pragma GCC diagnostic push
+  #pragma GCC diagnostic ignored "-Wunused-variable"
+  #include "GENIE/Conventions/Constants.h" //for calculating event kinematics
+  #pragma GCC diagnostic pop
 
-#include "GENIE/PDG/PDGCodes.h"
-#ifndef GENIE_USE_ENVVAR
+  #include "GENIE/PDG/PDGCodes.h"
   #include "GENIE/Utils/AppInit.h"
   #include "GENIE/Utils/RunOpt.h"
+
+  #include "GENIE/Geo/ROOTGeomAnalyzer.h"
+  #include "GENIE/Geo/GeomVolSelectorFiducial.h"
+  #include "GENIE/Geo/GeomVolSelectorRockBox.h"
+  #include "GENIE/Utils/StringUtils.h"
+  #include "GENIE/Utils/XmlParserUtils.h"
+  #include "GENIE/Interaction/InitialState.h"
+  #include "GENIE/Interaction/Interaction.h"
+  #include "GENIE/Interaction/Kinematics.h"
+  #include "GENIE/Interaction/KPhaseSpace.h"
+  #include "GENIE/Interaction/ProcessInfo.h"
+  #include "GENIE/Interaction/XclsTag.h"
+  #include "GENIE/GHEP/GHepParticle.h"
+  #include "GENIE/PDG/PDGCodeList.h"
+
+  #include "GENIE/FluxDrivers/GFluxBlender.h"
+  #include "GENIE/FluxDrivers/GFlavorMixerI.h"
+  #include "GENIE/FluxDrivers/GFlavorMap.h"
+  #include "GENIE/FluxDrivers/GFlavorMixerFactory.h"
+
+#else
+  // GENIE R-3 reorganized headers
+  #include "GENIE/Framework/Conventions/GVersion.h"
+  #include "GENIE/Framework/Utils/StringUtils.h"
+  #include "GENIE/Framework/Utils/XmlParserUtils.h"
+
+  #pragma GCC diagnostic push
+  #pragma GCC diagnostic ignored "-Wunused-variable"
+  // constants for calculating event kinematics
+  #include "GENIE/Framework/Conventions/Constants.h"
+  #pragma GCC diagnostic pop
+
+  #include "GENIE/Framework/Conventions/Units.h"
+  #include "GENIE/Framework/ParticleData/PDGCodes.h"
+  #include "GENIE/Framework/ParticleData/PDGCodeList.h"
+  #include "GENIE/Framework/ParticleData/PDGLibrary.h"
+
+  #include "GENIE/Framework/GHEP/GHepParticle.h"
+  #include "GENIE/Framework/GHEP/GHepUtils.h"
+
+  #include "GENIE/Framework/Interaction/InitialState.h"
+  #include "GENIE/Framework/Interaction/Interaction.h"
+  #include "GENIE/Framework/Interaction/Kinematics.h"
+  #include "GENIE/Framework/Interaction/KPhaseSpace.h"
+  #include "GENIE/Framework/Interaction/ProcessInfo.h"
+  #include "GENIE/Framework/Interaction/XclsTag.h"
+
+  #include "GENIE/Framework/EventGen/GFluxI.h"
+  #include "GENIE/Framework/EventGen/EventRecord.h"
+  #include "GENIE/Framework/EventGen/GMCJDriver.h"
+
+  #include "GENIE/Framework/Utils/AppInit.h"
+  #include "GENIE/Framework/Utils/RunOpt.h"
+
+  #include "GENIE/Tools/Geometry/ROOTGeomAnalyzer.h"
+  #include "GENIE/Tools/Geometry/GeomVolSelectorFiducial.h"
+  #include "GENIE/Tools/Geometry/GeomVolSelectorRockBox.h"
+
+  #include "GENIE/Tools/Flux/GFluxBlender.h"
+  #include "GENIE/Tools/Flux/GFlavorMixerI.h"
+  #include "GENIE/Tools/Flux/GFlavorMap.h"
+  #include "GENIE/Tools/Flux/GFlavorMixerFactory.h"
+  #include "GENIE/Tools/Flux/GFluxDriverFactory.h"
+
+  #include "GENIE/Tools/Flux/GCylindTH1Flux.h"
+  #include "GENIE/Tools/Flux/GMonoEnergeticFlux.h"
+  #include "GENIE/Tools/Flux/GNuMIFlux.h"
+  #include "GENIE/Tools/Flux/GSimpleNtpFlux.h"
+  #include "GENIE/Tools/Flux/GAtmoFlux.h"
+  #include "GENIE/Tools/Flux/GBGLRSAtmoFlux.h"  // was GBartolAtmoFlux.h
+  #include "GENIE/Tools/Flux/GFLUKAAtmoFlux.h"  // was GFlukaAtmo3DFlux.h
+  #include "GENIE/Tools/Flux/GHAKKMAtmoFlux.h"  //
+
 #endif
 
-#include "GENIE/Geo/ROOTGeomAnalyzer.h"
-#include "GENIE/Geo/GeomVolSelectorFiducial.h"
-#include "GENIE/Geo/GeomVolSelectorRockBox.h"
-#include "GENIE/Utils/StringUtils.h"
-#include "GENIE/Utils/XmlParserUtils.h"
-#include "GENIE/Interaction/InitialState.h"
-#include "GENIE/Interaction/Interaction.h"
-#include "GENIE/Interaction/Kinematics.h"
-#include "GENIE/Interaction/KPhaseSpace.h"
-#include "GENIE/Interaction/ProcessInfo.h"
-#include "GENIE/Interaction/XclsTag.h"
-#include "GENIE/GHEP/GHepParticle.h"
-#include "GENIE/PDG/PDGCodeList.h"
-
-#include "GENIE/FluxDrivers/GFluxBlender.h"
-#include "GENIE/FluxDrivers/GFlavorMixerI.h"
-#include "GENIE/FluxDrivers/GFlavorMap.h"
-#include "GENIE/FluxDrivers/GFlavorMixerFactory.h"
 
 // dk2nu flux
 #include "dk2nu/tree/dk2nu.h"
@@ -199,6 +254,7 @@ namespace evgb {
     , fAtmoRt            (pset.get< double                   >("Rt",               20.0) )
     , fEnvironment       (pset.get< std::vector<std::string> >("Environment")            )
     , fXSecTable         (pset.get< std::string              >("XSecTable",          "") ) //e.g. "gxspl-FNALsmall.xml"
+    , fTuneName          (pset.get< std::string              >("TuneName","${GENIE_XSEC_TUNE}") )
     , fEventGeneratorList(pset.get< std::string              >("EventGeneratorList", "") ) // "Default"
     , fGXMLPATH          (pset.get< std::string              >("GXMLPATH",           "") )
     , fGMSGLAYOUT        (pset.get< std::string              >("GMSGLAYOUT",         "") ) // [BASIC] or SIMPLE
@@ -265,10 +321,6 @@ namespace evgb {
     if (fFluxCopyMethod == "DIRECT") ExpandFluxFilePatternsDirect();
     else                             ExpandFluxFilePatternsIFDH();
 
-    /// Set the GENIE environment
-    /// if using entries in the fEnvironment vector
-    //    they should come in pairs of variable name key, then value
-
     // Process GXMLPATH extensions first, so they are available
     // when GENIE starts to get initialized; these might be
     // alternative locations for configurations (including
@@ -282,39 +334,19 @@ namespace evgb {
     // Now initialize GENIE Messenger service
     StartGENIEMessenger(pset.get<std::string>("ProductionMode","false"));
 
-    // Determine EventGeneratorList to use
-    FindEventGeneratorList();
+    // Determine Tune and EventGeneratorList to use
+    FindTune();
 
     // Figure out which cross section file to use
     // post R-2_8_0 this actually triggers reading the file
     ReadXSecTable();
 
-#ifndef GENIE_USE_ENVVAR
     // In case we're printing the event record, how verbose should it be
     genie::GHepRecord::SetPrintLevel(fGHepPrintLevel);
 
     // Set GENIE's random # seed
     mf::LogInfo("GENIEHelper") << "Init genie::utils::app_init::RandGen() with seed " << seedval;
     genie::utils::app_init::RandGen(seedval);
-#else
-    // pre GENIE R-2_8_0 needs random # seed GSEED set in the environment
-    // determined the seed to use above, now make sure it is set externally
-    std::string seedstr = std::to_string(seedval); // part of C++11 <string>
-    mf::LogInfo("GENIEHelper") << "Init GSEED env with seed " << seedval;
-    fEnvironment.push_back("GSEED");
-    fEnvironment.push_back(seedstr);
-
-    // pre R-2_8_0 uses environment variables to configure how GENIE runs
-    std::ostringstream envlisttext;
-    envlisttext << "setting GENIE environment: ";
-    for (size_t i = 0; i < fEnvironment.size(); i += 2) {
-      std::string& key = fEnvironment[i];
-      std::string& val = fEnvironment[i+1];
-      gSystem->Setenv(key.c_str(), val.c_str());
-      envlisttext << "\n   " << key  << " to \"" << val <<"\"";
-    }
-    mf::LogInfo("GENIEHelper") << envlisttext.str();
-#endif
 
     if ( fFluxType.find("atmo") == 0 ) {
 
@@ -593,10 +625,9 @@ namespace evgb {
   void GENIEHelper::Initialize()
   {
     fDriver = new genie::GMCJDriver(); // needs to be before ConfigGeomScan
-#ifndef GENIE_USE_ENVVAR
-    // this configuration happened via $GEVGL beore R-2_8_0
+
+    // this configuration happened via $GEVGL before R-2_8_0
     fDriver->SetEventGeneratorList(fEventGeneratorList);
-#endif
 
     // initialize the Geometry and Flux drivers
     InitializeGeometry();
@@ -1026,18 +1057,8 @@ namespace evgb {
 
       genie::flux::GNuMIFlux* numiFlux = new genie::flux::GNuMIFlux();
 
-#ifndef GFLUX_MISSING_SETORVECTOR
       mf::LogDebug("GENIEHelper") << "LoadBeamSimData w/ vector of size " << fSelectedFluxFiles.size();
       numiFlux->LoadBeamSimData(fSelectedFluxFiles,fDetLocation);
-#else
-      // older code can only take one file name (wildcard pattern)
-      if ( fSelectedFluxFiles.empty() ) fSelectedFluxFiles.push_back("empty-fluxfile-set");
-      if ( fSelectedFluxFiles.size() > 1 )
-        mf::LogWarning("GENIEHelper")
-          << "LoadBeamSimData could use only first of "
-          << fSelectedFluxFiles.size() << " patterns";
-      numiFlux->LoadBeamSimData(fSelectedFluxFiles[0], fDetLocation);
-#endif
 
       // initialize to only use neutrino flavors requested by user
       genie::PDGCodeList probes;
@@ -1062,18 +1083,8 @@ namespace evgb {
       genie::flux::GSimpleNtpFlux* simpleFlux =
         new genie::flux::GSimpleNtpFlux();
 
-#ifndef GFLUX_MISSING_SETORVECTOR
       mf::LogDebug("GENIEHelper") << "LoadBeamSimData w/ vector of size " << fSelectedFluxFiles.size();
       simpleFlux->LoadBeamSimData(fSelectedFluxFiles,fDetLocation);
-#else
-      // older code can only take one file name (wildcard pattern)
-      if ( fSelectedFluxFiles.empty() ) fSelectedFluxFiles.push_back("empty-fluxfile-set");
-      if ( fSelectedFluxFiles.size() > 1 )
-        mf::LogWarning("GENIEHelper")
-          << "LoadBeamSimData could use only first of "
-          << fSelectedFluxFiles.size() << " patterns";
-      simpleFlux->LoadBeamSimData(fSelectedFluxFiles[0], fDetLocation);
-#endif
 
       // initialize to only use neutrino flavors requested by user
       genie::PDGCodeList probes;
@@ -2143,15 +2154,6 @@ namespace evgb {
     // collection could exceed the desired size threshold, but for
     // pick the collection that expands to the largest list
 
-#ifndef GFLUX_MISSING_SETORVECTOR
-    // no extra handling if we can pass a list
-#else
-    // need to keep track of patterns that that resolve, and who has most
-    std::vector<std::string> patternsWithFiles;
-    std::vector<int>         nfilesForPattern;
-    int nfilesSoFar = 0;
-#endif
-
     bool randomizeFiles = false;
     if ( fFluxType.compare("numi")   == 0 ||
          fFluxType.compare("simple") == 0 ||
@@ -2187,25 +2189,12 @@ namespace evgb {
         glob(filepatt.c_str(),flags,NULL,&g);
         if ( g.gl_pathc > 0 ) flags |= GLOB_APPEND; // next glob() will append to list
 
-#ifndef GFLUX_MISSING_SETORVECTOR
-        // nothing special since we can use any files we want
-#else
-        // keep track of pattern with most files ... we'll use that
-        int nresolved = g.gl_pathc - nfilesSoFar;
-        nfilesSoFar = g.gl_pathc;
-        if ( nresolved > 0 ) {
-          patternsWithFiles.push_back(filepatt);
-          nfilesForPattern.push_back(nresolved);
-        }
-#endif
-
       }  // loop over FluxSearchPaths dirs
     }  // loop over user patterns
 
     std::ostringstream paretext;
     std::ostringstream flisttext;
 
-#ifndef GFLUX_MISSING_SETORVECTOR
     int nfiles = g.gl_pathc;
 
     if ( nfiles == 0 ) {
@@ -2270,27 +2259,6 @@ namespace evgb {
       delete [] indices;
 
     }
-#else
-    // This version of GENIE can't handle a list of files,
-    // so only pass it patterns.  Later code will pick the first
-    // in the list, so list them in decreasing order of # of files
-    int  npatt = patternsWithFiles.size();
-    if ( npatt > 0 ) {
-      flisttext << "ExpandFluxFilePatternsDirect: " << npatt
-                << " user patterns resolved to files:\n";
-      // std::vector is contiguous, so take address of 0-th element
-      const int* nf = &(nfilesForPattern[0]);
-      int* indices  = new int[npatt];
-      TMath::Sort(npatt,nf,indices,true);  // descending order
-      for (int i=0; i<npatt; ++i) {
-        int indx = indices[i];
-        flisttext  << "[" << i << "] " << nfilesForPattern[indx]
-                   << " files in " << patternsWithFiles[indx] << "\n";
-        fSelectedFluxFiles.push_back(patternsWithFiles[indx]);
-      }
-      delete [] indices;
-    }
-#endif
 
     mf::LogInfo("GENIEHelper")
       << "ExpandFluxFilePatternsDirect initially found " << nfiles
@@ -2542,6 +2510,11 @@ namespace evgb {
         if ( fGXMLPATH != "" ) fGXMLPATH += ":";
         fGXMLPATH += fEnvironment[i+1];
         indxGXMLPATH = i;
+        /*
+        throw cet::exception("UsingGXMLPATH")
+          << "using Environment fcl parameter GXMLPATH: " << fEnvironment[indxGXMLPATH+1]
+          << ", use fcl parameter GXMLPATH instead.";
+        */
         break;
       }
     }
@@ -2662,14 +2635,61 @@ namespace evgb {
     mf::LogInfo("GENIEHelper")
       << "StartGENIEMessenger ProdMode=" << ((prodmode)?"yes":"no")
       << " read from: " << fGENIEMsgThresholds;
-#ifndef GENIE_USE_ENVVAR
+
     genie::utils::app_init::MesgThresholds(fGENIEMsgThresholds);
-#else
-    gSystem->Setenv("GMSGCONF",fGENIEMsgThresholds.c_str());
-    if ( prodmode ) gSystem->Setenv("GPRODMODE","YES");
-#endif
 
   }
+
+  //---------------------------------------------------------
+  void GENIEHelper::FindTune()
+  {
+    /// Determine Tune ... initialize as necessary
+
+    // this isn't all that useful ... but leave it for the UnphysEventMask
+    genie::RunOpt* grunopt = genie::RunOpt::Instance();
+    // ctor automatically calls:  grunopt->Init();
+
+#ifdef GENIE_PRE_R3
+    // nothing special .. it's all in the GXMLPATH definitions
+    // but set EventGeneratorList
+    FindEventGeneratorList();
+    grunopt->SetEventGeneratorList(fEventGeneratorList);
+
+#else
+    if ( fTuneName.find('$') == 0 ) {
+      // need to remove ${}'s
+      std::string tuneEnvVar = fTuneName;
+      char rmchars[] = "$(){} ";
+      for (unsigned int i = 0; i < strlen(rmchars); ++i) {
+        // remove moves matching characters in [first,last) to end and
+        //   returns a past-the-end iterator for the new end of the range [funky!]
+        // erase actually trims the string
+        tuneEnvVar.erase( std::remove(tuneEnvVar.begin(), tuneEnvVar.end(), rmchars[i]), tuneEnvVar.end() );
+      }
+
+      const char* tune = std::getenv(tuneEnvVar.c_str());
+      if ( tune ) {
+        mf::LogInfo("GENIEHelper") << "fTuneName started as '" << fTuneName << "' "
+                                   << " (env: " << tuneEnvVar << "), "
+                                   << " converted to " << tune;
+        fTuneName = std::string(tune);
+      } else {
+        mf::LogError("GENIEHelper") << "fTuneName started as '" << fTuneName << "', "
+                                    << " (env: " << tuneEnvVar << "), "
+                                    << " but resolved to a empty string";
+        throw cet::exception("UnresolvedTuneName")
+          << "can't resolve TuneName: " << fTuneName;
+      }
+    }
+
+    grunopt->SetTuneName(fTuneName);
+    FindEventGeneratorList();
+    grunopt->SetEventGeneratorList(fEventGeneratorList);
+    grunopt->BuildTune();
+
+#endif
+    }
+
 
   //---------------------------------------------------------
   void GENIEHelper::FindEventGeneratorList()
@@ -2684,6 +2704,9 @@ namespace evgb {
       for (size_t i = 0; i < fEnvironment.size(); i += 2) {
         if ( fEnvironment[i].compare("GEVGL") == 0 ) {
           fEventGeneratorList = fEnvironment[i+1];
+          throw cet::exception("UsingGEVGL")
+            << "using Environment fcl parameter GEVGL: " << fEventGeneratorList
+            << ", use fcl parameter EventGeneratorList instead.";
           break;
         }
       }
@@ -2692,12 +2715,6 @@ namespace evgb {
 
     mf::LogInfo("GENIEHelper") << "GENIE EventGeneratorList using \""
                                << fEventGeneratorList << "\"";
-#ifndef GENIE_USE_ENVVAR
-    // just save it away because post R-2_8_0 this needs to get
-    // passed to the GMCJDriver explicitly
-#else
-    gSystem->Setenv("GEVGL",fEventGeneratorList.c_str());
-#endif
 
   }
 
@@ -2719,6 +2736,10 @@ namespace evgb {
       if ( ! gspload_alt ) {
         const char* gspload_dflt = "gxspl-FNALsmall.xml";  // fall back
         gspload_alt = gspload_dflt;
+      } else {
+        throw cet::exception("$GSPLOAD")
+          << "using env variable $GSPLOAD: " << gspload_alt
+          << ", use fcl parameter 'XSecTable' instead.";
       }
       fXSecTable = std::string(gspload_alt);
     }
@@ -2728,6 +2749,9 @@ namespace evgb {
     for (size_t i = 0; i < fEnvironment.size(); i += 2) {
       if ( fEnvironment[i].compare("GSPLOAD") == 0 ) {
         indxGSPLOAD = i;
+        throw cet::exception("UsingGSPLOAD")
+          << "using Environment fcl parameter GSPLOAD: " << fEnvironment[indxGSPLOAD+1]
+          << ", use fcl parameter 'XSecTable' instead.";
         continue;
       }
     }
@@ -2769,7 +2793,6 @@ namespace evgb {
     mf::LogInfo("GENIEHelper")
       << "XSecTable/GSPLOAD full path \"" << fXSecTable << "\"";
 
-#ifndef GENIE_USE_ENVVAR
     TStopwatch xtime;
     xtime.Start();
 
@@ -2783,10 +2806,6 @@ namespace evgb {
       << " Real " << xtime.RealTime() << " s,"
       << " CPU " << xtime.CpuTime() << " s"
       << " from " << fXSecTable;
-#else
-    // pre R-2_8_0 uses $GSPLOAD to indicate x-sec table
-    gSystem->Setenv("GSPLOAD", fXSecTable.c_str());
-#endif
 
   }
 
