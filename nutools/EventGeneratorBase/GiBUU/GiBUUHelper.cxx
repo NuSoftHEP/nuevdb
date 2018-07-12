@@ -9,7 +9,11 @@
 ////////////////////////////////////////////////////////////////////////
 
 // GENIE includes
-#include "EVGCore/EventRecord.h"
+#ifdef GENIE_PRE_R3
+  #include "EVGCore/EventRecord.h"
+#else
+  #include "GENIE/Framework/EventGen/EventRecord.h"
+#endif
 
 // NuTools includes
 #include "nutools/EventGeneratorBase/evgenbase.h"

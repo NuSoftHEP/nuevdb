@@ -11,6 +11,7 @@
 #include <vector>
 #include <map>
 #include <unistd.h>
+#include <string>
 
 // ROOT includes
 #include "TStopwatch.h"
@@ -45,7 +46,12 @@
 #include "dk2nu/genie/GDk2NuFlux.h"
 //--- END
 
-#include "GENIE/EVGCore/EventRecord.h"
+// GENIE includes
+#ifdef GENIE_PRE_R3
+  #include "GENIE/EVGCore/EventRecord.h"
+#else
+  #include "GENIE/Framework/EventGen/EventRecord.h"
+#endif
 
 //#undef  PUT_DK2NU_ASSN
 #define PUT_DK2NU_ASSN 1

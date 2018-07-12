@@ -15,16 +15,16 @@
 
 #include "nutools/EventGeneratorBase/GENIE/GENIEHelper.h"
 
-namespace evgb{
+namespace evgb {
 
   class GiBUUHelper : public GENIEHelper {
-    
+
   public:
-  
+
     explicit GiBUUHelper(fhicl::ParameterSet const& pset,
-			 TGeoManager*               rootGeom,
-			 std::string         const& rootFile,
-			 double              const& detectorMass);
+                         TGeoManager*               rootGeom,
+                         std::string         const& rootFile,
+                         double              const& detectorMass);
     ~GiBUUHelper();
 
     genie::EventRecord* GetGiBUUEventRecord() { return fGiBUUEventRecord; }
