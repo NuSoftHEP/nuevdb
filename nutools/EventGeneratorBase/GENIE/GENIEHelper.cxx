@@ -33,6 +33,7 @@
 #include "TRegexp.h"
 #include "TMath.h"
 #include "TStopwatch.h"
+#include "TRotation.h"
 
 //GENIE includes
 #include "GENIE/Conventions/GVersion.h"
@@ -171,6 +172,9 @@ namespace evgb {
     , fFluxCopyMethod    (pset.get< std::string              >("FluxCopyMethod","DIRECT")) // "DIRECT" = old direct access method
     , fFluxCleanup       (pset.get< std::string              >("FluxCleanup","/var/tmp") ) // "ALWAYS", "NEVER", "/var/tmp"
     , fBeamName          (pset.get< std::string              >("BeamName")               )
+    , fFluxRotCfg        (pset.get< std::string              >("FluxRotCfg","none")      )
+    , fFluxRotValues     (pset.get< std::vector<double>      >("FluxRotValues", {} )     ) // default empty vector
+    , fFluxRotation      (0)
     , fTopVolume         (pset.get< std::string              >("TopVolume")              )
     , fWorldVolume       ("volWorld")
     , fDetLocation       (pset.get< std::string              >("DetectorLocation")       )
@@ -211,6 +215,7 @@ namespace evgb {
     , fDebugFlags        (pset.get< unsigned int             >("DebugFlags",          0) )
   {
 
+    // for histogram, mono-energetic, functional form fluxes ...
     std::vector<double> beamCenter   (pset.get< std::vector<double> >("BeamCenter")   );
     std::vector<double> beamDirection(pset.get< std::vector<double> >("BeamDirection"));
     fBeamCenter.SetXYZ(beamCenter[0], beamCenter[1], beamCenter[2]);
@@ -264,6 +269,9 @@ namespace evgb {
     ExpandFluxPaths();
     if (fFluxCopyMethod == "DIRECT") ExpandFluxFilePatternsDirect();
     else                             ExpandFluxFilePatternsIFDH();
+
+    /// For atmos / astro fluxes we might need to set a coordinate system rotation
+    BuildFluxRotation();
 
     /// Set the GENIE environment
     /// if using entries in the fEnvironment vector
@@ -1140,11 +1148,11 @@ namespace evgb {
 
 
     //Using the atmospheric fluxes
-    else if (fFluxType.compare("atmo_FLUKA")  == 0 ||
-             fFluxType.compare("atmo_BARTOL") == 0 ||
-             fFluxType.compare("atmo_BGLRS")  == 0 ||
-             fFluxType.compare("atmo_HONDA")  == 0 ||
-             fFluxType.compare("atmo_HAKKM")  == 0   ) {
+    else if ( fFluxType.find("FLUKA")  != std::string::npos ||
+              fFluxType.find("BARTOL") != std::string::npos ||
+              fFluxType.find("BGLRS")  != std::string::npos ||
+              fFluxType.find("HONDA")  != std::string::npos ||
+              fFluxType.find("HAKKM")  != std::string::npos   ) {
 
       // Instantiate appropriate concrete flux driver
       genie::flux::GAtmoFlux *atmo_flux_driver = 0;
@@ -1181,6 +1189,7 @@ namespace evgb {
 
       atmo_flux_driver->ForceMinEnergy(fAtmoEmin);
       atmo_flux_driver->ForceMaxEnergy(fAtmoEmax);
+      if ( fFluxRotation ) atmo_flux_driver->SetUserCoordSystem(*fFluxRotation);
 
       std::ostringstream atmoCfgText;
       atmoCfgText << "Configuration for " << fFluxType
@@ -1191,6 +1200,24 @@ namespace evgb {
         atmo_flux_driver->AddFluxFile(flavor,flxfile); // pre-R-2_11_0 was SetFluxFile()
         atmoCfgText << "\n  FLAVOR: " << std::setw(3) << flavor
                     << "  FLUX FILE: " <<  flxfile;
+      }
+      if ( fFluxRotation ) {
+        const int w=13, p=6;
+        auto old_p = atmoCfgText.precision(p);
+        atmoCfgText << "\n UserCoordSystem rotation:\n"
+                    << "  [ "
+                    << std::setw(w) << fFluxRotation->XX() << " "
+                    << std::setw(w) << fFluxRotation->XY() << " "
+                    << std::setw(w) << fFluxRotation->XZ() << " ]\n"
+                    << "  [ "
+                    << std::setw(w) << fFluxRotation->YX() << " "
+                    << std::setw(w) << fFluxRotation->YY() << " "
+                    << std::setw(w) << fFluxRotation->YZ() << " ]\n"
+                    << "  [ "
+                    << std::setw(w) << fFluxRotation->ZX() << " "
+                    << std::setw(w) << fFluxRotation->ZY() << " "
+                    << std::setw(w) << fFluxRotation->ZZ() << " ]\n";
+          atmoCfgText.precision(old_p);
       }
       mf::LogInfo("GENIEHelper") << atmoCfgText.str();
 
@@ -2106,6 +2133,122 @@ namespace evgb {
     return;
   }
 
+  //---------------------------------------------------------
+  void GENIEHelper::BuildFluxRotation()
+  {
+    // construct fFluxRotation matrix
+    //     from fFluxRotCfg + fFluxRotValues
+    if ( fFluxRotCfg == "" ||
+         ( fFluxRotCfg.find("none") != std::string::npos ) ) return;
+
+    size_t nval = fFluxRotValues.size();
+
+    bool verbose = ( fFluxRotCfg.find("verbose") != std::string::npos );
+    if (verbose) {
+      std::ostringstream indata;
+      indata << "BuildFluxRotation: Cfg \"" << fFluxRotCfg << "\"\n"
+             << " " << nval << " values\n";
+      for (size_t i=0; i<nval; ++i) {
+        indata << "   [" << std::setw(2) << i << "] " << fFluxRotValues[i] << "\n";
+      }
+      mf::LogInfo("GENIEHelper") << indata.str();
+    }
+
+    // interpret as a full 3x3 array
+    if ( fFluxRotCfg.find("newxyz") != std::string::npos ||
+         fFluxRotCfg.find("3x3")    != std::string::npos    ) {
+      if ( nval == 9 ) {
+        TRotation fTempRot;
+        TVector3 newX = TVector3(fFluxRotValues[0],
+                                 fFluxRotValues[1],
+                                 fFluxRotValues[2]);
+        TVector3 newY = TVector3(fFluxRotValues[3],
+                                 fFluxRotValues[4],
+                                 fFluxRotValues[5]);
+        TVector3 newZ = TVector3(fFluxRotValues[6],
+                                 fFluxRotValues[7],
+                                 fFluxRotValues[8]);
+        fTempRot.RotateAxes(newX,newY,newZ);
+        // weirdly necessary; frame vs. obj rotation
+        fFluxRotation = new TRotation(fTempRot.Inverse());
+        return;
+      } else {
+        throw cet::exception("BadFluxRotation")
+          << "specified: " << fFluxRotCfg << "\n"
+          << " but nval=" << nval << ", need 9";
+      }
+    }
+
+    // another possibility  ... series of rotations around particular axes
+    if ( fFluxRotCfg.find("series") != std::string::npos ) {
+      TRotation fTempRot;
+      // if series then cfg should also have series of rot{X|Y|Z}{deg|rad}
+      std::vector<std::string> strs = genie::utils::str::Split(fFluxRotCfg," ,;(){}[]");
+      size_t nrot = -1;
+      for (size_t j=0; j<strs.size(); ++j) {
+        std::string what = strs[j];
+        if ( what == ""        ) continue;
+        // lower case for convenience
+        std::transform(what.begin(),what.end(),what.begin(),::tolower);
+        if ( what == "series"  ) continue;
+        if ( what == "verbose" ) continue;
+        if ( what.find("rot") != 0 ) {
+          mf::LogWarning("GENIEHelper")
+            << "processing series rotation saw keyword \"" << what << "\" -- ignoring";
+          continue;
+        }
+        char axis = what[3];
+        // check that axis is sensibly x, y or z
+        if ( axis != 'x' && axis != 'y' && axis != 'z' ) {
+          throw cet::exception("BadFluxRotation")
+            << "specified: " << fFluxRotCfg << "\n"
+            << " keyword '" << what << "': bad axis '" << axis << "'";
+        }
+        std::string units = what.substr(4);
+        // don't worry if written fully as "radians" or "degrees"
+        if (units.size() > 3) units.erase(3);
+        if ( units != "" && units != "rad" && units != "deg" ) {
+          throw cet::exception("BadFluxRotation")
+            << "specified: " << fFluxRotCfg << "\n"
+            << " keyword '" << what << "': bad units '" << units << "'";
+        }
+        // no units?  assume degrees
+        double scale = (( units == "rad" ) ? 1.0 : TMath::DegToRad() );
+
+        ++nrot;
+        if ( nrot >= nval ) {
+          // not enough values
+          throw cet::exception("BadFluxRotation")
+            << "specified: " << fFluxRotCfg << "\n"
+            << " asking for rotation [" << nrot << "] "
+            << what << " but nval=" << nval;
+        }
+        double rot = scale * fFluxRotValues[nrot];
+        if ( axis == 'x' ) fTempRot.RotateX(rot);
+        if ( axis == 'y' ) fTempRot.RotateY(rot);
+        if ( axis == 'z' ) fTempRot.RotateZ(rot);
+
+      } // loop over tokens in cfg string
+
+      // weirdly necessary; frame vs. obj rotation
+      fFluxRotation = new TRotation(fTempRot.Inverse());
+
+      if ( nrot+1 != nval ) {
+        // call out possible user mistake
+        mf::LogWarning("GENIEHelper")
+          << "BuildFluxRotation only used " << nrot+1 << " of "
+          << nval << " FluxRotValues";
+      }
+      return;
+    }
+
+    // could put other interpretations here ...
+
+    throw cet::exception("BadFluxRotation")
+      << "specified: " << fFluxRotCfg << "\n"
+      << " nval=" << nval << ", but don't know how to interpret that";
+
+  }
   //---------------------------------------------------------
   void GENIEHelper::ExpandFluxPaths()
   {
