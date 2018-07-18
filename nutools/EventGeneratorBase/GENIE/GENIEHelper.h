@@ -21,6 +21,7 @@ class TH1D;
 class TH2D;
 class TF1;
 class TRandom3;
+class TRotation;
 
 ///parameter set interface
 namespace fhicl {
@@ -93,11 +94,14 @@ namespace evgb {
     void InitializeFluxDriver();
     void ConfigGeomScan();
     void SetMaxPathOutInfo();
+
+
     void PackNuMIFlux(simb::MCFlux &flux);
     void PackSimpleFlux(simb::MCFlux &flux);
     void PackMCTruth(genie::EventRecord *record, simb::MCTruth &truth);
     void PackGTruth(genie::EventRecord *record, simb::GTruth &truth);
 
+    void BuildFluxRotation();
     void ExpandFluxPaths();
     void ExpandFluxFilePatternsDirect();
     void ExpandFluxFilePatternsIFDH();
@@ -125,7 +129,9 @@ namespace evgb {
     bool                     fUseHelperRndGen4GENIE;   ///< use fHelperRandom for gRandom during Sample()
     evgb::EvtTimeShiftI*     fTimeShifter;       ///< generator for time offset within a spill
 
-    std::string              fFluxType;          ///< histogram or ntuple or atmo_FLUKA or atmo_BARTOL
+    std::string              fFluxType;          ///< histogram, gsimple, dk2nu, ntuple/gnumi, atmos_XXXX
+                                                 ///  atmo_{FLUKA|BARTOL/BGLRS|HONDA/HAKKM}
+
     std::string              fFluxSearchPaths;   ///< colon separated set of path stems
     std::vector<std::string> fFluxFilePatterns;  ///< wildcard patterns files containing histograms or ntuples, or txt
     std::vector<std::string> fSelectedFluxFiles; ///< flux files selected after wildcard expansion and subset selection
@@ -134,6 +140,10 @@ namespace evgb {
     std::string              fFluxCopyMethod;    ///< "DIRECT" = old direct access method, otherwise = ifdh approach schema ("" okay)
     std::string              fFluxCleanup;       ///< "ALWAYS", "/var/tmp", "NEVER"
     std::string              fBeamName;          ///< name of the beam we are simulating
+    std::string              fFluxRotCfg;        ///< how to interpret fFluxRotValues
+    std::vector<double>      fFluxRotValues;     ///< parameters for rotation
+    TRotation*               fFluxRotation;      ///< rotation for atmos / astro flux coord systems
+
     std::string              fTopVolume;         ///< top volume in the ROOT geometry in which to generate events
     std::string              fWorldVolume;       ///< name of the world volume in the ROOT geometry
     std::string              fDetLocation;       ///< name of flux window location
