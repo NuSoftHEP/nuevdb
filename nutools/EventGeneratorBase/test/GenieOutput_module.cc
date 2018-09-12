@@ -17,13 +17,23 @@
 #include "nutools/EventGeneratorBase/GENIE/MCTruthAndFriendsItr.h"
 
 // GENIE includes
-#include "Ntuple/NtpMCFormat.h"
-#include "Ntuple/NtpWriter.h"
-#include "Ntuple/NtpMCEventRecord.h"
-//#include "Ntuple/NtpMCTreeHeader.h"
-#include "PDG/PDGLibrary.h"
-// // #include "Messenger/Messenger.h" -- conflict LOG_INFO w/ messagefacility
-#include "GHEP/GHepRecord.h"
+#ifdef GENIE_PRE_R3
+  #include "Ntuple/NtpMCFormat.h"
+  #include "Ntuple/NtpWriter.h"
+  #include "Ntuple/NtpMCEventRecord.h"
+  //#include "Ntuple/NtpMCTreeHeader.h"
+  #include "PDG/PDGLibrary.h"
+  // // #include "Messenger/Messenger.h" -- conflict LOG_INFO w/ messagefacility
+  #include "GHEP/GHepRecord.h"
+#else
+  #include "GENIE/Framework/ParticleData/PDGLibrary.h"
+  #include "GENIE/Framework/GHEP/GHepRecord.h"
+  #include "GENIE/Framework/Ntuple/NtpMCFormat.h"
+  #include "GENIE/Framework/Ntuple/NtpWriter.h"
+  #include "GENIE/Framework/Ntuple/NtpMCEventRecord.h"
+  // #include "GENIE/Framework/Ntuple/NtpMCTreeHeader.h"
+  // #include "GENIE/Framework/Messenger/Messenger.h" -- conflict LOG_INFO w/ messagefacility
+#endif
 
 #include <iostream>
 #include <iomanip>

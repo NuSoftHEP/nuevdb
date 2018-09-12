@@ -2,19 +2,23 @@
 ///\file ReweightLabels.h
 ///\brief typedef defining all of the available GENIE reweighting parameters
 ///
-///\author  nathan.mayer@tufts.edu 
+///\author  nathan.mayer@tufts.edu
 ////////////////////////////////////////////////////////////////////////
 #ifndef RWGT_REWEIGHTLABEL_H
 #define RWGT_REWEIGHTLABEL_H
 
-#include "ReWeight/GSyst.h"
+#ifdef GENIE_PRE_R3
+  #include "ReWeight/GSyst.h"
+#else
+  #include "GENIE/Tools/ReWeight/GSyst.h"
+#endif
 
 namespace rwgt {
-  
+
   typedef enum EReweightLabel {
-	  
+
     kReweightNull = genie::rew::kNullSystematic,
-    
+
     // NCEL tweaking parameters:
     fReweightMaNCEL = genie::rew::kXSecTwkDial_MaNCEL,              ///< tweak Ma NCEL, affects dsigma(NCEL)/dQ2 both in shape and normalization
     fReweightEtaNCEL = genie::rew::kXSecTwkDial_EtaNCEL,            ///< tweak NCEL strange axial form factor eta, affects dsigma(NCEL)/dQ2 both in shape and normalization
@@ -30,13 +34,13 @@ namespace rwgt {
     fReweightMvCCRESshape = genie::rew::kXSecTwkDial_MvCCRESshape,   ///< tweak Mv CCRES, affects d2sigma(CCRES)/dWdQ2 in shape only (normalized to constant integral)
     fReweightMaCCRES = genie::rew::kXSecTwkDial_MaCCRES,             ///< tweak Ma CCRES, affects d2sigma(CCRES)/dWdQ2 both in shape and normalization
     fReweightMvCCRES = genie::rew::kXSecTwkDial_MvCCRES,             ///< tweak Mv CCRES, affects d2sigma(CCRES)/dWdQ2 both in shape and normalization
-    
+
     fReweightNormNCRES = genie::rew::kXSecTwkDial_NormNCRES,         ///< tweak NCRES normalization
     fReweightMaNCRESshape = genie::rew::kXSecTwkDial_MaNCRESshape,   ///< tweak Ma NCRES, affects d2sigma(NCRES)/dWdQ2 in shape only (normalized to constant integral)
     fReweightMvNCRESshape = genie::rew::kXSecTwkDial_MvNCRESshape,   ///< tweak Mv NCRES, affects d2sigma(NCRES)/dWdQ2 in shape only (normalized to constant integral)
     fReweightMaNCRES = genie::rew::kXSecTwkDial_MaNCRES,             ///< tweak Ma NCRES, affects d2sigma(NCRES)/dWdQ2 both in shape and normalization
     fReweightMvNCRES = genie::rew::kXSecTwkDial_MvNCRES,             ///< tweak Mv NCRES, affects d2sigma(NCRES)/dWdQ2 both in shape and normalization
-    
+
     // Coherent pion production tweaking parameters:
     fReweightMaCOHpi = genie::rew::kXSecTwkDial_MaCOHpi,             ///< tweak Ma for COH pion production
     fReweightR0COHpi = genie::rew::kXSecTwkDial_R0COHpi,             ///< tweak R0 for COH pion production
@@ -57,7 +61,7 @@ namespace rwgt {
     fReweightRvbarnCC2pi = genie::rew::kXSecTwkDial_RvbarnCC2pi,     ///< tweak the 2pi non-RES bkg in the RES region, for vbar+n CC
     fReweightRvbarnNC1pi = genie::rew::kXSecTwkDial_RvbarnNC1pi,     ///< tweak the 1pi non-RES bkg in the RES region, for vbar+n NC
     fReweightRvbarnNC2pi = genie::rew::kXSecTwkDial_RvbarnNC2pi,     ///< tweak the 2pi non-RES bkg in the RES region, for vbar+n NC
-    // DIS tweaking parameters - applied for DIS events with (Q2>Q2o, W>Wo), 
+    // DIS tweaking parameters - applied for DIS events with (Q2>Q2o, W>Wo),
     // typically Q2okReweight =1GeV^2, WokReweight =1.7-2.0GeV
     fReweightAhtBY = genie::rew::kXSecTwkDial_AhtBY,                 ///< tweak the Bodek-Yang model parameter A_{ht} - incl. both shape and normalization effect
     fReweightBhtBY = genie::rew::kXSecTwkDial_BhtBY,                 ///< tweak the Bodek-Yang model parameter B_{ht} - incl. both shape and normalization effect
@@ -72,23 +76,23 @@ namespace rwgt {
     fReweightDISNuclMod = genie::rew::kXSecTwkDial_DISNuclMod,       ///< tweak DIS nuclear modification (shadowing, anti-shadowing, EMC).  Does not appear to be working in GENIE at the moment
     //
     fReweightNC = genie::rew::kXSecTwkDial_NC,                ///<
-    
-    
+
+
     //
     // Hadronization (free nucleon target)
-    // 
-    
+    //
+
     fReweightAGKY_xF1pi = genie::rew::kHadrAGKYTwkDial_xF1pi,         ///< tweak xF distribution for low multiplicity (N + pi) DIS f/s produced by AGKY
     fReweightAGKY_pT1pi = genie::rew::kHadrAGKYTwkDial_pT1pi,         ///< tweak pT distribution for low multiplicity (N + pi) DIS f/s produced by AGKY
-    
-    
+
+
     //
     // Medium-effects to hadronization
-    // 
-    
+    //
+
     fReweightFormZone = genie::rew::kHadrNuclTwkDial_FormZone,         ///< tweak formation zone
-    
-    
+
+
     //
     // Intranuclear rescattering systematics.
     // There are 2 sets of parameters:
@@ -96,7 +100,7 @@ namespace rwgt {
     // - parameters that control the fraction of each process (`fate'), given a total rescat. prob., P(fate|total)
     // These parameters are considered separately for pions and nucleons.
     //
-    
+
     fReweightMFP_pi = genie::rew::kINukeTwkDial_MFP_pi,           ///< tweak mean free path for pions
     fReweightMFP_N = genie::rew::kINukeTwkDial_MFP_N,             ///< tweak mean free path for nucleons
     fReweightFrCEx_pi = genie::rew::kINukeTwkDial_FrCEx_pi,       ///< tweak charge exchange probability for pions, for given total rescattering probability
@@ -109,18 +113,18 @@ namespace rwgt {
     fReweightFrInel_N = genie::rew::kINukeTwkDial_FrInel_N,       ///< tweak inelastic  probability for nucleons, for given total rescattering probability
     fReweightFrAbs_N = genie::rew::kINukeTwkDial_FrAbs_N,         ///< tweak absorption probability for nucleons, for given total rescattering probability
     fReweightFrPiProd_N = genie::rew::kINukeTwkDial_FrPiProd_N,   ///< tweak pion production probability for nucleons, for given total rescattering probability
-    
+
     //
     // Nuclear model
-    // 
-    
+    //
+
     fReweightCCQEPauliSupViaKF = genie::rew::kSystNucl_CCQEPauliSupViaKF,   ///<
     fReweightCCQEMomDistroFGtoSF = genie::rew::kSystNucl_CCQEMomDistroFGtoSF, ///<
-    
+
     //
     // Resonance decays
-    // 
-    
+    //
+
     fReweightBR1gamma = genie::rew::kRDcyTwkDial_BR1gamma,               ///< tweak Resonance -> X + gamma branching ratio, eg Delta+(1232) -> p gamma
     fReweightBR1eta = genie::rew::kRDcyTwkDial_BR1eta,                   ///< tweak Resonance -> X + eta   branching ratio, eg N+(1440) -> p eta
     fReweightTheta_Delta2Npi = genie::rew::kRDcyTwkDial_Theta_Delta2Npi,  ///< distort pi angular distribution in Delta -> N + pi

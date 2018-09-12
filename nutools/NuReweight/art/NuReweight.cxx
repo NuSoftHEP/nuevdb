@@ -17,9 +17,10 @@
 #include "TSystem.h"
 
 //GENIE includes
-#include "Conventions/Units.h"
-#include "EVGCore/EventRecord.h"
-#include "GHEP/GHepUtils.h"
+#ifdef GENIE_PRE_R3
+  #include "Conventions/Units.h"
+  #include "EVGCore/EventRecord.h"
+  #include "GHEP/GHepUtils.h"
 
 #include "ReWeight/GReWeightI.h"
 #include "ReWeight/GSystSet.h"
@@ -37,26 +38,72 @@
 #include "ReWeight/GReWeightINuke.h"
 #include "ReWeight/GReWeightAGKY.h"
 #include "ReWeight/GReWeightNuXSecCCQEvec.h"
-#include "ReWeight/GReWeightNuXSecNCRES.h" 
-#include "ReWeight/GReWeightNuXSecDIS.h"   
-#include "ReWeight/GReWeightNuXSecNC.h"  
+#include "ReWeight/GReWeightNuXSecNCRES.h"
+#include "ReWeight/GReWeightNuXSecDIS.h"
+#include "ReWeight/GReWeightNuXSecNC.h"
 #include "ReWeight/GSystUncertainty.h"
-#include "ReWeight/GReWeightUtils.h" 
+#include "ReWeight/GReWeightUtils.h"
 
-#include "Geo/ROOTGeomAnalyzer.h"
-#include "Geo/GeomVolSelectorFiducial.h"
-#include "Geo/GeomVolSelectorRockBox.h"
-#include "Utils/StringUtils.h"
-#include "Utils/XmlParserUtils.h"
-#include "Interaction/InitialState.h"
-#include "Interaction/Interaction.h"
-#include "Interaction/Kinematics.h"
-#include "Interaction/KPhaseSpace.h"
-#include "Interaction/ProcessInfo.h"
-#include "Interaction/XclsTag.h"
-#include "GHEP/GHepParticle.h"
-#include "PDG/PDGCodeList.h"
-#include "Conventions/Constants.h" //for calculating event kinematics
+//#include "Geo/ROOTGeomAnalyzer.h"
+//#include "Geo/GeomVolSelectorFiducial.h"
+//#include "Geo/GeomVolSelectorRockBox.h"
+//#include "Utils/StringUtils.h"
+//#include "Utils/XmlParserUtils.h"
+  #include "Interaction/InitialState.h"
+  #include "Interaction/Interaction.h"
+  #include "Interaction/Kinematics.h"
+  #include "Interaction/KPhaseSpace.h"
+  #include "Interaction/ProcessInfo.h"
+  #include "Interaction/XclsTag.h"
+  #include "GHEP/GHepParticle.h"
+  #include "PDG/PDGCodeList.h"
+  #include "Conventions/Constants.h" //for calculating event kinematics
+
+#else
+  // GENIE includes R-3 and beyond
+  #include "GENIE/Framework/Messenger/Messenger.h"
+  #include "GENIE/Framework/Conventions/Units.h"
+  #include "GENIE/Framework/Conventions/Constants.h"
+  #include "GENIE/Framework/GHEP/GHepUtils.h"
+  #include "GENIE/Framework/EventGen/EventRecord.h"
+
+//  #include "GENIE/Framework/Interaction/InitialState.h"
+//  #include "GENIE/Framework/Interaction/Interaction.h"
+//  #include "GENIE/Framework/Interaction/Kinematics.h"
+//  #include "GENIE/Framework/Interaction/KPhaseSpace.h"
+//  #include "GENIE/Framework/Interaction/ProcessInfo.h"
+//  #include "GENIE/Framework/Interaction/XclsTag.h"
+
+//  #include "GENIE/Framework/ParticleData/PDGCodes.h"
+//  #include "GENIE/Framework/ParticleData/PDGCodeList.h"
+//  #include "GENIE/Framework/ParticleData/PDGLibrary.h"
+//  #include "GENIE/Framework/GHEP/GHepUtils.h"
+
+  #include "GENIE/Framework/GHEP/GHepParticle.h"
+
+  #include "GENIE/Tools/ReWeight/GReWeightI.h"
+  #include "GENIE/Tools/ReWeight/GSystSet.h"
+  #include "GENIE/Tools/ReWeight/GSyst.h"
+  #include "GENIE/Tools/ReWeight/GReWeight.h"
+  #include "GENIE/Tools/ReWeight/GReWeightNuXSecNCEL.h"
+  #include "GENIE/Tools/ReWeight/GReWeightNuXSecCCQE.h"
+  #include "GENIE/Tools/ReWeight/GReWeightNuXSecCCRES.h"
+  #include "GENIE/Tools/ReWeight/GReWeightNuXSecCOH.h"
+  #include "GENIE/Tools/ReWeight/GReWeightNonResonanceBkg.h"
+  #include "GENIE/Tools/ReWeight/GReWeightFGM.h"
+  #include "GENIE/Tools/ReWeight/GReWeightDISNuclMod.h"
+  #include "GENIE/Tools/ReWeight/GReWeightResonanceDecay.h"
+  #include "GENIE/Tools/ReWeight/GReWeightFZone.h"
+  #include "GENIE/Tools/ReWeight/GReWeightINuke.h"
+  #include "GENIE/Tools/ReWeight/GReWeightAGKY.h"
+  #include "GENIE/Tools/ReWeight/GReWeightNuXSecCCQEvec.h"
+  #include "GENIE/Tools/ReWeight/GReWeightNuXSecNCRES.h"
+  #include "GENIE/Tools/ReWeight/GReWeightNuXSecDIS.h"
+  #include "GENIE/Tools/ReWeight/GReWeightNuXSecNC.h"
+  #include "GENIE/Tools/ReWeight/GSystUncertainty.h"
+  #include "GENIE/Tools/ReWeight/GReWeightUtils.h"
+
+#endif
 
 //NuTools includes
 #include "nusimdata/SimulationBase/MCTruth.h"
@@ -113,28 +160,28 @@ namespace rwgt {
       int fdtrkid = 0;
       int ldtrkid = 0;
       if(ndaughters !=0) {
-	fdtrkid = mcpart.Daughter(0);
-	if(ndaughters == 1) {
-	  ldtrkid = 1;
-	}
-	else if(ndaughters >1) {
-	  fdtrkid = mcpart.Daughter(ndaughters-1);
-	}
-      }      
+        fdtrkid = mcpart.Daughter(0);
+        if(ndaughters == 1) {
+          ldtrkid = 1;
+        }
+        else if(ndaughters >1) {
+          fdtrkid = mcpart.Daughter(ndaughters-1);
+        }
+      }
       int gmfd = -1;
       int gmld = -1;
       //Genie uses the index in the particle array to reference the daughter particles.
       //MCTruth keeps the particles in the same order so use the track ID to find the proper index.
       for(int j = 0; j < truth.NParticles(); j++) {
-	simb::MCParticle temp = truth.GetParticle(i);
-	if(temp.TrackId() == fdtrkid) {
-	  gmfd = j;
-	}
-	if(temp.TrackId() == ldtrkid) {
-	  gmld = j;
-	}
+        simb::MCParticle temp = truth.GetParticle(i);
+        if(temp.TrackId() == fdtrkid) {
+          gmfd = j;
+        }
+        if(temp.TrackId() == ldtrkid) {
+          gmld = j;
+        }
       }
-    
+
       double gmpx = mcpart.Px(0);
       double gmpy = mcpart.Py(0);
       double gmpz = mcpart.Pz(0);
@@ -144,12 +191,12 @@ namespace rwgt {
       double gmvz = mcpart.Gvz();
       double gmvt = mcpart.Gvt();
       int gmri = mcpart.Rescatter();
-      
+
       genie::GHepParticle gpart(gmid, gmst, gmmo, -1, gmfd, gmld, gmpx, gmpy, gmpz, gme, gmvx, gmvy, gmvz, gmvt);
       gpart.SetRescatterCode(gmri);
       TVector3 polz = mcpart.Polarization();
       if(polz.x() !=0 || polz.y() !=0 || polz.z() !=0) {
-	gpart.SetPolarization(polz);
+        gpart.SetPolarization(polz);
       }
       newEvent.AddParticle(gpart);
 
@@ -162,20 +209,20 @@ namespace rwgt {
     proc_info.Set(gscty,ginty);
 
     genie::XclsTag gxt;
-    
+
     //Set Exclusive Final State particle numbers
     genie::Resonance_t gres = (genie::Resonance_t)gtruth.fResNum;
     gxt.SetResonance(gres);
     gxt.SetNPions(gtruth.fNumPiPlus, gtruth.fNumPi0, gtruth.fNumPiMinus);
     gxt.SetNNucleons(gtruth.fNumProton, gtruth.fNumNeutron);
-    
+
     if(gtruth.fIsCharm) {
       gxt.SetCharm(0);
     }
      else {
        gxt.UnsetCharm();
      }
-    
+
     //Set the GENIE kinematic info
     genie::Kinematics gkin;
     gkin.Setx(gtruth.fgX, true);
@@ -188,42 +235,42 @@ namespace rwgt {
     simb::MCParticle lep = nu.Lepton();
     gkin.SetFSLeptonP4(lep.Px(), lep.Py(), lep.Pz(), lep.E());
     gkin.SetHadSystP4(gtruth.fFShadSystP4.Px(), gtruth.fFShadSystP4.Py(), gtruth.fFShadSystP4.Pz(), gtruth.fFShadSystP4.E());
-    
+
     //Set the GENIE final state interaction info
     genie::Interaction * p_gint = new genie::Interaction;
     genie::InitialState * p_ginstate = p_gint->InitStatePtr();
     //int Z = gtruth.ftgtZ;
     //int A = gtruth.ftgtA;
     int targetNucleon = nu.HitNuc();
-    int struckQuark = nu.HitQuark(); 
+    int struckQuark = nu.HitQuark();
     int incoming = gtruth.fProbePDG;
     p_ginstate->SetProbePdg(incoming);
-    
+
     genie::Target* target123 = p_ginstate->TgtPtr();
-    
+
     target123->SetId(gtruth.ftgtPDG);
     //target123->SetId(Z,A);
-    
+
     //int pdg_code = pdg::IonPdgCode(A, Z);
     //TParticlePDG * p = PDGLibrary::Instance()->Find(pdg_code);
-    
+
     //mf::LogWarning("GENIEReweight") << "Setting Target Z and A";
     //mf::LogWarning("GENIEReweight") << "Saved PDG: " << gtruth.ftgtPDG;
     //mf::LogWarning("GENIEReweight") << "Target PDG: " << target123->Pdg();
     target123->SetHitNucPdg(targetNucleon);
     target123->SetHitQrkPdg(struckQuark);
     target123->SetHitSeaQrk(gtruth.fIsSeaQuark);
-    
+
     if(newEvent.HitNucleonPosition()> 0) {
       genie::GHepParticle * hitnucleon = newEvent.HitNucleon();
       std::unique_ptr<TLorentzVector> p4hitnucleon(hitnucleon->GetP4());
       target123->SetHitNucP4(*p4hitnucleon);
-    }  
+    }
     else {
       TLorentzVector dummy(0.,0.,0.,0.);
       target123->SetHitNucP4(dummy);
     }
-   
+
     genie::GHepParticle * probe = newEvent.Probe();
     std::unique_ptr<TLorentzVector> p4probe(probe->GetP4());
     p_ginstate->SetProbeP4(*p4probe);
@@ -239,7 +286,7 @@ namespace rwgt {
     p_gint->SetKine(gkin);
     p_gint->SetExclTag(gxt);
     newEvent.AttachSummary(p_gint);
-    
+
     /*
     //For temporary debugging purposes
     genie::Interaction *inter = newEvent.Summary();
@@ -248,12 +295,12 @@ namespace rwgt {
     std::cout << "TargetPDG as Recorded: " << gtruth.ftgtPDG << std::endl;
     std::cout << "TargetZ as Recorded:   " << gtruth.ftgtZ << std::endl;
     std::cout << "TargetA as Recorded:   " << gtruth.ftgtA << std::endl;
-    std::cout << "TargetPDG as Recreated: " << tgt.Pdg() << std::endl;   
-    std::cout << "TargetZ as Recreated: " << tgt.Z() << std::endl;   
-    std::cout << "TargetA as Recreated: " << tgt.A() << std::endl;   
+    std::cout << "TargetPDG as Recreated: " << tgt.Pdg() << std::endl;
+    std::cout << "TargetZ as Recreated: " << tgt.Z() << std::endl;
+    std::cout << "TargetA as Recreated: " << tgt.A() << std::endl;
     */
     return newEvent;
- 
+
   }
 
 }
