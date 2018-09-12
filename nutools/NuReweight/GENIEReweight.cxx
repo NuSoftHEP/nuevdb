@@ -16,49 +16,102 @@
 #include "TSystem.h"
 
 //GENIE includes
-#include "Conventions/Units.h"
-#include "EVGCore/EventRecord.h"
-#include "GHEP/GHepUtils.h"
-#include "Messenger/Messenger.h"
+#ifdef GENIE_PRE_R3
+  #include "Conventions/Units.h"
+  #include "EVGCore/EventRecord.h"
+  #include "GHEP/GHepUtils.h"
+  #include "Messenger/Messenger.h"
+
+  #include "ReWeight/GReWeightI.h"
+  #include "ReWeight/GSystSet.h"
+  #include "ReWeight/GSyst.h"
+  #include "ReWeight/GReWeight.h"
+  #include "ReWeight/GReWeightNuXSecNCEL.h"
+  #include "ReWeight/GReWeightNuXSecCCQE.h"
+  #include "ReWeight/GReWeightNuXSecCCRES.h"
+  #include "ReWeight/GReWeightNuXSecCOH.h"
+  #include "ReWeight/GReWeightNonResonanceBkg.h"
+  #include "ReWeight/GReWeightFGM.h"
+  #include "ReWeight/GReWeightDISNuclMod.h"
+  #include "ReWeight/GReWeightResonanceDecay.h"
+  #include "ReWeight/GReWeightFZone.h"
+  #include "ReWeight/GReWeightINuke.h"
+  #include "ReWeight/GReWeightAGKY.h"
+  #include "ReWeight/GReWeightNuXSecCCQEvec.h"
+  #include "ReWeight/GReWeightNuXSecNCRES.h"
+  #include "ReWeight/GReWeightNuXSecDIS.h"
+  #include "ReWeight/GReWeightNuXSecNC.h"
+  #include "ReWeight/GSystUncertainty.h"
+  #include "ReWeight/GReWeightUtils.h"
+
+//#include "Geo/ROOTGeomAnalyzer.h"
+//#include "Geo/GeomVolSelectorFiducial.h"
+//#include "Geo/GeomVolSelectorRockBox.h"
+  #include "Utils/StringUtils.h"
+  #include "Utils/XmlParserUtils.h"
+  #include "Interaction/InitialState.h"
+  #include "Interaction/Interaction.h"
+  #include "Interaction/Kinematics.h"
+  #include "Interaction/KPhaseSpace.h"
+  #include "Interaction/ProcessInfo.h"
+  #include "Interaction/XclsTag.h"
+  #include "GHEP/GHepParticle.h"
+  #include "PDG/PDGCodeList.h"
+  #include "Conventions/Constants.h" //for calculating event kinematics
+
+#else
+  // GENIE includes R-3 and beyond
+  #include "GENIE/Framework/Messenger/Messenger.h"
+  #include "GENIE/Framework/Conventions/Units.h"
+  #include "GENIE/Framework/Conventions/Constants.h"
+  #include "GENIE/Framework/GHEP/GHepUtils.h"
+  #include "GENIE/Framework/EventGen/EventRecord.h"
+
+//  #include "GENIE/Framework/Interaction/InitialState.h"
+//  #include "GENIE/Framework/Interaction/Interaction.h"
+//  #include "GENIE/Framework/Interaction/Kinematics.h"
+//  #include "GENIE/Framework/Interaction/KPhaseSpace.h"
+//  #include "GENIE/Framework/Interaction/ProcessInfo.h"
+//  #include "GENIE/Framework/Interaction/XclsTag.h"
+
+//  #include "GENIE/Framework/ParticleData/PDGCodes.h"
+//  #include "GENIE/Framework/ParticleData/PDGCodeList.h"
+//  #include "GENIE/Framework/ParticleData/PDGLibrary.h"
+//  #include "GENIE/Framework/GHEP/GHepUtils.h"
+//  #include "GENIE/Framework/GHEP/GHepParticle.h"
+
+  #include "GENIE/Tools/ReWeight/GReWeightI.h"
+  #include "GENIE/Tools/ReWeight/GSystSet.h"
+  #include "GENIE/Tools/ReWeight/GSyst.h"
+  #include "GENIE/Tools/ReWeight/GReWeight.h"
+  #include "GENIE/Tools/ReWeight/GReWeightNuXSecNCEL.h"
+  #include "GENIE/Tools/ReWeight/GReWeightNuXSecCCQE.h"
+  #include "GENIE/Tools/ReWeight/GReWeightNuXSecCCRES.h"
+  #include "GENIE/Tools/ReWeight/GReWeightNuXSecCOH.h"
+  #include "GENIE/Tools/ReWeight/GReWeightNonResonanceBkg.h"
+  #include "GENIE/Tools/ReWeight/GReWeightFGM.h"
+  #include "GENIE/Tools/ReWeight/GReWeightDISNuclMod.h"
+  #include "GENIE/Tools/ReWeight/GReWeightResonanceDecay.h"
+  #include "GENIE/Tools/ReWeight/GReWeightFZone.h"
+  #include "GENIE/Tools/ReWeight/GReWeightINuke.h"
+  #include "GENIE/Tools/ReWeight/GReWeightAGKY.h"
+  #include "GENIE/Tools/ReWeight/GReWeightNuXSecCCQEvec.h"
+  #include "GENIE/Tools/ReWeight/GReWeightNuXSecNCRES.h"
+  #include "GENIE/Tools/ReWeight/GReWeightNuXSecDIS.h"
+  #include "GENIE/Tools/ReWeight/GReWeightNuXSecNC.h"
+  #include "GENIE/Tools/ReWeight/GSystUncertainty.h"
+  #include "GENIE/Tools/ReWeight/GReWeightUtils.h"
+
+//#include "Geo/ROOTGeomAnalyzer.h"
+//#include "Geo/GeomVolSelectorFiducial.h"
+//#include "Geo/GeomVolSelectorRockBox.h"
+//#include "Utils/StringUtils.h"
+//#include "Utils/XmlParserUtils.h"
+
+#endif
 // Necessary because the GENIE LOG_* macros don't fully qualify Messenger
 using genie::Messenger;
 
-#include "ReWeight/GReWeightI.h"
-#include "ReWeight/GSystSet.h"
-#include "ReWeight/GSyst.h"
-#include "ReWeight/GReWeight.h"
-#include "ReWeight/GReWeightNuXSecNCEL.h"
-#include "ReWeight/GReWeightNuXSecCCQE.h"
-#include "ReWeight/GReWeightNuXSecCCRES.h"
-#include "ReWeight/GReWeightNuXSecCOH.h"
-#include "ReWeight/GReWeightNonResonanceBkg.h"
-#include "ReWeight/GReWeightFGM.h"
-#include "ReWeight/GReWeightDISNuclMod.h"
-#include "ReWeight/GReWeightResonanceDecay.h"
-#include "ReWeight/GReWeightFZone.h"
-#include "ReWeight/GReWeightINuke.h"
-#include "ReWeight/GReWeightAGKY.h"
-#include "ReWeight/GReWeightNuXSecCCQEvec.h"
-#include "ReWeight/GReWeightNuXSecNCRES.h" 
-#include "ReWeight/GReWeightNuXSecDIS.h"   
-#include "ReWeight/GReWeightNuXSecNC.h"  
-#include "ReWeight/GSystUncertainty.h"
-#include "ReWeight/GReWeightUtils.h" 
-
-#include "Geo/ROOTGeomAnalyzer.h"
-#include "Geo/GeomVolSelectorFiducial.h"
-#include "Geo/GeomVolSelectorRockBox.h"
-#include "Utils/StringUtils.h"
-#include "Utils/XmlParserUtils.h"
-#include "Interaction/InitialState.h"
-#include "Interaction/Interaction.h"
-#include "Interaction/Kinematics.h"
-#include "Interaction/KPhaseSpace.h"
-#include "Interaction/ProcessInfo.h"
-#include "Interaction/XclsTag.h"
-#include "GHEP/GHepParticle.h"
-#include "PDG/PDGCodeList.h"
-#include "Conventions/Constants.h" //for calculating event kinematics
 
 //NuTools includes
 #include "nusimdata/SimulationBase/MCTruth.h"
@@ -145,16 +198,16 @@ namespace rwgt {
 
 
     // Non-resonance background tweaking parameters:
-    fNominalParameters[(int)rwgt::fReweightRvpCC1pi] = 1.0; 
-    fNominalParameters[(int)rwgt::fReweightRvpCC2pi] = 1.0; 
-    fNominalParameters[(int)rwgt::fReweightRvpNC1pi] = 1.0; 
+    fNominalParameters[(int)rwgt::fReweightRvpCC1pi] = 1.0;
+    fNominalParameters[(int)rwgt::fReweightRvpCC2pi] = 1.0;
+    fNominalParameters[(int)rwgt::fReweightRvpNC1pi] = 1.0;
     fNominalParameters[(int)rwgt::fReweightRvpNC2pi] = 1.0;
     fNominalParameters[(int)rwgt::fReweightRvnCC1pi] = 1.0;
     fNominalParameters[(int)rwgt::fReweightRvnCC2pi] = 1.0;
     fNominalParameters[(int)rwgt::fReweightRvnNC1pi] = 1.0;
     fNominalParameters[(int)rwgt::fReweightRvnNC2pi] = 1.0;
     fNominalParameters[(int)rwgt::fReweightRvbarpCC1pi] = 1.0;
-    fNominalParameters[(int)rwgt::fReweightRvbarpCC2pi] = 1.0; 
+    fNominalParameters[(int)rwgt::fReweightRvbarpCC2pi] = 1.0;
     fNominalParameters[(int)rwgt::fReweightRvbarpNC1pi] = 1.0;
     fNominalParameters[(int)rwgt::fReweightRvbarpNC2pi] = 1.0;
     fNominalParameters[(int)rwgt::fReweightRvbarnCC1pi] = 1.0;
@@ -185,13 +238,13 @@ namespace rwgt {
 
     //
     // Hadronization [free nucleon target]
-    // 
-    fNominalParameters[(int)rwgt::fReweightAGKY_xF1pi] = 0.385; 
+    //
+    fNominalParameters[(int)rwgt::fReweightAGKY_xF1pi] = 0.385;
     fNominalParameters[(int)rwgt::fReweightAGKY_pT1pi] = 1./6.625;
 
     //
     // Medium-effects to hadronization
-    // 
+    //
     fNominalParameters[(int)rwgt::fReweightFormZone] = 1.0;
 
     //
@@ -212,22 +265,22 @@ namespace rwgt {
 
     //
     //RFG Nuclear model
-    // 
+    //
     fNominalParameters[(int)rwgt::fReweightCCQEPauliSupViaKF] = 1.0;
-    fNominalParameters[(int)rwgt::fReweightCCQEMomDistroFGtoSF] = 0.0; 
-    //Continous "switch" at 0.0 full FG model.  At 1.0 full spectral function model.  
+    fNominalParameters[(int)rwgt::fReweightCCQEMomDistroFGtoSF] = 0.0;
+    //Continous "switch" at 0.0 full FG model.  At 1.0 full spectral function model.
     //From genie code it looks like weird stuff may happen for <0 and >1.
-    //This parameter does not have an "uncertainty" value associated with it.  
+    //This parameter does not have an "uncertainty" value associated with it.
     //The tweaked dial value gets passed all the way through unchanged to the weight calculator
 
     //
     // Resonance decays
-    // 
+    //
     fNominalParameters[(int)rwgt::fReweightBR1gamma] = 1.0;
     fNominalParameters[(int)rwgt::fReweightBR1eta] = 1.0;
-    fNominalParameters[(int)rwgt::fReweightTheta_Delta2Npi] = 0.0; 
+    fNominalParameters[(int)rwgt::fReweightTheta_Delta2Npi] = 0.0;
     //Continous "switch" at 0.0 full isotropic pion angular distribution.  At 1.0 full R/S pion angular distribtuion.
-    //This parameter does not have an "uncertainty" value associated with it.  
+    //This parameter does not have an "uncertainty" value associated with it.
     //The tweaked dial value gets passed all the way through unchanged to the weight calculator
   }
 
@@ -266,7 +319,7 @@ namespace rwgt {
 
   ///<Add reweight parameters to the list
   void GENIEReweight::AddReweightValue(ReweightLabel_t rLabel, double value) {
-    int label = (int)rLabel;   
+    int label = (int)rLabel;
     LOG_INFO("GENIEReweight") << "Adding parameter: " <<  genie::rew::GSyst::AsString(genie::rew::EGSyst(label)) << ".  With value: " << value;
     fReWgtParameterName.push_back(label);
     fReWgtParameterValue.push_back(value);
@@ -434,7 +487,7 @@ namespace rwgt {
           break;
 
       }  // switch(fReWgtParameterName[i])
-      
+
     } //end for loop
 
     //configure the individual weight calculators
@@ -548,7 +601,7 @@ namespace rwgt {
     this->Configure();
   }
 
-  ///<Simple Configuration of the Non-Resonance Background weight calculator.  
+  ///<Simple Configuration of the Non-Resonance Background weight calculator.
   //Here it is being configured for v+p and vbar + n (1 pi) type interactions
   void GENIEReweight::ReweightNonResRvp1pi(double sigma) {
     LOG_INFO("GENIEReweight") << "Configuring GENIEReweight for  Non-Resonance Background Reweighting (Neutrino Single Pion)";
@@ -559,7 +612,7 @@ namespace rwgt {
     this->Configure();
   }
 
-  ///<Simple Configuration of the Non-Resonance Background weight calculator.  
+  ///<Simple Configuration of the Non-Resonance Background weight calculator.
   //Here it is being configured for v+n and vbar + p (1 pi) type interactions
   void GENIEReweight::ReweightNonResRvbarp1pi(double sigma) {
     LOG_INFO("GENIEReweight") << "Configuring GENIEReweight for  Non-Resonance Background Reweighting (Anti-Neutrino Single Pion)";
@@ -580,7 +633,7 @@ namespace rwgt {
     this->Configure();
   }
 
-  ///<Simple Configuration of the Non-Resonance Background weight calculator. 
+  ///<Simple Configuration of the Non-Resonance Background weight calculator.
   // Here it is being configured for v+n and vbar + p (2 pi) type interactions
   void GENIEReweight::ReweightNonResRvbarp2pi(double sigma) {
     LOG_INFO("GENIEReweight") << "Configuring GENIEReweight for  Non-Resonance Background Reweighting (Anti-Neutrino Two Pion)";
@@ -729,7 +782,7 @@ namespace rwgt {
     fWcalc->AdoptWghtCalc( "xsec_ccres",      new GReWeightNuXSecCCRES     );
     if(!fMaCCResShape) {
       LOG_INFO("GENIEReweight") << "in axial mass (Res) rate+shape mode";
-      GReWeightNuXSecCCRES * rwccres = dynamic_cast<GReWeightNuXSecCCRES *> (fWcalc->WghtCalc("xsec_ccres")); 
+      GReWeightNuXSecCCRES * rwccres = dynamic_cast<GReWeightNuXSecCCRES *> (fWcalc->WghtCalc("xsec_ccres"));
       rwccres->SetMode(GReWeightNuXSecCCRES::kModeMaMv);
     }
     else {
@@ -743,7 +796,7 @@ namespace rwgt {
     fWcalc->AdoptWghtCalc( "xsec_ncres",      new GReWeightNuXSecNCRES     );
     if(!fMaNCResShape) {
       LOG_INFO("GENIEReweight") << "in axial mass (Res) rate+shape mode";
-      GReWeightNuXSecNCRES * rwncres = dynamic_cast<GReWeightNuXSecNCRES *> (fWcalc->WghtCalc("xsec_ncres")); 
+      GReWeightNuXSecNCRES * rwncres = dynamic_cast<GReWeightNuXSecNCRES *> (fWcalc->WghtCalc("xsec_ncres"));
       rwncres->SetMode(GReWeightNuXSecNCRES::kModeMaMv);
     }
     else {
@@ -835,7 +888,7 @@ namespace rwgt {
     fWcalc->Reconfigure();
   }
 
-  ///Used in parameter value mode (instead of parameter sigma mode) Given a user passed parameter value calculate the corresponding sigma value 
+  ///Used in parameter value mode (instead of parameter sigma mode) Given a user passed parameter value calculate the corresponding sigma value
   ///that needs to be passed to genie to give the same weight.
   double GENIEReweight::CalculateSigma(ReweightLabel_t label, double value) {
     //double GENIEReweight::CalculateSigma(int label, double value) {
@@ -845,7 +898,7 @@ namespace rwgt {
     double sigma;
     int sign;
     GSystUncertainty * gsysterr = GSystUncertainty::Instance();
-    if(label==rwgt::fReweightCCQEMomDistroFGtoSF || 
+    if(label==rwgt::fReweightCCQEMomDistroFGtoSF ||
         label==rwgt::fReweightTheta_Delta2Npi ||
         label==rwgt::fReweightDISNuclMod) {
       //These parameters don't use the sigma definition just pass them through the function unchanged
@@ -892,26 +945,26 @@ namespace rwgt {
       int fdtrkid = 0;
       int ldtrkid = 0;
       if(ndaughters !=0) {
-	fdtrkid = mcpart.Daughter(0);
-	if(ndaughters == 1) {
-	  ldtrkid = 1;
-	}
-	else if(ndaughters >1) {
-	  fdtrkid = mcpart.Daughter(ndaughters-1);
-	}
-      }      
+        fdtrkid = mcpart.Daughter(0);
+        if(ndaughters == 1) {
+          ldtrkid = 1;
+        }
+        else if(ndaughters >1) {
+          fdtrkid = mcpart.Daughter(ndaughters-1);
+        }
+      }
       int gmfd = -1;
       int gmld = -1;
       //Genie uses the index in the particle array to reference the daughter particles.
       //MCTruth keeps the particles in the same order so use the track ID to find the proper index.
       for(int j = 0; j < truth.NParticles(); j++) {
-	simb::MCParticle temp = truth.GetParticle(i);
-	if(temp.TrackId() == fdtrkid) {
-	  gmfd = j;
-	}
-	if(temp.TrackId() == ldtrkid) {
-	  gmld = j;
-	}
+        simb::MCParticle temp = truth.GetParticle(i);
+        if(temp.TrackId() == fdtrkid) {
+          gmfd = j;
+        }
+        if(temp.TrackId() == ldtrkid) {
+          gmld = j;
+        }
       }
 
       double gmpx = mcpart.Px(0);
@@ -928,7 +981,7 @@ namespace rwgt {
       gpart.SetRescatterCode(gmri);
       TVector3 polz = mcpart.Polarization();
       if(polz.x() !=0 || polz.y() !=0 || polz.z() !=0) {
-	gpart.SetPolarization(polz);
+        gpart.SetPolarization(polz);
       }
       newEvent.AddParticle(gpart);
 
@@ -974,7 +1027,7 @@ namespace rwgt {
     //int Z = gtruth.ftgtZ;
     //int A = gtruth.ftgtA;
     int targetNucleon = nu.HitNuc();
-    int struckQuark = nu.HitQuark(); 
+    int struckQuark = nu.HitQuark();
     int incoming = gtruth.fProbePDG;
     p_ginstate->SetProbePdg(incoming);
 
@@ -997,7 +1050,7 @@ namespace rwgt {
       genie::GHepParticle * hitnucleon = newEvent.HitNucleon();
       std::auto_ptr<TLorentzVector> p4hitnucleon(hitnucleon->GetP4());
       target123->SetHitNucP4(*p4hitnucleon);
-    }  
+    }
     else {
       TLorentzVector dummy(0.,0.,0.,0.);
       target123->SetHitNucP4(dummy);
@@ -1027,9 +1080,9 @@ namespace rwgt {
     //std::cout << "TargetPDG as Recorded: " << gtruth.ftgtPDG << std::endl;
     //std::cout << "TargetZ as Recorded:   " << gtruth.ftgtZ << std::endl;
     //std::cout << "TargetA as Recorded:   " << gtruth.ftgtA << std::endl;
-    //std::cout << "TargetPDG as Recreated: " << tgt.Pdg() << std::endl;   
-    //std::cout << "TargetZ as Recreated: " << tgt.Z() << std::endl;   
-    //std::cout << "TargetA as Recreated: " << tgt.A() << std::endl;   
+    //std::cout << "TargetPDG as Recreated: " << tgt.Pdg() << std::endl;
+    //std::cout << "TargetZ as Recreated: " << tgt.Z() << std::endl;
+    //std::cout << "TargetA as Recreated: " << tgt.A() << std::endl;
 
     return newEvent;
 
