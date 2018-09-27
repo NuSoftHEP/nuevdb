@@ -18,7 +18,6 @@
 #include "art/Framework/Principal/Event.h"
 #include "fhiclcpp/ParameterSet.h"
 #include "art/Framework/Principal/Handle.h"
-#include "art/Framework/Services/Registry/ServiceHandle.h"
 #include "messagefacility/MessageLogger/MessageLogger.h"
 #include "art/Framework/Core/EDAnalyzer.h"
 #include "cetlib_except/exception.h"
@@ -49,10 +48,8 @@ namespace evgen {
   public:
 
     explicit EventGeneratorTest(fhicl::ParameterSet const &pset);
-    virtual ~EventGeneratorTest();                        
 
     void analyze(art::Event const& evt);  
-    void beginJob();
 
   private:
 
@@ -86,6 +83,7 @@ namespace evgen {
     double      fCryDetLength;           ///< length of detector to test CRY, units of cm
     double      fCryDetWidth;            ///< width of detector to test CRY, units of cm
     double      fCryDetHeight;           ///< height of detector to test CRY, units of cm
+    CLHEP::HepRandomEngine& fEngine;     ///< art-owned engine used in generation random numbers
   };
 }
 
@@ -102,21 +100,8 @@ namespace evgen {
     , fCryDetLength          (1000.)
     , fCryDetWidth           (500.)
     , fCryDetHeight          (500.)
-  {  
-    /// Create a Art Random Number engine
-    int seed = (pset.get< int >("Seed", evgb::GetRandomNumberSeed()));
-    createEngine(seed);
-  }
-
-  //____________________________________________________________________________
-  EventGeneratorTest::~EventGeneratorTest()
-  {  
-  }
-
-  //____________________________________________________________________________
-  void EventGeneratorTest::beginJob()
-  {  
-  }
+    , fEngine{createEngine(pset.get< int >("Seed", evgb::GetRandomNumberSeed()))}
+  {}
 
   //____________________________________________________________________________
   void EventGeneratorTest::analyze(art::Event const& evt)
@@ -373,12 +358,8 @@ namespace evgen {
     // make the parameter set
     fhicl::ParameterSet pset = this->CRYParameterSet();
 
-    // get the random number generator service and make some CLHEP generators
-    art::ServiceHandle<art::RandomNumberGenerator> rng;
-    CLHEP::HepRandomEngine& engine = rng->getEngine();
-
     // make the CRYHelper
-    evgb::CRYHelper help(pset, engine);
+    evgb::CRYHelper help(pset, fEngine);
 
     int    nspill         = 0;
     double avPartPerSpill = 0.;
@@ -525,5 +506,3 @@ namespace evgen{
 }
 
 #endif // EVGEN_TEST_H
-
-

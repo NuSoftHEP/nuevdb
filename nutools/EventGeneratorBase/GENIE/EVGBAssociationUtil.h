@@ -591,7 +591,7 @@ namespace util {
 // MARK CreateAssn_01
 template<class PRODUCER, class T, class U>
 bool evgb::util::CreateAssn(
-  PRODUCER        const& prod,
+  PRODUCER        const&,   // Argument should be removed
   art::Event           & evt,
   std::vector<T>  const& a,
   art::Ptr<U>     const& b,
@@ -603,7 +603,7 @@ bool evgb::util::CreateAssn(
   if (indx == UINT_MAX) indx = a.size()-1;
   
   try{
-    art::ProductID aid = prod.template getProductID< std::vector<T>>( a_instance);
+    art::ProductID aid = evt.getProductID< std::vector<T>>( a_instance);
     art::Ptr<T> aptr(aid, indx, evt.productGetter(aid));
     assn.addSingle(b, aptr);
     return true;
@@ -645,7 +645,7 @@ bool evgb::util::CreateAssn(
 // MARK CreateAssn_04
 template<class PRODUCER, class T, class U>
 bool evgb::util::CreateAssn(
-  PRODUCER          const& prod,
+  PRODUCER          const&,   // Argument should be removed
   art::Event             & evt,
   std::vector<T>    const& a,
   art::PtrVector<U> const& b,
@@ -655,7 +655,7 @@ bool evgb::util::CreateAssn(
   if(indx == UINT_MAX) indx = a.size() - 1;
   
   try{
-    art::ProductID aid = prod.template getProductID< std::vector<T> >();
+    art::ProductID aid = evt.getProductID< std::vector<T> >();
     art::Ptr<T> aptr(aid, indx, evt.productGetter(aid));
     for(art::Ptr<U> const& b_item: b) assn.addSingle(aptr, b_item);
   }
@@ -695,7 +695,7 @@ bool evgb::util::CreateAssn(
 // MARK CreateAssn_06
 template<class PRODUCER, class T, class U>
 bool evgb::util::CreateAssn(
-  PRODUCER                 const& prod,
+  PRODUCER                 const&,   // Argument should be removed
   art::Event                    & evt,
   std::vector<T>           const& a,
   std::vector<art::Ptr<U>> const& b,
@@ -706,7 +706,7 @@ bool evgb::util::CreateAssn(
   if (indx == UINT_MAX) indx = a.size() - 1;
   
   try{
-    art::ProductID aid = prod.template getProductID< std::vector<T> >();
+    art::ProductID aid = evt.getProductID< std::vector<T> >();
     art::Ptr<T> aptr(aid, indx, evt.productGetter(aid));
     for (art::Ptr<U> const& b_item: b) assn.addSingle(aptr, b_item);
   }
@@ -723,7 +723,7 @@ bool evgb::util::CreateAssn(
 // MARK CreateAssn_07
 template<class PRODUCER, class T, class U>
 bool evgb::util::CreateAssn(
-  PRODUCER        const& prod,
+  PRODUCER        const&,  // Argument should be removed
   art::Event           & evt,
   std::vector<T>  const& a,
   std::vector<U>  const& /* b */,
@@ -736,8 +736,8 @@ bool evgb::util::CreateAssn(
   if(indx == UINT_MAX) indx = a.size() - 1;
   
   try{
-    art::ProductID aid = prod.template getProductID< std::vector<T> >();
-    art::ProductID bid = prod.template getProductID< std::vector<U> >();
+    art::ProductID aid = evt.getProductID< std::vector<T> >();
+    art::ProductID bid = evt.getProductID< std::vector<U> >();
     art::Ptr<T> aptr(aid, indx, evt.productGetter(aid));
     auto const* getter = evt.productGetter(bid); // I don't want to know what it is
     for(size_t i = startU; i < endU; ++i){
