@@ -7,6 +7,10 @@
 #ifndef RWGT_REWEIGHTLABEL_H
 #define RWGT_REWEIGHTLABEL_H
 
+#ifndef GENIE_PRE_R3
+#define GENIE_PRE_R3
+#endif
+
 #ifdef GENIE_PRE_R3
   #include "ReWeight/GSyst.h"
 #else
