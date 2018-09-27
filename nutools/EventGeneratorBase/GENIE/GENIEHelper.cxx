@@ -2792,17 +2792,17 @@ namespace evgb {
   {
     /// Determine Tune ... initialize as necessary
 
-    // this isn't all that useful ... but leave it for the UnphysEventMask
-    genie::RunOpt* grunopt = genie::RunOpt::Instance();
-    // ctor automatically calls:  grunopt->Init();
-
 #ifdef GENIE_PRE_R3
     // nothing special .. it's all in the GXMLPATH definitions
     // but set EventGeneratorList
     FindEventGeneratorList();
-    grunopt->SetEventGeneratorList(fEventGeneratorList);
+    fDriver->SetEventGeneratorList(fEventGeneratorList);
 
 #else
+    // this isn't all that useful ... but leave it for the UnphysEventMask
+    genie::RunOpt* grunopt = genie::RunOpt::Instance();
+    // ctor automatically calls:  grunopt->Init();
+
     if ( fTuneName.find('$') == 0 ) {
       // need to remove ${}'s
       std::string tuneEnvVar = fTuneName;
