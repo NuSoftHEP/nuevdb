@@ -1,4 +1,3 @@
-
 set( IFDH_AS_SERVICE_LIB_LIST
            art_Framework_Services_Registry
            ${Boost_SYSTEM_LIBRARY}
@@ -6,6 +5,7 @@ set( IFDH_AS_SERVICE_LIB_LIST
 
 art_make( LIB_LIBRARIES nusimdata_SimulationBase
                         art_Framework_Principal
+                        art_Persistency_Provenance
                         art_Utilities
                         ${IFDH_AS_SERVICE_LIB_LIST}
                         canvas

@@ -7,7 +7,6 @@
 
 #include "fhiclcpp/ParameterSet.h"
 
-#include "art/Framework/Services/Registry/ServiceHandle.h"
 #include "art/Framework/Services/Optional/RandomNumberGenerator.h"
 
 #include "messagefacility/MessageLogger/MessageLogger.h"
@@ -253,7 +252,8 @@ private:
 
   bsim::Dk2Nu*                            fDk2Nu;
   bsim::NuChoice*                         fNuChoice;
-
+  unsigned int const                      fSeed;
+  CLHEP::HepRandomEngine&                 fEngine;
 
   // selection order - sequential-round, sequential-1time, random-1?
 
@@ -284,6 +284,12 @@ evg::AddGenieEventsToArt::AddGenieEventsToArt(const Parameters& params)
   , fGSimpleNtpAux(0)
   , fDk2Nu(0)
   , fNuChoice(0)
+  // get the random number seed, use a random default if not specified
+  // in the configuration file.
+  , fSeed{fParams().seed() == 0 ? evgb::GetRandomNumberSeed() : fParams().seed()}
+  // only need sub-label if using more than one engine for each
+  // instance of this module (already tagged by equiv of fMyModuleLabel)
+  , fEngine{createEngine(fSeed/*, "HepJamesRandom", sub-label*/)}
 {
   // trigger early initialization of PDG database & GENIE message service
   // just to get it out of the way and not intermixed with other output
@@ -297,15 +303,6 @@ evg::AddGenieEventsToArt::AddGenieEventsToArt(const Parameters& params)
     << " (" << fMyModuleType << ") " << std::endl << std::flush;
 
   fFileList = fParams().fileList();
-
-  // get the random number seed, use a random default if not specified
-  // in the configuration file.
-  unsigned int seed = fParams().seed();
-  if ( seed == 0 ) seed = evgb::GetRandomNumberSeed();
-
-  // only need sub-label if using more than one engine for each
-  // instance of this module (already tagged by equiv of fMyModuleLabel
-  createEngine(seed); // ,"HepJamesRandom",sub-label);
 
   ParseCountConfig();
   ParseVtxOffsetConfig();
@@ -484,9 +481,7 @@ void evg::AddGenieEventsToArt::produce(art::Event & evt)
   // same entry should never be in the list twice ...
   std::vector<size_t> entries;
 
-  art::ServiceHandle<art::RandomNumberGenerator> rng;
-  CLHEP::HepRandomEngine& engine = rng->getEngine();
-  CLHEP::RandFlat flat(engine);
+  CLHEP::RandFlat flat(fEngine);
 
   //mf::LogInfo("AddGeniEventsToArt") << "attempt to get " << n << " entries";
   while ( entries.size() != n ) {
@@ -727,11 +722,7 @@ void evg::AddGenieEventsToArt::ParseCountConfig()
   // test how fireInt() works ...
   static bool first = true;
   if ( first ) {
-    art::ServiceHandle<art::RandomNumberGenerator> rng;
-    CLHEP::HepRandomEngine& engine = rng->getEngine();
-
-    // can't do servicehandle in ctor (or ctor callees)
-    CLHEP::RandFlat flatTest(engine);   // pass by ref, doesn't own
+    CLHEP::RandFlat flatTest(fEngine);   // pass by ref, doesn't own
     first = false;
     for (int rtest = 0; rtest < 5; ++rtest ) {
       std::cout << " ======= testing CLHEP::RandFlat::fireInt("
@@ -747,9 +738,6 @@ void evg::AddGenieEventsToArt::ParseCountConfig()
 size_t evg::AddGenieEventsToArt::GetNumToAdd() const
 {
 
-  art::ServiceHandle<art::RandomNumberGenerator> rng;
-  CLHEP::HepRandomEngine& engine = rng->getEngine();
-
   size_t nchosen = 0;
 
   switch ( fRndDist ) {
@@ -759,7 +747,7 @@ size_t evg::AddGenieEventsToArt::GetNumToAdd() const
     }
   case kFlat:
     {
-      CLHEP::RandFlat flat(engine);   // pass by ref, doesn't own
+      CLHEP::RandFlat flat(fEngine);   // pass by ref, doesn't own
       // couldn't find good documentation on how this worked ... empirically
       //   fireInt(0) & fireInt(1) give 0 always
       //   fireInt(2) gives 0 or 1
@@ -775,7 +763,7 @@ size_t evg::AddGenieEventsToArt::GetNumToAdd() const
   case kPoisson:
   case kPoissonMinus1:
     {
-      CLHEP::RandPoisson poisson(engine);
+      CLHEP::RandPoisson poisson(fEngine);
       nchosen = poisson.fire(fRndP1);
       if ( fRndDist == kPoissonMinus1 ) {
         if ( nchosen > 0 ) --nchosen;
@@ -792,7 +780,7 @@ size_t evg::AddGenieEventsToArt::GetNumToAdd() const
     break;
   case kGaussian:
     {
-      CLHEP::RandGauss gauss(engine);
+      CLHEP::RandGauss gauss(fEngine);
       double tmp = gauss.fire(fRndP1,fRndP2);
       if ( tmp > 0 ) nchosen = (size_t)(tmp);
       else {
