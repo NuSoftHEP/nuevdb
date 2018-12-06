@@ -163,10 +163,10 @@ geniehelpertest_dune_atmos_honda.SpillTimeConfig:  "evgb::EvtTimeFlat" # no beam
 geniehelpertest_dune_atmos_honda.FluxSearchPaths: "/dune/app/users/wwu/v06_81_00/work/atm/cosZ-0.4-0.3_phi_Az0-30/Honda"
 ##### this base version _does_ _no_ _coordinate_ _transform_ HONDA needsa
 
-geniehelpertest_dune_atmos_honda_alt0:  @local::geniehelpertest_dune_atmos_honda
-geniehelpertest_dune_atmos_honda_alt0.FluxRotCfg:  "verbose series rotXdeg rotZdeg rotZdeg"
-### mysterious 90deg offset
-geniehelpertest_dune_atmos_honda_alt0.FluxRotValues:  [ 90, 7.175588, -90 ]
+### this seems to be the right one!
+geniehelpertest_dune_atmos_honda_rotfd:  @local::geniehelpertest_dune_atmos_honda
+geniehelpertest_dune_atmos_honda_rotfd.FluxRotCfg:  "verbose series rotXdeg rotZdeg rotZdeg"
+geniehelpertest_dune_atmos_honda_rotfd.FluxRotValues:  [ 90, -90, 7.175588 ]
 
 
 geniehelpertest_dune_atmos_honda_alt1:  @local::geniehelpertest_dune_atmos_honda
@@ -214,6 +214,30 @@ geniehelpertest_dune_atmos_honda_alt98.FluxRotValues:  [ 90, 7.175588 ]
 geniehelpertest_dune_atmos_honda_alt99:  @local::geniehelpertest_dune_atmos_honda
 geniehelpertest_dune_atmos_honda_alt99.FluxRotCfg:  "verbose series rotXrad rotZdeg rotZgrad"
 geniehelpertest_dune_atmos_honda_alt99.FluxRotValues:  [ 1.57079813, 7.175588, +90 ]
+
+
+#=========================================================================
+
+geniehelpertest_func:  @local::geniehelpertest_dune_fd # @local::geniehelpertest_nova_gsimple
+geniehelpertest_func.FluxType:  "func"
+geniehelpertest_func.FunctionalFlux:  "1/x"
+geniehelpertest_func.FunctionalBinning:  10000
+geniehelpertest_func.FluxEmax:  10
+geniehelpertest_func.FluxEmin:  1
+geniehelpertest_func.BeamRadius:  1 # meter
+geniehelpertest_func.BeamCenter:  [ 0.00, 0.01, -5.0 ] # meters
+geniehelpertest_func.BeamDirection:  [ 0.0, 0.0, 1.0 ]
+geniehelpertest_func.GenFlavors:       [14,-14]
+geniehelpertest_func.FluxCopyMethod: "DIRECT" # IFDH or "DIRECT" method.
+geniehelpertest_func.MaxFluxFileNumber:  2
+geniehelpertest_func.FluxSearchPaths: "/no/such/path"
+geniehelpertest_func.FluxFiles: [ "*no-files*" ]
+geniehelpertest_func.DetectorLocation: "nowhere"  # used for config of numi or dk2nu flux drivers
+geniehelpertest_func.SpillTimeConfig:  ""
+# a test that "" is same as "none"
+geniehelpertest_func.MixerConfig:      ""
+### test this
+#geniehelpertest_func.EventGeneratorList: "CC"
 
 
 END_PROLOG
