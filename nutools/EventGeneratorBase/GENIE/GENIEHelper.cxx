@@ -1284,7 +1284,7 @@ namespace evgb {
     if( fMixerConfig.find_first_not_of(" \t\n") != 0) // trim any leading whitespace
       fMixerConfig.erase( 0, fMixerConfig.find_first_not_of(" \t\n")  );
     std::string keyword = fMixerConfig.substr(0,fMixerConfig.find_first_of(" \t\n"));
-    if ( keyword != "none" ) {
+    if ( keyword != "none" && keyword != "" ) {
       // Wrap the true flux driver up in the adapter to allow flavor mixing
       genie::flux::GFlavorMixerI* mixer = 0;
       // here is where we map MixerConfig string keyword to actual class
@@ -1307,12 +1307,12 @@ namespace evgb {
         } else {
           const std::vector<std::string>& knownMixers =
             mixerFactory.AvailableFlavorMixers();
-          mf::LogWarning("GENIEHelper")
-            << " GFlavorMixerFactory known mixers: ";
+          std::ostringstream mixers;
           for (unsigned int j=0; j < knownMixers.size(); ++j ) {
-            mf::LogWarning("GENIEHelper")
-              << "   [" << std::setw(2) << j << "]  " << knownMixers[j];
+            mixers << "\n   [" << std::setw(2) << j << "]  " << knownMixers[j];
           }
+          mf::LogWarning("GENIEHelper")
+            << " GFlavorMixerFactory known mixers: " << mixers.str();
         }
       }
       // configure the mixer
