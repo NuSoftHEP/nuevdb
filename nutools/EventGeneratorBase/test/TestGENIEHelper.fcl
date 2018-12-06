@@ -10,7 +10,9 @@ standard_geniehelpertest:
    # the rest are used by GENIEHelper itself
 
    # GENIEHelper::Stop() uses this
-   EventsPerSpill:   1   # events per spill generated
+   # one or the other should be non-zero but not both
+   EventsPerSpill:   0   # events per spill generated
+   POTPerSpill:      0   # pots per spill generated
 
    # one of:   ntuple, [g]simple, dk2nu, mono, histogram (cylinder)
    FluxType:         mono
