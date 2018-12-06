@@ -652,7 +652,7 @@ namespace evgb {
     // Atmospheric fluxes
     // prior to R-2_11_0 BGLRS was "BARTOL" and HAKKM was "HONDA"
     if ( tmpFluxType.find("FLUKA")  != std::string::npos ) tmpFluxType = "atmo_FLUKA";
-    if ( tmpFluxType.find("BARTOL") != std::string::npos ) tmpFluxType = "atmo_BGRLS";
+    if ( tmpFluxType.find("BARTOL") != std::string::npos ) tmpFluxType = "atmo_BGLRS";
     if ( tmpFluxType.find("BGLRS")  != std::string::npos ) tmpFluxType = "atmo_BGLRS";
     if ( tmpFluxType.find("HONDA")  != std::string::npos ) tmpFluxType = "atmo_HAKKM";
     if ( tmpFluxType.find("HAKKM")  != std::string::npos ) tmpFluxType = "atmo_HAKKM";
