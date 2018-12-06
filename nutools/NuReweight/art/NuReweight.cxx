@@ -81,27 +81,27 @@
 
   #include "GENIE/Framework/GHEP/GHepParticle.h"
 
-  #include "GENIE/Tools/ReWeight/GReWeightI.h"
-  #include "GENIE/Tools/ReWeight/GSystSet.h"
-  #include "GENIE/Tools/ReWeight/GSyst.h"
-  #include "GENIE/Tools/ReWeight/GReWeight.h"
-  #include "GENIE/Tools/ReWeight/GReWeightNuXSecNCEL.h"
-  #include "GENIE/Tools/ReWeight/GReWeightNuXSecCCQE.h"
-  #include "GENIE/Tools/ReWeight/GReWeightNuXSecCCRES.h"
-  #include "GENIE/Tools/ReWeight/GReWeightNuXSecCOH.h"
-  #include "GENIE/Tools/ReWeight/GReWeightNonResonanceBkg.h"
-  #include "GENIE/Tools/ReWeight/GReWeightFGM.h"
-  #include "GENIE/Tools/ReWeight/GReWeightDISNuclMod.h"
-  #include "GENIE/Tools/ReWeight/GReWeightResonanceDecay.h"
-  #include "GENIE/Tools/ReWeight/GReWeightFZone.h"
-  #include "GENIE/Tools/ReWeight/GReWeightINuke.h"
-  #include "GENIE/Tools/ReWeight/GReWeightAGKY.h"
-  #include "GENIE/Tools/ReWeight/GReWeightNuXSecCCQEvec.h"
-  #include "GENIE/Tools/ReWeight/GReWeightNuXSecNCRES.h"
-  #include "GENIE/Tools/ReWeight/GReWeightNuXSecDIS.h"
-  #include "GENIE/Tools/ReWeight/GReWeightNuXSecNC.h"
-  #include "GENIE/Tools/ReWeight/GSystUncertainty.h"
-  #include "GENIE/Tools/ReWeight/GReWeightUtils.h"
+  #include "RwFramework/GReWeightI.h"
+  #include "RwFramework/GSystSet.h"
+  #include "RwFramework/GSyst.h"
+  #include "RwFramework/GReWeight.h"
+  #include "RwFramework/GSystUncertainty.h"
+  #include "RwCalculators/GReWeightNuXSecNCEL.h"
+  #include "RwCalculators/GReWeightNuXSecCCQE.h"
+  #include "RwCalculators/GReWeightNuXSecCCRES.h"
+  #include "RwCalculators/GReWeightNuXSecCOH.h"
+  #include "RwCalculators/GReWeightNonResonanceBkg.h"
+  #include "RwCalculators/GReWeightFGM.h"
+  #include "RwCalculators/GReWeightDISNuclMod.h"
+  #include "RwCalculators/GReWeightResonanceDecay.h"
+  #include "RwCalculators/GReWeightFZone.h"
+  #include "RwCalculators/GReWeightINuke.h"
+  #include "RwCalculators/GReWeightAGKY.h"
+  #include "RwCalculators/GReWeightNuXSecCCQEvec.h"
+  #include "RwCalculators/GReWeightNuXSecNCRES.h"
+  #include "RwCalculators/GReWeightNuXSecDIS.h"
+  #include "RwCalculators/GReWeightNuXSecNC.h"
+  #include "RwCalculators/GReWeightUtils.h"
 
 #endif
 
@@ -136,16 +136,11 @@ namespace rwgt {
     newEvent.SetWeight(gtruth.fweight);
     newEvent.SetProbability(gtruth.fprobability);
     newEvent.SetXSec(gtruth.fXsec);
-#ifndef SETDIFFXSEC_1ARG
-    // this argument is used only for bookkeeping purposes in a GHepRecord.
-    // since we're making a GHepRecord that will be thrown away
-    // as soon as we're done getting the weights for it,
-    // it doesn't matter what we put here.
-    genie::KinePhaseSpace_t space = genie::kPSNull;
+
+    genie::KinePhaseSpace_t space
+      = (genie::KinePhaseSpace_t)gtruth.fGPhaseSpace;
     newEvent.SetDiffXSec(gtruth.fDiffXsec,space);
-#else
-    newEvent.SetDiffXSec(gtruth.fDiffXsec);
-#endif
+
     TLorentzVector vtx = gtruth.fVertex;
     newEvent.SetVertex(vtx);
 
