@@ -100,13 +100,17 @@ namespace evgb {
 
   private:
 
+    void RegularizeFluxType();
+    void SqueezeFilePatterns();
+    void AtmoFluxCheck();
+    void HistogramFluxCheck();
+
     void InitializeGeometry();
     void InitializeFiducialSelection();
     void InitializeRockBoxSelection();
     void InitializeFluxDriver();
     void ConfigGeomScan();
     void SetMaxPathOutInfo();
-
 
     void PackNuMIFlux(simb::MCFlux &flux);
     void PackSimpleFlux(simb::MCFlux &flux);
