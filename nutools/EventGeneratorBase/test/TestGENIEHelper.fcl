@@ -69,9 +69,13 @@ standard_geniehelpertest:
    MixerBaseline:    0.0
 
    DebugFlags:       16          # 0x10 = dump as generate  # no debug flags on by default
-   ProductionMode:   "true"     # for GENIE 2.10.X uses Messenger_whisper.xml
-   # for GENIE 2.10.X uses Messenger_production.xml from genie_phyopt
+
+   # for GENIE 2.10.X uses Messenger_production.xml is from genie_phyopt
+   # for GENIE 2.10.X uses Messenger_whisper.xml for "Production"
+   ProductionMode:   "true"
    GENIEMsgThresholds: "Messenger_production.xml"
+   #ProductionMode:   "false"
+   #GENIEMsgThresholds: ""
 
    # leftover kruft ... ancient GENIE versions
    Environment:      [ "obsolete", "obsolete" ]
@@ -237,7 +241,7 @@ geniehelpertest_func.SpillTimeConfig:  ""
 # a test that "" is same as "none"
 geniehelpertest_func.MixerConfig:      ""
 ### test this
-#geniehelpertest_func.EventGeneratorList: "CC"
+geniehelpertest_func.EventGeneratorList: "CCQE"
 
 
 END_PROLOG
