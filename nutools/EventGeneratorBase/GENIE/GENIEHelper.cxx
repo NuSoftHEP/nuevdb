@@ -558,20 +558,20 @@ namespace evgb {
     // get this out of the way
     genie::PDGLibrary::Instance();
 
-#ifdef GENIE_PRE_R3
-    fDriver = new genie::GMCJDriver(); // this needs to be before ConfigGeomScan
-
-    // Determine EventGeneratorList to use; let GMCJDriver know
+    // Determine EventGeneratorList to use
     FindEventGeneratorList();
-    fDriver->SetEventGeneratorList(fEventGeneratorList);
 
+#ifdef GENIE_PRE_R3
 #else
     // Determine Tune and EventGeneratorList to use
     // needs to be before creating GMCJDriver for version R-3 and beyond
     FindTune();
+#endif
 
     fDriver = new genie::GMCJDriver(); // this needs to be before ConfigGeomScan
-#endif
+    // let the driver know which list
+    // (for R-3 this is in _addition_ to setting it in RunOpt)
+    fDriver->SetEventGeneratorList(fEventGeneratorList);
 
     // Figure out which cross section file to use
     // post R-2_8_0 this actually triggers reading the file
@@ -2809,7 +2809,6 @@ namespace evgb {
 #ifdef GENIE_PRE_R3
     // Tune isn't relevant pre-R-3
 #else
-    // this isn't all that useful ... but leave it for the setting of UnphysEventMask
     genie::RunOpt* grunopt = genie::RunOpt::Instance();
     // ctor automatically calls:  grunopt->Init();
 
@@ -2842,9 +2841,10 @@ namespace evgb {
       }
     }
 
-    grunopt->SetTuneName(fTuneName);
-    FindEventGeneratorList();
+    // this is in addition to setting it (later) in GMCJDriver
     grunopt->SetEventGeneratorList(fEventGeneratorList);
+
+    grunopt->SetTuneName(fTuneName);
     grunopt->BuildTune();
 
 #endif
