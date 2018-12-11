@@ -14,7 +14,10 @@ services:
 
   # IFDH:          {IFDH_BASE_URI:  "http://samweb.fnal.gov:8480/sam/nova/api"}
   # nope  @table::standard_services
+
+  scheduler: { }
 }
+
 
 # Read from an existing file
 source:
