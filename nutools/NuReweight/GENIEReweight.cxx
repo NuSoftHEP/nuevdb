@@ -80,27 +80,27 @@
 //  #include "GENIE/Framework/GHEP/GHepUtils.h"
 //  #include "GENIE/Framework/GHEP/GHepParticle.h"
 
-  #include "GENIE/Tools/ReWeight/GReWeightI.h"
-  #include "GENIE/Tools/ReWeight/GSystSet.h"
-  #include "GENIE/Tools/ReWeight/GSyst.h"
-  #include "GENIE/Tools/ReWeight/GReWeight.h"
-  #include "GENIE/Tools/ReWeight/GReWeightNuXSecNCEL.h"
-  #include "GENIE/Tools/ReWeight/GReWeightNuXSecCCQE.h"
-  #include "GENIE/Tools/ReWeight/GReWeightNuXSecCCRES.h"
-  #include "GENIE/Tools/ReWeight/GReWeightNuXSecCOH.h"
-  #include "GENIE/Tools/ReWeight/GReWeightNonResonanceBkg.h"
-  #include "GENIE/Tools/ReWeight/GReWeightFGM.h"
-  #include "GENIE/Tools/ReWeight/GReWeightDISNuclMod.h"
-  #include "GENIE/Tools/ReWeight/GReWeightResonanceDecay.h"
-  #include "GENIE/Tools/ReWeight/GReWeightFZone.h"
-  #include "GENIE/Tools/ReWeight/GReWeightINuke.h"
-  #include "GENIE/Tools/ReWeight/GReWeightAGKY.h"
-  #include "GENIE/Tools/ReWeight/GReWeightNuXSecCCQEvec.h"
-  #include "GENIE/Tools/ReWeight/GReWeightNuXSecNCRES.h"
-  #include "GENIE/Tools/ReWeight/GReWeightNuXSecDIS.h"
-  #include "GENIE/Tools/ReWeight/GReWeightNuXSecNC.h"
-  #include "GENIE/Tools/ReWeight/GSystUncertainty.h"
-  #include "GENIE/Tools/ReWeight/GReWeightUtils.h"
+  #include "RwFramework/GReWeightI.h"
+  #include "RwFramework/GSystSet.h"
+  #include "RwFramework/GSyst.h"
+  #include "RwFramework/GReWeight.h"
+  #include "RwFramework/GSystUncertainty.h"
+  #include "RwCalculators/GReWeightNuXSecNCEL.h"
+  #include "RwCalculators/GReWeightNuXSecCCQE.h"
+  #include "RwCalculators/GReWeightNuXSecCCRES.h"
+  #include "RwCalculators/GReWeightNuXSecCOH.h"
+  #include "RwCalculators/GReWeightNonResonanceBkg.h"
+  #include "RwCalculators/GReWeightFGM.h"
+  #include "RwCalculators/GReWeightDISNuclMod.h"
+  #include "RwCalculators/GReWeightResonanceDecay.h"
+  #include "RwCalculators/GReWeightFZone.h"
+  #include "RwCalculators/GReWeightINuke.h"
+  #include "RwCalculators/GReWeightAGKY.h"
+  #include "RwCalculators/GReWeightNuXSecCCQEvec.h"
+  #include "RwCalculators/GReWeightNuXSecNCRES.h"
+  #include "RwCalculators/GReWeightNuXSecDIS.h"
+  #include "RwCalculators/GReWeightNuXSecNC.h"
+  #include "RwCalculators/GReWeightUtils.h"
 
 //#include "Geo/ROOTGeomAnalyzer.h"
 //#include "Geo/GeomVolSelectorFiducial.h"
@@ -252,12 +252,16 @@ namespace rwgt {
     fNominalParameters[(int)rwgt::fReweightMFP_pi] = 1.0;
     fNominalParameters[(int)rwgt::fReweightMFP_N] = 1.0;
     fNominalParameters[(int)rwgt::fReweightFrCEx_pi] = 1.0;
+#ifdef GENIE_PRE_R3
     fNominalParameters[(int)rwgt::fReweightFrElas_pi] = 1.0;
+#endif
     fNominalParameters[(int)rwgt::fReweightFrInel_pi] = 1.0;
     fNominalParameters[(int)rwgt::fReweightFrAbs_pi] = 1.0;
     fNominalParameters[(int)rwgt::fReweightFrPiProd_pi] = 1.0;
     fNominalParameters[(int)rwgt::fReweightFrCEx_N] = 1.0;
+#ifdef GENIE_PRE_R3
     fNominalParameters[(int)rwgt::fReweightFrElas_N] = 1.0;
+#endif
     fNominalParameters[(int)rwgt::fReweightFrInel_N] = 1.0;
     fNominalParameters[(int)rwgt::fReweightFrAbs_N] = 1.0;
     fNominalParameters[(int)rwgt::fReweightFrPiProd_N] = 1.0;
@@ -457,12 +461,16 @@ namespace rwgt {
         case rwgt::fReweightMFP_pi:
         case rwgt::fReweightMFP_N:
         case rwgt::fReweightFrCEx_pi:
+#ifdef GENIE_PRE_R3
         case rwgt::fReweightFrElas_pi:
+#endif
         case rwgt::fReweightFrInel_pi:
         case rwgt::fReweightFrAbs_pi:
         case rwgt::fReweightFrPiProd_pi:
         case rwgt::fReweightFrCEx_N:
+#ifdef GENIE_PRE_R3
         case rwgt::fReweightFrElas_N:
+#endif
         case rwgt::fReweightFrInel_N :
         case rwgt::fReweightFrAbs_N :
         case rwgt::fReweightFrPiProd_N:
@@ -710,12 +718,16 @@ namespace rwgt {
     if ( (name==rwgt::fReweightMFP_pi) ||
         (name==rwgt::fReweightMFP_N) ||
         (name==rwgt::fReweightFrCEx_pi) ||
+#ifdef GENIE_PRE_R3
         (name==rwgt::fReweightFrElas_pi) ||
+#endif
         (name==rwgt::fReweightFrInel_pi) ||
         (name==rwgt::fReweightFrAbs_pi) ||
         (name==rwgt::fReweightFrPiProd_pi) ||
         (name==rwgt::fReweightFrCEx_N) ||
+#ifdef GENIE_PRE_R3
         (name==rwgt::fReweightFrElas_N) ||
+#endif
         (name==rwgt::fReweightFrInel_N ) ||
         (name==rwgt::fReweightFrAbs_N ) ||
         (name==rwgt::fReweightFrPiProd_N) ) {
