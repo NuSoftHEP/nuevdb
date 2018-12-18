@@ -16,6 +16,42 @@ services:
     IFDH_BASE_URI: "http://samweb.fnal.gov:8480/sam/nova/api"
   }
 
+# newer versions of art want a definition of "scheduler" or one gets:
+#       %MSG-s StdLibException:  Early 06-Dec-2018 15:32:04 CST JobSetup
+#       Standard library exception caught in art
+#       Any parameters prefaced with '#' are optional.
+#       Unsupported parameters:
+#        + wantTracer [ <file.fcl> ]
+  scheduler: { }
+
+## https://cdcvs.fnal.gov/redmine/projects/art/wiki/ART_available_services
+
+# Always-present services; configuration optional.
+#  #rwh# floating_point_control: { ... }
+
+#  scheduler:  # options block in the old system
+#  {
+#    # see other parts of this page for the complete table or options and defaults
+#    Rethrow: ['OtherArt','StdException','Unknown','BadAlloc',
+#              'BadExceptionType','ProductNotFound','DictionaryNotFound',
+#              'InsertFailure','Configuration','LogicError',
+#              'UnimplementedFeature','InvalidReference','NullPointerError',
+#              'NoProductSpecified','EventTimeout','DataCorruption',
+#              'ScheduleExecutionFailure','EventProcessorFailure',
+#              'FileInPathError','FileOpenError','FileReadError',
+#              'FatalRootError','MismatchedInputFiles',
+#              'ProductDoesNotSupportViews','ProductDoesNotSupportPtr',
+#              'NotFound']
+#    IgnoreCompletely: []
+#    wantSummary: true
+#    #rwh#    wantTracer: true #rwh# false
+#    handleEmptyRuns: true
+#    handleEmptySubRuns: true
+#    #rwh#     enableSigInt: true
+#    #rwh#     unloadRootSigHandler: false
+#    #rwh#     resetRootErrHandler: true
+#  }
+
 }
 
 # Start each new event with an empty event.
@@ -35,11 +71,13 @@ physics:
 
  producers:
  {
-#   generator: @local::geniehelpertest_nova_dk2nu
-### alternative tests
    generator: @local::geniehelpertest_dune_dk2nu
-#   generator: @local::geniehelpertest_dune_atmos # BARTOL
-#   generator: @local::geniehelpertest_dune_atmos_honda_alt0
+### alternative tests
+### change filenames below (at bottom of file)
+#   generator: @local::geniehelpertest_nova_dk2nu
+#   generator: @local::geniehelpertest_dune_atmos  # BARTOL
+#   generator: @local::geniehelpertest_dune_atmos_honda_rotfd
+#   generator: @local::geniehelpertest_func
 
  }
 
@@ -77,7 +115,13 @@ outputs:
  }
 }
 
-services.TFileService.fileName: "honda_dune_alt0.hist.root"
-outputs.out1.fileName:          "honda_dune_alt0.artgenie.root"
+#services.TFileService.fileName:  "bartol_dune.hist.root"
+#out1.fileName:                   "bartol_dune.artgenie.root"
+#services.TFileService.fileName: "honda_dune_rotfd.hist.root"
+#outputs.out1.fileName:          "honda_dune_rotfd.artgenie.root"
+#services.TFileService.fileName: "test_func_ccqe.hist.root"
+#outputs.out1.fileName:          "test_func_ccqe.artgenie.root"
+
+
 
 # end-of-fcl

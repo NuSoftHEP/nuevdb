@@ -1,4 +1,4 @@
-////////////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////
 /// \file  GENIEHelper.h
 /// \brief Wrapper for generating neutrino interactions with GENIE
 ///
@@ -64,6 +64,7 @@
   #include "GENIE/Conventions/Constants.h" //for calculating event kinematics
   #pragma GCC diagnostic pop
 
+  #include "GENIE/PDG/PDGLibrary.h"
   #include "GENIE/PDG/PDGCodes.h"
   #include "GENIE/Utils/AppInit.h"
   #include "GENIE/Utils/RunOpt.h"
@@ -235,7 +236,7 @@ namespace evgb {
     , fDetLocation       (pset.get< std::string              >("DetectorLocation")       )
     , fFluxUpstreamZ     (pset.get< double                   >("FluxUpstreamZ",  -2.e30) )
     , fEventsPerSpill    (pset.get< double                   >("EventsPerSpill",      0) )
-    , fPOTPerSpill       (pset.get< double                   >("POTPerSpill",     5.e13) )
+    , fPOTPerSpill       (pset.get< double                   >("POTPerSpill",     0.0) )
     , fHistEventsPerSpill(0.)
     , fSpillEvents       (0)
     , fSpillExposure     (0.)
@@ -271,6 +272,19 @@ namespace evgb {
     , fDebugFlags        (pset.get< unsigned int             >("DebugFlags",          0) )
   {
 
+    // fEnvironment is (generally) deprecated ... print out any settings
+    if ( fEnvironment.size() > 0 ) {
+      std::ostringstream fenvout;
+      fenvout << " fEnviroment.size() = " << fEnvironment.size();
+      for (size_t i = 0; i < fEnvironment.size(); i += 2) {
+        fenvout << std::endl << " [" << std::setw(20)
+                << fEnvironment[i] << "] ==> "
+                << fEnvironment[i+1] << std::endl;
+      }
+      mf::LogInfo("GENIEHelper") << " Use of fEnvironment parameters is deprecated:\n"
+                                 << fenvout.str();
+    }
+
     // for histogram, mono-energetic, functional form fluxes ...
     std::vector<double> beamCenter   (pset.get< std::vector<double> >("BeamCenter")   );
     std::vector<double> beamDirection(pset.get< std::vector<double> >("BeamDirection"));
@@ -293,41 +307,30 @@ namespace evgb {
     mf::LogInfo("GENIEHelper") << "Init HelperRandom with seed " << seedval;
     fHelperRandom = new TRandom3(seedval);
 
-    // regularize fFluxType string ...
-    // remove lead/trailing whitespace
-    size_t ftlead  = fFluxType.find_first_not_of(" \t\n");
-    if ( ftlead )    fFluxType.erase( 0, ftlead );
-    size_t ftlen   = fFluxType.length();
-    size_t fttrail = fFluxType.find_last_not_of(" \t\n");
-    if ( fttrail != ftlen ) fFluxType.erase( fttrail+1, ftlen );
-
-    if ( fFluxType.find("simple") != std::string::npos ) fFluxType = "simple";
-    if ( fFluxType.find("ntuple") != std::string::npos ) fFluxType = "numi";
-    if ( fFluxType.find("numi")   != std::string::npos ) fFluxType = "numi";
+    // clean up user input
+    // also classifies flux type to simplify tests
+    //  e.g.  atmo_  tree_
+    RegularizeFluxType();
 
     /// Determine which flux files to use
     /// Do this after random number seed initialization for stability
 
-    // for "numi" (nee "ntuple"), "simple" and "dk2nu" squeeze the patterns so there
-    // are no duplicates; for the others we want to preserve order
-    if ( fFluxType.compare("numi")   == 0 ||
-         fFluxType.compare("simple") == 0 ||
-         fFluxType.compare("dk2nu")  == 0    ) {
-      // convert vector<> to a set<> and back to vector<>
-      // to avoid having duplicate patterns in the list
-      std::set<std::string> fluxpattset(fFluxFilePatterns.begin(),fFluxFilePatterns.end());
-      //// if we weren't initializing from ctor we could do
-      //std::copy(fFluxFilePatterns.begin(),fFluxFilePatterns.end(),std::inserter(fluxpattset,fluxpattset.begin()));
-      fFluxFilePatterns.clear(); // clear vector, copy unique set back
-      std::copy(fluxpattset.begin(),fluxpattset.end(),
-                std::back_inserter(fFluxFilePatterns));
-    }
-    ExpandFluxPaths();
-    if (fFluxCopyMethod == "DIRECT") ExpandFluxFilePatternsDirect();
-    else                             ExpandFluxFilePatternsIFDH();
+    // for tree-based fluxes
+    // (e.g. "tree_numi" (nee "ntuple"), "tree_simple" and "tree_dk2nu")
+    // we don't care about order and don't want duplicates
+    // for others order might matter
+    if ( fFluxType.find("tree_") == 0 ) SqueezeFilePatterns();
 
-    /// For atmos / astro fluxes we might need to set a coordinate system rotation
-    BuildFluxRotation();
+    ExpandFluxPaths();
+    if ( fFluxCopyMethod == "DIRECT" ) ExpandFluxFilePatternsDirect();
+    else                               ExpandFluxFilePatternsIFDH();
+
+    /// For atmos_ / astro_ fluxes we might need to set a
+    /// coordinate system rotation
+    if ( fFluxType.find("atmo_")  == 0 ||
+         fFluxType.find("astro_") == 0    ) {
+      BuildFluxRotation();
+    }
 
     /// Set the GENIE environment
     /// if using entries in the fEnvironment vector
@@ -346,120 +349,40 @@ namespace evgb {
     // Now initialize GENIE Messenger service
     StartGENIEMessenger(pset.get<std::string>("ProductionMode","false"));
 
-    // Determine Tune and EventGeneratorList to use
-    FindTune();
-
-    // Figure out which cross section file to use
-    // post R-2_8_0 this actually triggers reading the file
-    ReadXSecTable();
-
     // In case we're printing the event record, how verbose should it be
     genie::GHepRecord::SetPrintLevel(fGHepPrintLevel);
 
     // Set GENIE's random # seed
-    mf::LogInfo("GENIEHelper") << "Init genie::utils::app_init::RandGen() with seed " << seedval;
+    mf::LogInfo("GENIEHelper")
+      << "Init genie::utils::app_init::RandGen() with seed " << seedval;
     genie::utils::app_init::RandGen(seedval);
 
-    if ( fFluxType.find("atmo") == 0 ) {
+    // special things for atmos fluxes
+    if ( fFluxType.find("atmo_") == 0 ) AtmoFluxCheck();
 
-      if(fGenFlavors.size() != fSelectedFluxFiles.size()){
-        mf::LogInfo("GENIEHelper") <<  "ERROR: The number of generated neutrino flavors ("
-                                   << fGenFlavors.size() << ") doesn't correspond to the number of files ("
-                                   << fSelectedFluxFiles.size() << ")!!!";
-        exit(1);
-      } else {
-        std::ostringstream atmofluxmatch;
-        for (size_t indx=0; indx < fGenFlavors.size(); ++indx ) {
-          atmofluxmatch << "   " << std::setw(3) << fGenFlavors[indx] << " " << fSelectedFluxFiles[indx] << "\n";
-        }
-        mf::LogInfo("GENIEHelper")
-          <<  "atmo flux assignment : \n"
-          << atmofluxmatch.str();
-      }
-
-      if(fEventsPerSpill !=1){
-        mf::LogInfo("GENIEHelper")
-          <<  "ERROR: For Atmosphric Neutrino generation, EventPerSpill need to be 1!!";
-        exit(1);
-      }
-
-      std::ostringstream atmofluxinfo;
-
-      if (fFluxType.find("FLUKA") != std::string::npos ){
-        atmofluxinfo << "  The fluxes are from FLUKA";
-      }
-      else if (fFluxType.find("BARTOL") != std::string::npos ||
-               fFluxType.find("BGLRS")  != std::string::npos    ){
-        atmofluxinfo << "  The fluxes are from BARTOL/BGLRS";
-      }
-      else if (fFluxType.find("HONDA") != std::string::npos ||
-               fFluxType.find("HAKKM") != std::string::npos    ){
-        atmofluxinfo << "  The fluxes are from HONDA/HAKKM";
-      }
-      else {
-        mf::LogInfo("GENIEHelper") << "Unknown atmo flux simulation: " << fFluxType;
-        exit(1);
-      }
-
-      atmofluxinfo << '\n'
-                   << "  The energy range is between:  " << fAtmoEmin << " GeV and "
-                   << fAtmoEmax << " GeV.";
-
-      atmofluxinfo << '\n'
-                   << "  Generation surface of: (" << fAtmoRl << ","
-                   << fAtmoRt << ")";
-
-      mf::LogInfo("GENIEHelper") << atmofluxinfo.str();
-
-    }// end if atmospheric fluxes
-
-    // make the histograms
-    if ( fFluxType.compare("histogram") == 0 ){
-      mf::LogInfo("GENIEHelper") << "setting beam direction and center at "
-                                 << fBeamDirection.X() << " " << fBeamDirection.Y() << " " << fBeamDirection.Z()
-                                 << " (" << fBeamCenter.X() << "," << fBeamCenter.Y() << "," << fBeamCenter.Z()
-                                 << ") with radius " << fBeamRadius;
-
-      TDirectory *savedir = gDirectory;
-
-      fFluxHistograms.clear();
-
-      TFile tf((*fSelectedFluxFiles.begin()).c_str());
-      tf.ls();
-
-      for(std::vector<int>::iterator flvitr = fGenFlavors.begin(); flvitr != fGenFlavors.end(); flvitr++){
-        if(*flvitr ==  12) fFluxHistograms.push_back(dynamic_cast<TH1D *>(tf.Get("nue")));
-        if(*flvitr == -12) fFluxHistograms.push_back(dynamic_cast<TH1D *>(tf.Get("nuebar")));
-        if(*flvitr ==  14) fFluxHistograms.push_back(dynamic_cast<TH1D *>(tf.Get("numu")));
-        if(*flvitr == -14) fFluxHistograms.push_back(dynamic_cast<TH1D *>(tf.Get("numubar")));
-        if(*flvitr ==  16) fFluxHistograms.push_back(dynamic_cast<TH1D *>(tf.Get("nutau")));
-        if(*flvitr == -16) fFluxHistograms.push_back(dynamic_cast<TH1D *>(tf.Get("nutaubar")));
-      }
-
-      for(unsigned int i = 0; i < fFluxHistograms.size(); ++i){
-        fFluxHistograms[i]->SetDirectory(savedir);
-        fTotalHistFlux += fFluxHistograms[i]->Integral();
-      }
-
-      mf::LogInfo("GENIEHelper") << "total histogram flux over desired flavors = "
-                                 << fTotalHistFlux;
-
-    }//end if getting fluxes from histograms
+    // make the histogram associations
+    if ( fFluxType.find("histogram") == 0 ) HistogramFluxCheck();
 
     std::string flvlist;
     for ( std::vector<int>::iterator itr = fGenFlavors.begin(); itr != fGenFlavors.end(); itr++ )
       flvlist += Form(" %d",*itr);
 
-    if ( fFluxType.compare("mono")     == 0 ||
-         fFluxType.compare("function") == 0    ) {
+    if ( fFluxType.find("mono") == 0 ) {
       fEventsPerSpill = 1;
       mf::LogInfo("GENIEHelper")
         << "Generating monoenergetic (" << fMonoEnergy
         << " GeV) neutrinos with the following flavors: "
         << flvlist;
-    }
-    else{
+    } else if ( fFluxType.find("function") == 0    ) {
+      fEventsPerSpill = 1;
+      mf::LogInfo("GENIEHelper")
+        << "Generating neutrinos using the functional form: "
+        << fFunctionalFlux << " E [" << fEmin << ":" << fEmax
+        << "] GeV with " << fFunctionalBinning << " bins "
+        << "with the following flavors: " << flvlist;
+    } else {
 
+      // flux methods other than "mono" and "function" require files
       std::string fileliststr;
       if ( fSelectedFluxFiles.empty() ) {
         fileliststr = "NO FLUX FILES FOUND!";
@@ -478,13 +401,26 @@ namespace evgb {
 
     }
 
+    // disallow conflicting settings here
+    if ( ( fEventsPerSpill != 0 && fPOTPerSpill != 0 ) ||
+         ( fEventsPerSpill == 0 && fPOTPerSpill == 0 )    ) {
+      throw cet::exception("GENIEHelper")
+        << "one or the other of EventsPerSpill ("
+        << fEventsPerSpill << ") or "
+        << "POTPerSpill ("
+        << fPOTPerSpill << ") needs to be zero (but not both)";
+    }
+
     if ( fEventsPerSpill != 0 ) {
       mf::LogInfo("GENIEHelper") << "Generating " << fEventsPerSpill
                                  << " events for each spill";
+
     } else {
-      mf::LogInfo("GENIEHelper") << "Using " << fPOTPerSpill << " pot for each spill";
+      mf::LogInfo("GENIEHelper") << "Using " << fPOTPerSpill
+                                 << " pot for each spill";
     }
 
+    // how to distribute events in time
     if ( fSpillTimeConfig != "" ) {
       evgb::EvtTimeShiftFactory& timeShiftFactory = evgb::EvtTimeShiftFactory::Instance();
       fTimeShifter = timeShiftFactory.GetEvtTimeShift(fSpillTimeConfig);
@@ -537,7 +473,7 @@ namespace evgb {
 
       double probscale = fDriver->GlobProbScale();
       double rawpots   = 0;
-#if __GENIE_RELEASE_CODE__ >= GRELCODE(2,11,0)
+
       // rather than ask individual flux drivers for info
       // use the unified interface
 
@@ -551,23 +487,6 @@ namespace evgb {
       if ( ffileconfig ) {
         ffileconfig->PrintConfig();
       }
-#else
-      if      ( fFluxType.compare("numi") == 0 ) {
-        genie::flux::GNuMIFlux* numiFlux = dynamic_cast<genie::flux::GNuMIFlux *>(fFluxD);
-        rawpots = numiFlux->UsedPOTs();
-        numiFlux->PrintConfig();
-      }
-      else if ( fFluxType.compare("simple") == 0 ) {
-        genie::flux::GSimpleNtpFlux* simpleFlux = dynamic_cast<genie::flux::GSimpleNtpFlux *>(fFluxD);
-        rawpots = simpleFlux->UsedPOTs();
-        simpleFlux->PrintConfig();
-      }
-      else if ( fFluxType.compare("dk2nu") == 0 ) {
-        genie::flux::GDk2NuFlux* dk2nuFlux = dynamic_cast<genie::flux::GDk2NuFlux *>(fFluxD);
-        rawpots = dk2nuFlux->UsedPOTs();
-        dk2nuFlux->PrintConfig();
-      }
-#endif
 
       mf::LogInfo("GENIEHelper")
         << " Total Exposure " << fTotalExposure
@@ -621,12 +540,12 @@ namespace evgb {
   //--------------------------------------------------
   double GENIEHelper::TotalHistFlux()
   {
-    if ( fFluxType.compare("mono")     == 0 ||
-         fFluxType.compare("function") == 0 ||
-         fFluxType.compare("numi")     == 0 ||
-         fFluxType.compare("simple")   == 0 ||
-         fFluxType.compare("dk2nu")    == 0    ) {
+    if ( fFluxType.find("mono")     == 0 ||
+         fFluxType.find("function") == 0 ||
+         fFluxType.find("tree_")    == 0 ||
+         fFluxType.find("atmo_")    == 0    ) {
       // shouldn't be asking for this for any of the above
+      // perhaps not-not "function"?
       return -999.;
     }
 
@@ -636,10 +555,27 @@ namespace evgb {
   //--------------------------------------------------
   void GENIEHelper::Initialize()
   {
-    fDriver = new genie::GMCJDriver(); // needs to be before ConfigGeomScan
+    // get this out of the way
+    genie::PDGLibrary::Instance();
 
-    // this configuration happened via $GEVGL before R-2_8_0
+    // Determine EventGeneratorList to use
+    FindEventGeneratorList();
+
+#ifdef GENIE_PRE_R3
+#else
+    // Determine Tune and EventGeneratorList to use
+    // needs to be before creating GMCJDriver for version R-3 and beyond
+    FindTune();
+#endif
+
+    fDriver = new genie::GMCJDriver(); // this needs to be before ConfigGeomScan
+    // let the driver know which list
+    // (for R-3 this is in _addition_ to setting it in RunOpt)
     fDriver->SetEventGeneratorList(fEventGeneratorList);
+
+    // Figure out which cross section file to use
+    // post R-2_8_0 this actually triggers reading the file
+    ReadXSecTable();
 
     // initialize the Geometry and Flux drivers
     InitializeGeometry();
@@ -649,13 +585,13 @@ namespace evgb {
     fDriver->UseGeomAnalyzer(fGeomD);
 
     // must come after creation of Geom, Flux and GMCJDriver
-    ConfigGeomScan();  // could trigger fDriver->UseMaxPathLengths(*xmlfile*)
+    ConfigGeomScan();      // could trigger fDriver->UseMaxPathLengths(*xmlfile*)
 
-    fDriver->Configure();  // trigger GeomDriver::ComputeMaxPathLengths()
+    fDriver->Configure();  // could trigger GeomDriver::ComputeMaxPathLengths()
     fDriver->UseSplines();
     fDriver->ForceSingleProbScale();
 
-    if ( fFluxType.compare("histogram") == 0 && fEventsPerSpill < 0.01 ) {
+    if ( fFluxType.find("histogram") == 0 && fEventsPerSpill < 0.01 ) {
       // fluxes are assumed to be given in units of neutrinos/cm^2/1e20POT/energy
       // integral over all fluxes removes energy dependence
       // histograms should have bin width that reflects the value of the /energy bit
@@ -680,56 +616,184 @@ namespace evgb {
     // If the flux driver knows how to keep track of exposure (time,pots)
     // reset it now as some might have been used in determining
     // the geometry maxpathlength or internally scanning for weights.
-    // This should not be necessary (GENIE should do it automagically)
-    // but the current version (as of 3665) doesn't.
+    // Should be happen for all cases since R-2_8_0 .. but no harm doing it ourselves
 
-    // alas, at this time there is no "unified" interface for Clear()
-    // as there is for GetTotalExposure (replacing UsedPOTs())
-    double preUsedFluxPOTs = 0;
-    bool   wasCleared = true;
-    bool   doprintpre = false;
-    if( fFluxType.compare("numi") == 0 ) {
-      genie::flux::GNuMIFlux* gnumiflux =
-        dynamic_cast<genie::flux::GNuMIFlux *>(fFluxD);
-      preUsedFluxPOTs = gnumiflux->UsedPOTs();
-      if ( preUsedFluxPOTs > 0 ) {
-        doprintpre = true;
-        gnumiflux->Clear("CycleHistory");
-        if ( gnumiflux->UsedPOTs() != 0 ) wasCleared = false;
-      }
-    } else if ( fFluxType.compare("simple") == 0 ) {
-      genie::flux::GSimpleNtpFlux* gsimpleflux =
-        dynamic_cast<genie::flux::GSimpleNtpFlux *>(fFluxD);
-      preUsedFluxPOTs = gsimpleflux->UsedPOTs();
-      if ( preUsedFluxPOTs > 0 ) {
-        doprintpre = true;
-        gsimpleflux->Clear("CycleHistory");
-        if ( gsimpleflux->UsedPOTs() != 0 ) wasCleared = false;
-      }
-#if __GENIE_RELEASE_CODE__ >= GRELCODE(2,11,0)
-    } else if ( fFluxType.compare("dk2nu") == 0 ) {
-      genie::flux::GDk2NuFlux* dk2nuflux =
-        dynamic_cast<genie::flux::GDk2NuFlux *>(fFluxD);
-      preUsedFluxPOTs = dk2nuflux->UsedPOTs();
-      if ( preUsedFluxPOTs > 0 ) {
-        doprintpre = true;
-        dk2nuflux->Clear("CycleHistory");
-        if ( dk2nuflux->UsedPOTs() != 0 ) wasCleared = false;
-      }
-#endif
-    }
-    if ( doprintpre ) {
-      double probscale = fDriver->GlobProbScale();
-      mf::LogInfo("GENIEHelper")
-        << "Pre-Event Generation: "
-        << " FluxDriver base " << preUsedFluxPOTs
-        << " / GMCJDriver GlobProbScale " << probscale
-        << " = used POTS " << preUsedFluxPOTs/TMath::Max(probscale,1.0e-100)
-        << " "
-        << (wasCleared?"successfully":"failed to") << " cleared count for "
-        << fFluxType;
-    }
+    fFluxD->Clear("CycleHistory");
+
     return;
+  }
+
+  //--------------------------------------------------
+  void GENIEHelper::RegularizeFluxType()
+  {
+    // Regularize fFluxType string to sensible setting
+
+    std::string tmpFluxType = fFluxType;
+
+    // remove lead/trailing whitespace
+    size_t ftlead  = tmpFluxType.find_first_not_of(" \t\n");
+    if ( ftlead )    tmpFluxType.erase( 0, ftlead );
+    size_t ftlen   = tmpFluxType.length();
+    size_t fttrail = tmpFluxType.find_last_not_of(" \t\n");
+    if ( fttrail != ftlen ) tmpFluxType.erase( fttrail+1, ftlen );
+
+    // strip off leading catagories ... we'll put them back later
+    // so we don't accidently allow arbitrary strings
+    if ( tmpFluxType.find("atmos_") == 0 ) tmpFluxType.erase(0,6);
+    if ( tmpFluxType.find("atmo_")  == 0 ) tmpFluxType.erase(0,5);
+    if ( tmpFluxType.find("tree_")  == 0 ) tmpFluxType.erase(0,5);
+
+    // make reasonable inferences of what the user intended
+
+    // simple fluxes
+    if ( tmpFluxType.find("hist")   != std::string::npos ) tmpFluxType = "histogram";
+    if ( tmpFluxType.find("func")   != std::string::npos ) tmpFluxType = "function";
+    if ( tmpFluxType.find("mono")   != std::string::npos ) tmpFluxType = "mono";
+    // Atmospheric fluxes
+    // prior to R-2_11_0 BGLRS was "BARTOL" and HAKKM was "HONDA"
+    if ( tmpFluxType.find("FLUKA")  != std::string::npos ) tmpFluxType = "atmo_FLUKA";
+    if ( tmpFluxType.find("BARTOL") != std::string::npos ) tmpFluxType = "atmo_BGLRS";
+    if ( tmpFluxType.find("BGLRS")  != std::string::npos ) tmpFluxType = "atmo_BGLRS";
+    if ( tmpFluxType.find("HONDA")  != std::string::npos ) tmpFluxType = "atmo_HAKKM";
+    if ( tmpFluxType.find("HAKKM")  != std::string::npos ) tmpFluxType = "atmo_HAKKM";
+    // TTree-based fluxes (old "ntuple" is really "numi")
+    //    we're allowed to randomize the order here, and squeeze out duplicates
+    if ( tmpFluxType.find("simple") != std::string::npos ) tmpFluxType = "tree_simple";
+    if ( tmpFluxType.find("ntuple") != std::string::npos ) tmpFluxType = "tree_numi";
+    if ( tmpFluxType.find("numi")   != std::string::npos ) tmpFluxType = "tree_numi";
+    if ( tmpFluxType.find("dk2nu")  != std::string::npos ) tmpFluxType = "tree_dk2nu";
+
+    fFluxType = tmpFluxType;
+  }
+
+  //--------------------------------------------------
+  void GENIEHelper::SqueezeFilePatterns()
+  {
+    // for "numi" (nee "ntuple"), "simple" and "dk2nu" squeeze the patterns
+    // so there are no duplicates; for the others we want to preserve order
+
+    // convert vector<> to a set<> and back to vector<>
+    // to avoid having duplicate patterns in the list
+    std::set<std::string> fluxpattset(fFluxFilePatterns.begin(),
+                                      fFluxFilePatterns.end());
+    //// if we weren't initializing from ctor we could do
+    //std::copy(fFluxFilePatterns.begin(),fFluxFilePatterns.end(),
+    //          std::inserter(fluxpattset,fluxpattset.begin()));
+    fFluxFilePatterns.clear(); // clear vector, copy unique set back
+    std::copy(fluxpattset.begin(),fluxpattset.end(),
+              std::back_inserter(fFluxFilePatterns));
+  }
+
+  //--------------------------------------------------
+  void GENIEHelper::AtmoFluxCheck()
+  {
+    /// Speical pre-checks for atmo_ fluxes
+
+    if ( fGenFlavors.size() != fSelectedFluxFiles.size() ) {
+      mf::LogInfo("GENIEHelper")
+        <<  "ERROR: The number of generated neutrino flavors ("
+        << fGenFlavors.size()
+        << ") doesn't correspond to the number of files ("
+        << fSelectedFluxFiles.size() << ")!!!";
+      throw cet::exception("GENIEHelper")
+        << "ERROR: atmo_ flavors != files";
+    } else {
+      std::ostringstream atmofluxmatch;
+      for (size_t indx=0; indx < fGenFlavors.size(); ++indx ) {
+        atmofluxmatch << "   " << std::setw(3) << fGenFlavors[indx]
+                      << " " << fSelectedFluxFiles[indx] << "\n";
+      }
+      mf::LogInfo("GENIEHelper")
+        <<  "atmo flux assignment : \n" << atmofluxmatch.str();
+    }
+
+    if ( fEventsPerSpill != 1 ) {
+      mf::LogInfo("GENIEHelper")
+        <<  "ERROR: For Atmospheric Neutrino generation,"
+        << " EventPerSpill need to be 1!!";
+      throw cet::exception("GENIEHelper")
+        << "ERROR: " << fFluxType << " EventsPerSpill wasn't 1 ("
+        << fEventsPerSpill << ")";
+    }
+
+    std::ostringstream atmofluxinfo;
+
+    if (fFluxType.find("FLUKA") != std::string::npos ){
+      atmofluxinfo << "  The fluxes are from FLUKA";
+    }
+    else if (fFluxType.find("BARTOL") != std::string::npos ||
+             fFluxType.find("BGLRS")  != std::string::npos    ){
+      atmofluxinfo << "  The fluxes are from BARTOL/BGLRS";
+    }
+    else if (fFluxType.find("HONDA") != std::string::npos ||
+             fFluxType.find("HAKKM") != std::string::npos    ){
+      atmofluxinfo << "  The fluxes are from HONDA/HAKKM";
+    }
+    else {
+      mf::LogInfo("GENIEHelper")
+        << "Unknown atmo_ flux simulation: " << fFluxType;
+      throw cet::exception("GENIEHelper")
+        << "ERROR: bad atmo_ flux type " << fFluxType;
+    }
+
+    atmofluxinfo
+      << '\n'
+      << "  The energy range is between:  " << fAtmoEmin << " GeV and "
+      << fAtmoEmax << " GeV."
+      << '\n'
+      << "  Generation surface of: (" << fAtmoRl << ","
+      << fAtmoRt << ")";
+
+    mf::LogInfo("GENIEHelper") << atmofluxinfo.str();
+
+  }
+
+  //--------------------------------------------------
+  void GENIEHelper::HistogramFluxCheck()
+  {
+
+    mf::LogInfo("GENIEHelper")
+      << "setting beam direction and center at "
+      << fBeamDirection.X() << " " << fBeamDirection.Y()
+      << " " << fBeamDirection.Z()
+      << " (" << fBeamCenter.X() << "," << fBeamCenter.Y()
+      << "," << fBeamCenter.Z()
+      << ") with radius " << fBeamRadius;
+
+    TDirectory *savedir = gDirectory;
+
+    fFluxHistograms.clear();
+
+    TFile tf((*fSelectedFluxFiles.begin()).c_str());
+    tf.ls();
+
+    for ( std::vector<int>::iterator flvitr = fGenFlavors.begin(); flvitr != fGenFlavors.end(); flvitr++){
+      const char* histname = "none";
+      switch ( *flvitr ) {
+        case  12: histname = "nue";      break;
+        case -12: histname = "nuebar";   break;
+        case  14: histname = "numu";     break;
+        case -14: histname = "numubar";  break;
+        case  16: histname = "nutau";    break;
+        case -16: histname = "nutaubar"; break;
+        default: {
+          throw cet::exception("GENIEHelper")
+            <<  "ERROR: no support for histogram flux with flavor PDG="
+            << *flvitr;
+        }
+      }
+      fFluxHistograms.push_back(dynamic_cast<TH1D *>(tf.Get(histname)));
+    }
+
+    for ( unsigned int i = 0; i < fFluxHistograms.size(); ++i ) {
+      fFluxHistograms[i]->SetDirectory(savedir);
+      fTotalHistFlux += fFluxHistograms[i]->Integral();
+    }
+
+    mf::LogInfo("GENIEHelper")
+      << "total histogram flux over desired flavors = "
+      << fTotalHistFlux;
+
   }
 
   //--------------------------------------------------
@@ -1022,22 +1086,28 @@ namespace evgb {
   void GENIEHelper::InitializeFluxDriver()
   {
 
-#if __GENIE_RELEASE_CODE__ >= GRELCODE(2,11,0)
-    // simplify a lot of things ... but for now only handle the 3 ntuple styles
+    // simplify a lot of things ...
+    // but for now this part only handles the 3 ntuple styles
     // that support the GFluxFileConfig mix-in
     // not the atmos, histo or mono versions
+
     std::string fluxName = "";
+
     // what looks like the start of a fully qualified class name
+    // or one of our tree_ classes "numi" "simple" "dk2nu"
+    // but only know how to configure those that dervie from:
+    //    genie::flux::GFluxFileConfigI*
     if ( fFluxType.find("genie::flux::")   != std::string::npos )
       fluxName = fFluxType;
-    else if ( fFluxType.compare("numi")    == 0 )
+    else if ( fFluxType.find("tree_numi")    == 0 )
       fluxName = "genie::flux::GNuMIFlux";
-    else if ( fFluxType.compare("simple")  == 0 )
+    else if ( fFluxType.find("tree_simple")  == 0 )
       fluxName = "genie::flux::GSimpleNtpFlux";
-    else if ( fFluxType.compare("dk2nu")   == 0 )
+    else if ( fFluxType.find("tree_dk2nu")   == 0 )
       fluxName = "genie::flux::GDk2NuFlux";
+
     if ( fluxName != "" ) {
-      // fall through to hopefully be handled below ...
+      // any fall through to hopefully be handled below ...
       genie::flux::GFluxDriverFactory& fluxDFactory =
         genie::flux::GFluxDriverFactory::Instance();
       fFluxD = fluxDFactory.GetFluxDriver(fluxName);
@@ -1063,54 +1133,9 @@ namespace evgb {
           if ( TMath::Abs(fFluxUpstreamZ) < 1.0e30 ) ffileconfig->SetUpstreamZ(fFluxUpstreamZ);
         }
       }
-    }
-#else
-    if ( fFluxType.compare("numi") == 0 ) {
+    } // is genie::flux:: or tree_{numi|simple|dk2nu}
 
-      genie::flux::GNuMIFlux* numiFlux = new genie::flux::GNuMIFlux();
-
-      mf::LogDebug("GENIEHelper") << "LoadBeamSimData w/ vector of size " << fSelectedFluxFiles.size();
-      numiFlux->LoadBeamSimData(fSelectedFluxFiles,fDetLocation);
-
-      // initialize to only use neutrino flavors requested by user
-      genie::PDGCodeList probes;
-      for ( std::vector<int>::iterator flvitr = fGenFlavors.begin(); flvitr != fGenFlavors.end(); flvitr++ )
-        probes.push_back(*flvitr);
-      numiFlux->SetFluxParticles(probes);
-
-      if ( TMath::Abs(fFluxUpstreamZ) < 1.0e30 ) numiFlux->SetUpstreamZ(fFluxUpstreamZ);
-
-      // set the number of cycles to run
-      // +++++++++this is stupid - to really set it i have to get a
-      // value from the MCJDriver and i am not even sure what i have
-      // below is approximately correct.
-      // for now just run on a set number of events that is kept track of
-      // in the sample method
-      //  numiFlux->SetNumOfCycles(int(fPOT/fFluxNormalization));
-
-      fFluxD = numiFlux; // dynamic_cast<genie::GFluxI *>(numiFlux);
-    } //end if using ntuple flux files
-    else if ( fFluxType.compare("simple") == 0 ) {
-
-      genie::flux::GSimpleNtpFlux* simpleFlux =
-        new genie::flux::GSimpleNtpFlux();
-
-      mf::LogDebug("GENIEHelper") << "LoadBeamSimData w/ vector of size " << fSelectedFluxFiles.size();
-      simpleFlux->LoadBeamSimData(fSelectedFluxFiles,fDetLocation);
-
-      // initialize to only use neutrino flavors requested by user
-      genie::PDGCodeList probes;
-      for ( std::vector<int>::iterator flvitr = fGenFlavors.begin(); flvitr != fGenFlavors.end(); flvitr++ )
-        probes.push_back(*flvitr);
-      simpleFlux->SetFluxParticles(probes);
-
-      if ( TMath::Abs(fFluxUpstreamZ) < 1.0e30 ) simpleFlux->SetUpstreamZ(fFluxUpstreamZ);
-
-      fFluxD = simpleFlux; // dynamic_cast<genie::GFluxI *>(simpleFlux);
-
-    } //end if using simple_flux flux files
-#endif
-    if ( fFluxType.compare("histogram") == 0 ) {
+    if ( fFluxType.find("histogram") == 0 ) {
 
       genie::flux::GCylindTH1Flux* histFlux = new genie::flux::GCylindTH1Flux();
 
@@ -1127,8 +1152,9 @@ namespace evgb {
       histFlux->SetTransverseRadius(fBeamRadius);
 
       fFluxD = histFlux; // dynamic_cast<genie::GFluxI *>(histFlux);
+
     } // end if using a histogram
-    else if ( fFluxType.compare("mono") == 0 ) {
+    else if ( fFluxType.find("mono") == 0 ) {
 
       // weight each species equally in the generation
       double weight = 1./(1.*fGenFlavors.size());
@@ -1141,8 +1167,9 @@ namespace evgb {
       monoflux->SetDirectionCos(fBeamDirection.X(), fBeamDirection.Y(), fBeamDirection.Z());
       monoflux->SetRayOrigin(fBeamCenter.X(), fBeamCenter.Y(), fBeamCenter.Z());
       fFluxD = monoflux; // dynamic_cast<genie::GFluxI *>(monoflux);
+
     } //end if using monoenergetic beam
-    else if ( fFluxType.compare("function") == 0 ) {
+    else if ( fFluxType.find("function") == 0 ) {
 
       genie::flux::GCylindTH1Flux* histFlux = new genie::flux::GCylindTH1Flux();
       TF1* input_func = new TF1("input_func", fFunctionalFlux.c_str(), fEmin, fEmax);
@@ -1159,20 +1186,15 @@ namespace evgb {
 
       fFluxD = histFlux; // dynamic_cast<genie::GFluxI *>(histFlux);
       delete input_func;
-    } //end if using monoenergetic beam
+    } //end if using function beam
 
-
-    //Using the atmospheric fluxes
-    else if ( fFluxType.find("FLUKA")  != std::string::npos ||
-              fFluxType.find("BARTOL") != std::string::npos ||
-              fFluxType.find("BGLRS")  != std::string::npos ||
-              fFluxType.find("HONDA")  != std::string::npos ||
-              fFluxType.find("HAKKM")  != std::string::npos   ) {
+    // Using the atmospheric fluxes
+    else if ( fFluxType.find("atmo_") == 0 ) {
 
       // Instantiate appropriate concrete flux driver
       genie::flux::GAtmoFlux *atmo_flux_driver = 0;
 
-      if ( fFluxType.compare("atmo_FLUKA") == 0 ) {
+      if ( fFluxType.find("FLUKA") != std::string::npos ) {
 #if __GENIE_RELEASE_CODE__ >= GRELCODE(2,11,0)
         genie::flux::GFLUKAAtmoFlux * fluka_flux =
           new genie::flux::GFLUKAAtmoFlux;
@@ -1182,8 +1204,8 @@ namespace evgb {
 #endif
         atmo_flux_driver = dynamic_cast<genie::flux::GAtmoFlux *>(fluka_flux);
       }
-      if ( fFluxType.compare("atmo_BARTOL") == 0 ||
-           fFluxType.compare("atmo_BGLRS")  == 0    ) {
+      if ( fFluxType.find("BARTOL") != std::string::npos ||
+           fFluxType.find("BGLRS")  != std::string::npos    ) {
 #if __GENIE_RELEASE_CODE__ >= GRELCODE(2,11,0)
         genie::flux::GBGLRSAtmoFlux * bartol_flux =
           new genie::flux::GBGLRSAtmoFlux;
@@ -1194,8 +1216,8 @@ namespace evgb {
         atmo_flux_driver = dynamic_cast<genie::flux::GAtmoFlux *>(bartol_flux);
       }
 #if __GENIE_RELEASE_CODE__ >= GRELCODE(2,12,2)
-      if (fFluxType.compare("atmo_HONDA") == 0 ||
-          fFluxType.compare("atmo_HAKKM") == 0    ) {
+      if (fFluxType.find("atmo_HONDA") != std::string::npos ||
+          fFluxType.find("atmo_HAKKM") != std::string::npos    ) {
         genie::flux::GHAKKMAtmoFlux * honda_flux =
           new genie::flux::GHAKKMAtmoFlux;
         atmo_flux_driver = dynamic_cast<genie::flux::GAtmoFlux *>(honda_flux);
@@ -1242,6 +1264,7 @@ namespace evgb {
       atmo_flux_driver->SetRadii(fAtmoRl, fAtmoRt);
 
       fFluxD = atmo_flux_driver;//dynamic_cast<genie::GFluxI *>(atmo_flux_driver);
+
     } //end if using atmospheric fluxes
 
     if ( ! fFluxD ) {
@@ -1261,7 +1284,7 @@ namespace evgb {
     if( fMixerConfig.find_first_not_of(" \t\n") != 0) // trim any leading whitespace
       fMixerConfig.erase( 0, fMixerConfig.find_first_not_of(" \t\n")  );
     std::string keyword = fMixerConfig.substr(0,fMixerConfig.find_first_of(" \t\n"));
-    if ( keyword != "none" ) {
+    if ( keyword != "none" && keyword != "" ) {
       // Wrap the true flux driver up in the adapter to allow flavor mixing
       genie::flux::GFlavorMixerI* mixer = 0;
       // here is where we map MixerConfig string keyword to actual class
@@ -1284,12 +1307,12 @@ namespace evgb {
         } else {
           const std::vector<std::string>& knownMixers =
             mixerFactory.AvailableFlavorMixers();
-          mf::LogWarning("GENIEHelper")
-            << " GFlavorMixerFactory known mixers: ";
+          std::ostringstream mixers;
           for (unsigned int j=0; j < knownMixers.size(); ++j ) {
-            mf::LogWarning("GENIEHelper")
-              << "   [" << std::setw(2) << j << "]  " << knownMixers[j];
+            mixers << "\n   [" << std::setw(2) << j << "]  " << knownMixers[j];
           }
+          mf::LogWarning("GENIEHelper")
+            << " GFlavorMixerFactory known mixers: " << mixers.str();
         }
       }
       // configure the mixer
@@ -1453,44 +1476,39 @@ namespace evgb {
     // determine if we should keep throwing neutrinos for
     // this spill or move on
 
-    if ( fFluxType.compare("atmo_FLUKA") == 0 || fFluxType.compare("atmo_BARTOL") == 0 ||
-         fFluxType.compare("atmo_HONDA") == 0 || fFluxType.compare("atmo_HAKKM")  == 0    ) {
-      if ( (fEventsPerSpill > 0) && (fSpillEvents < fEventsPerSpill) ) {
-        return false;
-      }
-    }
-
-    else if ( fEventsPerSpill > 0 ) {
-      if ( fSpillEvents < fEventsPerSpill )
-        return false;
+    if ( fEventsPerSpill > 0 ) {
+      if ( fSpillEvents < fEventsPerSpill ) return false;
     } else {
-      if ( ( fFluxType.compare("numi")   == 0 ||
-             fFluxType.compare("simple") == 0 ||
-             fFluxType.compare("dk2nu")  == 0    ) &&
-           fSpillExposure < fPOTPerSpill ) return false;
-      else if ( fFluxType.compare("histogram") == 0 ){
+      // exposure (POT) based
+      if ( fFluxType.find("tree_") == 0 ) {
+        if ( fSpillExposure < fPOTPerSpill ) {
+          return false;
+        }
+      }
+      else if ( fFluxType.find("histogram") == 0 ) {
         if ( fSpillEvents < fHistEventsPerSpill ) return false;
         else fSpillExposure = fPOTPerSpill;
       }
     }
 
-    // made it to here, means need to reset the counters
+    if ( fFluxType.find("atmo_")  == 0 ) {
+      // the exposure for atmo is in SECONDS. In order to get seconds,
+      // it needs to be normalized by 1e4 to take into account the units
+      // discrepency between AtmoFluxDriver(/m2) and Generate(/cm2)
+      // and it need to be normalized by the generation surface area since
+      // it's not taken into accoutn in the flux driver
+      fTotalExposure =
+        (dynamic_cast<genie::flux::GAtmoFlux *>(fFluxD)->NFluxNeutrinos())
+        * 1.0e4 / (TMath::Pi() * fAtmoRt*fAtmoRt);
 
-    if(fFluxType.compare("atmo_FLUKA") == 0 || fFluxType.compare("atmo_BARTOL") == 0 ||
-       fFluxType.compare("atmo_HONDA") == 0 || fFluxType.compare("atmo_HAKKM") == 0 ){
-      //the exposure for atmo is in SECONDS. In order to get seconds, it needs to
-      //be normalized by 1e4 to take into account the units discrepency between
-      //AtmoFluxDriver(/m2) and Generate(/cm2) and it need to be normalized by
-      //the generation surface area since it's not taken into accoutn in the flux driver
-      fTotalExposure = (1e4 * (dynamic_cast<genie::flux::GAtmoFlux *>(fFluxD)->NFluxNeutrinos())) / (TMath::Pi() * fAtmoRt*fAtmoRt);
+      LOG_DEBUG("GENIEHelper")
+        << "===> Atmo EXPOSURE = " << fTotalExposure << " seconds";
 
-      LOG_DEBUG("GENIEHelper") << "===> Atmo EXPOSURE = " << fTotalExposure << " seconds";
-    }
-
-    else{
+    } else {
       fTotalExposure += fSpillExposure;
     }
 
+    // made it to here, means need to reset the counters
     fSpillEvents   = 0;
     fSpillExposure = 0.;
     fHistEventsPerSpill = fHelperRandom->Poisson(fXSecMassPOT*fTotalHistFlux);
@@ -1532,12 +1550,12 @@ namespace evgb {
     evgb::FillMCFlux(fFluxD,flux);
 #else
     // pack the flux information no support for dk2nu
-    if ( fFluxType.compare("numi") == 0){
+    if ( fFluxType.find("tree_numi") == 0 ) {
       fSpillExposure = (dynamic_cast<genie::flux::GNuMIFlux *>(fFluxD)->UsedPOTs()/fDriver->GlobProbScale() - fTotalExposure);
       flux.fFluxType = simb::kNtuple;
       PackNuMIFlux(flux);
     }
-    else if ( fFluxType.compare("simple")==0 ) {
+    else if ( fFluxType.find("tree_simple") == 0 ) {
       // pack the flux information
       fSpillExposure = (dynamic_cast<genie::flux::GSimpleNtpFlux *>(fFluxD)->UsedPOTs()/fDriver->GlobProbScale() - fTotalExposure);
       flux.fFluxType = simb::kSimple_Flux;
@@ -1572,16 +1590,13 @@ namespace evgb {
 
     // check to see if we are using flux ntuples but want to
     // make n events per spill
-    if ( fEventsPerSpill > 0 &&
-         ( fFluxType.compare("numi")    == 0 ||
-           fFluxType.compare("simple")  == 0 ||
-           fFluxType.compare("dk2nu")   == 0    )
-         ) ++fSpillEvents;
+    if ( ( fEventsPerSpill > 0 ) &&
+         ( fFluxType.find("tree_") == 0 ) ) ++fSpillEvents;
 
     // now check if using either histogram or mono fluxes, using
     // either n events per spill or basing events on POT per spill for the
     // histogram case
-    if(fFluxType.compare("histogram") == 0){
+    if ( fFluxType.find("histogram") == 0 ) {
       // set the flag in the parent object that says the
       // fluxes came from histograms and fill related values
       flux.fFluxType = simb::kHistPlusFocus;
@@ -1608,13 +1623,16 @@ namespace evgb {
 
       ++fSpillEvents;
     }
-    else if(fFluxType.compare("mono") == 0 || fFluxType.compare("function") == 0){
+    else if ( fFluxType.find("mono")     == 0 ||
+              fFluxType.find("function") == 0    ){
       ++fSpillEvents;
     }
-
-    else if(fFluxType.compare("atmo_FLUKA") == 0 || fFluxType.compare("atmo_BARTOL") == 0 ||
-            fFluxType.compare("atmo_HAKKM") == 0 || fFluxType.compare("atmo_HONDA") == 0 ){
-      if(fEventsPerSpill > 0) ++fSpillEvents;
+    else if ( fFluxType.find("atmo_FLUKA")  == 0 ||
+              fFluxType.find("atmo_BARTOL") == 0 ||
+              fFluxType.find("atmo_BGLRS")  == 0 ||
+              fFluxType.find("atmo_HAKKM")  == 0 ||
+              fFluxType.find("atmo_HONDA")  == 0    ) {
+      if ( fEventsPerSpill > 0 ) ++fSpillEvents;
       flux.fFluxType = simb::kHistPlusFocus;
     }
 
@@ -2302,9 +2320,7 @@ namespace evgb {
     // pick the collection that expands to the largest list
 
     bool randomizeFiles = false;
-    if ( fFluxType.compare("numi")   == 0 ||
-         fFluxType.compare("simple") == 0 ||
-         fFluxType.compare("dk2nu")  == 0    ) randomizeFiles = true;
+    if ( fFluxType.find("tree_") == 0 ) randomizeFiles = true;
 
     std::vector<std::string> dirs;
     cet::split_path(fFluxSearchPaths,dirs);
@@ -2420,19 +2436,18 @@ namespace evgb {
     globfree(&g);
 
     // no null path allowed for at least these
-    if ( fFluxType.compare("numi")   == 0 ||
-         fFluxType.compare("simple") == 0 ||
-         fFluxType.compare("dk2nu")  == 0    ) {
+    if ( fFluxType.find("tree_") == 0 ) {
       size_t nfiles = fSelectedFluxFiles.size();
       if ( nfiles == 0 ) {
         mf::LogError("GENIEHelper")
-          << "For \"dk2nu\', \"ntuple\" (\"numi\") or \"simple_flux\","
+          << "For \"" << fFluxType <<"\" "
+          << "(e.g. \"dk2nu\', \"ntuple\" (\"numi\") or \"simple\") "
           << " specification must resolve to at least one file"
-          << "\n  none were found user pattern: "
+          << "\n  none were found. DIRECT user pattern(s): "
           << patterntext.str()
           << "\n  using FluxSearchPaths of: "
           << dirstext.str();
-        //\"" << cet::getenv("FW_SEARCH_PATH") << "\"";
+
         throw cet::exception("NoFluxFiles")
           << "no flux files found for: " << patterntext.str() << "\n"
           << " in: " << dirstext.str();
@@ -2475,9 +2490,7 @@ namespace evgb {
     if ( fFluxCopyMethod.find("IFDH") == 0 ) fFluxCopyMethod = "";
 
     bool randomizeFiles = false;
-    if ( fFluxType.compare("numi")   == 0 ||
-         fFluxType.compare("simple") == 0 ||
-         fFluxType.compare("dk2nu")  == 0    ) randomizeFiles = true;
+    if ( fFluxType.find("tree_") == 0 ) randomizeFiles = true;
 
   #ifdef USE_IFDH_SERVICE
     art::ServiceHandle<IFDH> ifdhp;
@@ -2614,21 +2627,21 @@ namespace evgb {
       << localtext.str();
 
     // no null path allowed for at least these
-    if ( fFluxType.compare("numi")   == 0 ||
-         fFluxType.compare("simple") == 0 ||
-         fFluxType.compare("dk2nu")  == 0    ) {
+    if ( fFluxType.find("tree_") == 0 ) {
       size_t nfiles = fSelectedFluxFiles.size();
       if ( nfiles == 0 ) {
         mf::LogError("GENIEHelper")
-          << "For \"ntuple\" or \"simple_flux\", specification "
-          << "must resolve to at least one file"
-          << "\n  none were found user pattern(s): "
+          << "For \"" << fFluxType <<"\" "
+          << "(e.g. \"dk2nu\', \"ntuple\" (\"numi\") or \"simple\") "
+          << "specification must resolve to at least one file"
+          << "\n  none were found. IFDH user pattern(s): "
           << patterntext.str()
-          << "\n  using FW_SEARCH_PATH of: "
+          << "\n  using FluxSearchPaths of: "
           << spaths;
 
         throw cet::exception("NoFluxFiles")
-          << "no flux files found for: " << patterntext.str();
+          << "no flux files found for: " << patterntext.str() << "\n"
+          << " in " << spaths;
 
       }
     }
@@ -2653,13 +2666,14 @@ namespace evgb {
     // find it in the vector, if it exists
     int indxGXMLPATH = -1;
     for (size_t i = 0; i < fEnvironment.size(); i += 2) {
-      if ( fEnvironment[i].compare("GXMLPATH") == 0 ) {
+      if ( fEnvironment[i].find("GXMLPATH") == 0 ) {
         if ( fGXMLPATH != "" ) fGXMLPATH += ":";
         fGXMLPATH += fEnvironment[i+1];
         indxGXMLPATH = i;
         /*
         throw cet::exception("UsingGXMLPATH")
-          << "using Environment fcl parameter GXMLPATH: " << fEnvironment[indxGXMLPATH+1]
+          << "using Environment fcl parameter GXMLPATH: "
+          << fEnvironment[indxGXMLPATH+1]
           << ", use fcl parameter GXMLPATH instead.";
         */
         break;
@@ -2705,7 +2719,7 @@ namespace evgb {
     // find it in the vector, if it exists
     // this will override the top level fcl value
     for (size_t i = 0; i < fEnvironment.size(); i += 2) {
-      if ( fEnvironment[i].compare("GMSGLAYOUT") == 0 ) {
+      if ( fEnvironment[i].find("GMSGLAYOUT") == 0 ) {
         fGMSGLAYOUT = fEnvironment[i+1];
         break;
       }
@@ -2732,11 +2746,11 @@ namespace evgb {
     int indxGMSGCONF  = -1;
 
     for (size_t i = 0; i < fEnvironment.size(); i += 2) {
-      if ( fEnvironment[i].compare("GPRODMODE") == 0 ) {
+      if ( fEnvironment[i].find("GPRODMODE") == 0 ) {
         indxGPRODMODE = i;
         continue;
       }
-      if ( fEnvironment[i].compare("GMSGCONF") == 0 ) {
+      if ( fEnvironment[i].find("GMSGCONF") == 0 ) {
         indxGMSGCONF = i;
         continue;
       }
@@ -2793,15 +2807,13 @@ namespace evgb {
     /// Determine Tune ... initialize as necessary
 
 #ifdef GENIE_PRE_R3
-    // nothing special .. it's all in the GXMLPATH definitions
-    // but set EventGeneratorList
-    FindEventGeneratorList();
-    fDriver->SetEventGeneratorList(fEventGeneratorList);
-
+    // Tune isn't relevant pre-R-3
 #else
-    // this isn't all that useful ... but leave it for the UnphysEventMask
     genie::RunOpt* grunopt = genie::RunOpt::Instance();
     // ctor automatically calls:  grunopt->Init();
+
+    // not sure this is absolutely necessary either
+    grunopt->EnableBareXSecPreCalc(true);
 
     if ( fTuneName.find('$') == 0 ) {
       // need to remove ${}'s
@@ -2829,9 +2841,10 @@ namespace evgb {
       }
     }
 
-    grunopt->SetTuneName(fTuneName);
-    FindEventGeneratorList();
+    // this is in addition to setting it (later) in GMCJDriver
     grunopt->SetEventGeneratorList(fEventGeneratorList);
+
+    grunopt->SetTuneName(fTuneName);
     grunopt->BuildTune();
 
 #endif
@@ -2849,7 +2862,7 @@ namespace evgb {
     if ( fEventGeneratorList == "" ) {
       // find GEVGL in the vector, if it exists
       for (size_t i = 0; i < fEnvironment.size(); i += 2) {
-        if ( fEnvironment[i].compare("GEVGL") == 0 ) {
+        if ( fEnvironment[i].find("GEVGL") == 0 ) {
           fEventGeneratorList = fEnvironment[i+1];
           throw cet::exception("UsingGEVGL")
             << "using Environment fcl parameter GEVGL: " << fEventGeneratorList
@@ -2894,11 +2907,13 @@ namespace evgb {
     // find GSPLOAD in the vector, if it exists
     int indxGSPLOAD   = -1;
     for (size_t i = 0; i < fEnvironment.size(); i += 2) {
-      if ( fEnvironment[i].compare("GSPLOAD") == 0 ) {
+      if ( fEnvironment[i].find("GSPLOAD") == 0 ) {
         indxGSPLOAD = i;
         throw cet::exception("UsingGSPLOAD")
-          << "using Environment fcl parameter GSPLOAD: " << fEnvironment[indxGSPLOAD+1]
-          << ", use fcl parameter 'XSecTable' instead.";
+          << "using Environment fcl parameter GSPLOAD: "
+          << fEnvironment[indxGSPLOAD+1]
+          << ", use fcl parameter 'XSecTable' instead. "
+          << __FILE__ << ":" << __LINE__ << "\n";
         continue;
       }
     }
