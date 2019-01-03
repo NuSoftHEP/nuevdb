@@ -234,24 +234,13 @@ namespace rwgt {
     //Set the GENIE final state interaction info
     genie::Interaction * p_gint = new genie::Interaction;
     genie::InitialState * p_ginstate = p_gint->InitStatePtr();
-    //int Z = gtruth.ftgtZ;
-    //int A = gtruth.ftgtA;
+
+    p_ginstate->SetPdgs(gtruth.ftgtPDG, gtruth.fProbePDG);
+
     int targetNucleon = nu.HitNuc();
     int struckQuark = nu.HitQuark();
-    int incoming = gtruth.fProbePDG;
-    p_ginstate->SetProbePdg(incoming);
 
     genie::Target* target123 = p_ginstate->TgtPtr();
-
-    target123->SetId(gtruth.ftgtPDG);
-    //target123->SetId(Z,A);
-
-    //int pdg_code = pdg::IonPdgCode(A, Z);
-    //TParticlePDG * p = PDGLibrary::Instance()->Find(pdg_code);
-
-    //mf::LogWarning("GENIEReweight") << "Setting Target Z and A";
-    //mf::LogWarning("GENIEReweight") << "Saved PDG: " << gtruth.ftgtPDG;
-    //mf::LogWarning("GENIEReweight") << "Target PDG: " << target123->Pdg();
     target123->SetHitNucPdg(targetNucleon);
     target123->SetHitQrkPdg(struckQuark);
     target123->SetHitSeaQrk(gtruth.fIsSeaQuark);
@@ -287,6 +276,7 @@ namespace rwgt {
     genie::Interaction *inter = newEvent.Summary();
     const genie::InitialState &initState  = inter->InitState();
     const genie::Target &tgt = initState.Tgt();
+
     std::cout << "TargetPDG as Recorded: " << gtruth.ftgtPDG << std::endl;
     std::cout << "TargetZ as Recorded:   " << gtruth.ftgtZ << std::endl;
     std::cout << "TargetA as Recorded:   " << gtruth.ftgtA << std::endl;
@@ -294,6 +284,7 @@ namespace rwgt {
     std::cout << "TargetZ as Recreated: " << tgt.Z() << std::endl;
     std::cout << "TargetA as Recreated: " << tgt.A() << std::endl;
     */
+
     return newEvent;
 
   }
