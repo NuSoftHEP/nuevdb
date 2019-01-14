@@ -160,7 +160,7 @@ namespace evgb{
 	double z2 = 0.;
 	this->WorldBox(&x1, &x2, &y1, &y2, &z1, &z2);
 	
-	LOG_DEBUG("CRYHelper") << xyz[0] << " " << xyz[1] << " " << xyz[2] << " " 
+	MF_LOG_DEBUG("CRYHelper") << xyz[0] << " " << xyz[1] << " " << xyz[2] << " " 
 			       << x1 << " " << x2 << " " 
 			       << y1 << " " << y2 << " " 
 			       << z1 << " " << z2;

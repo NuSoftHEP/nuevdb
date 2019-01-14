@@ -154,11 +154,11 @@ namespace rwgt{
       return;
     }
     
-   LOG_DEBUG("ReweightAna")<<"MC List sizes:" << mclist->size() << " " << gtlist->size() << "\n";
+   MF_LOG_DEBUG("ReweightAna")<<"MC List sizes:" << mclist->size() << " " << gtlist->size() << "\n";
     
     // // Loop over neutrino interactions
     for(size_t i_intx = 0; i_intx < mclist->size(); ++i_intx){
-      LOG_DEBUG("ReweightAna") << "start loop";
+      MF_LOG_DEBUG("ReweightAna") << "start loop";
       
       //   // Link to the MCNeutrino class.
       //   // The class contains information not only about
@@ -182,7 +182,7 @@ namespace rwgt{
 	}
       }
 
-      LOG_DEBUG("ReweightAna") << "end loop" ;
+      MF_LOG_DEBUG("ReweightAna") << "end loop" ;
     }//end loop over interactions
 
  
