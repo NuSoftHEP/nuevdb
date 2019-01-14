@@ -38,6 +38,7 @@
 //GENIE includes
 #include "GENIE/Conventions/GVersion.h"
 #include "GENIE/Conventions/Units.h"
+#include "GENIE/Messenger/Messenger.h"
 #include "GENIE/EVGCore/EventRecord.h"
 #include "GENIE/EVGDrivers/GMCJDriver.h"
 #include "GENIE/GHEP/GHepUtils.h"
@@ -138,6 +139,12 @@
   // nothing doing ... use ifdef to hide any reference that might need header
   #include <cassert>
 #endif
+
+// The GENIE logging macros require the name 'Messenger' to be
+// accessible during the macro expansion.  This is a bug in GENIE, but
+// for now, the easiest way to do this is to bring genie::Messenger
+// into the global namespace by a using declaration.
+using genie::Messenger;
 
 namespace evgb {
 
