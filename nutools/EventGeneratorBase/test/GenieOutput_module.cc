@@ -22,13 +22,16 @@
 #include "Ntuple/NtpMCEventRecord.h"
 //#include "Ntuple/NtpMCTreeHeader.h"
 #include "PDG/PDGLibrary.h"
-// // #include "Messenger/Messenger.h" -- conflict LOG_INFO w/ messagefacility
+#include "Messenger/Messenger.h"
 #include "GHEP/GHepRecord.h"
 
 #include <iostream>
 #include <iomanip>
 #include <fstream>
 #include <sstream>
+
+// Necessary because the GENIE LOG_* macros don't fully qualify Messenger
+using genie::Messenger;
 
 namespace evg {
   class GenieOutput;
