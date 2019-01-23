@@ -44,13 +44,33 @@
 #include "Geant4/G4Version.hh"
 #include "nutools/G4Base/G4PhysListFactorySingleton.hh"
 
+// for C++17 __cplusplus = 201703L
+// INCLXX currently use std:::random_shuffle which strictly isn't
+// allowed w/ C++17 (gcc says nothing about it, but clang fails hard)
+// until that is resolved in G4INCLProjectileRemnant.hh don't include INCLXX
+#if ( __cplusplus < 201703L )
+  #define USE_INCLXX
+#else
+  #undef  USE_INCLXX
+  // testing, this shouldn't trigger anything
+  // #define random_shuffle XYZZY
+#endif
+
 #if G4VERSION_NUMBER < 1000
   #include "Geant4/CHIPS.hh"
   PHYSLISTREG(CHIPS)
 #endif
 
+#include "Geant4/FTF_BIC.hh"
+PHYSLISTREG(FTF_BIC)
+
 #include "Geant4/FTFP_BERT.hh"
 PHYSLISTREG(FTFP_BERT)
+
+#if G4VERSION_NUMBER >= 1003
+  #include "Geant4/FTFP_BERT_ATL.hh"
+  PHYSLISTREG(FTFP_BERT_ATL)
+#endif
 
 #if G4VERSION_NUMBER < 1000
   #include "Geant4/FTFP_BERT_EMV.hh"
@@ -60,11 +80,32 @@ PHYSLISTREG(FTFP_BERT)
   PHYSLISTREG(FTFP_BERT_EMX)
 #endif
 
+#if G4VERSION_NUMBER > 1000
+  #include "Geant4/FTFP_BERT_HP.hh"
+  PHYSLISTREG(FTFP_BERT_HP)
+#endif
+
 #include "Geant4/FTFP_BERT_TRV.hh"
 PHYSLISTREG(FTFP_BERT_TRV)
 
-#include "Geant4/FTF_BIC.hh"
-PHYSLISTREG(FTF_BIC)
+#if G4VERSION_NUMBER > 1000
+  #ifdef USE_INCLXX
+    #include "Geant4/FTFP_INCLXX.hh"
+    PHYSLISTREG(FTFP_INCLXX)
+
+    #include "Geant4/FTFP_INCLXX_HP.hh"
+    PHYSLISTREG(FTFP_INCLXX_HP)
+  #endif
+
+  // just including the G4GenericPhysicsList.hh header
+  // generates an error about remove_const
+  //     error: ‘remove_const’ is not a class template
+  //     template<typename T> struct remove_const<const T> {typedef T type;};
+  // #include <type_traits>
+  // // not a fix: using std::remove_const;
+  // #include "Geant4/G4GenericPhysicsList.hh"
+  // PHYSLISTREG(G4GenericPhysicsList)
+#endif
 
 #include "Geant4/LBE.hh"
 PHYSLISTREG(LBE)
@@ -77,6 +118,11 @@ PHYSLISTREG(LBE)
   PHYSLISTREG(LHEP_EMV)
 #endif
 
+#if G4VERSION_NUMBER > 1000
+  #include "Geant4/NuBeam.hh"
+  PHYSLISTREG(NuBeam)
+#endif
+
 #include "Geant4/QBBC.hh"
 PHYSLISTREG(QBBC)
 
@@ -87,6 +133,9 @@ PHYSLISTREG(QBBC)
   #include "Geant4/QGSP.hh"
   PHYSLISTREG(QGSP)
 #endif
+
+#include "Geant4/QGS_BIC.hh"
+PHYSLISTREG(QGS_BIC)
 
 #include "Geant4/QGSP_BERT.hh"
 PHYSLISTREG(QGSP_BERT)
@@ -121,14 +170,26 @@ PHYSLISTREG(QGSP_BIC)
   PHYSLISTREG(QGSP_BIC_EMY)
 #endif
 
+#if G4VERSION_NUMBER > 1000
+  #include "Geant4/QGSP_BIC_AllHP.hh"
+  PHYSLISTREG(QGSP_BIC_AllHP)
+#endif
+
 #include "Geant4/QGSP_BIC_HP.hh"
 PHYSLISTREG(QGSP_BIC_HP)
 
 #include "Geant4/QGSP_FTFP_BERT.hh"
 PHYSLISTREG(QGSP_FTFP_BERT)
 
-#include "Geant4/QGS_BIC.hh"
-PHYSLISTREG(QGS_BIC)
+#if G4VERSION_NUMBER > 1000
+  #ifdef USE_INCLXX
+    #include "Geant4/QGSP_INCLXX.hh"
+    PHYSLISTREG(QGSP_INCLXX)
+
+    #include "Geant4/QGSP_INCLXX_HP.hh"
+    PHYSLISTREG(QGSP_INCLXX_HP)
+  #endif
+#endif
 
 // not available in Geant 4.9.6 (generally not used in 4.9.5 either)
 //#include "Geant4/QGSP_INCL_ABLA.hh"
@@ -136,3 +197,6 @@ PHYSLISTREG(QGS_BIC)
 
 #include "Geant4/Shielding.hh"
 PHYSLISTREG(Shielding)
+
+  /*
+*/
