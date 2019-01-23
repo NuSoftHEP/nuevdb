@@ -44,6 +44,18 @@
 #include "Geant4/G4Version.hh"
 #include "nutools/G4Base/G4PhysListFactorySingleton.hh"
 
+// for C++17 __cplusplus = 201703L
+// INCLXX currently use std:::random_shuffle which strictly isn't
+// allowed w/ C++17 (gcc says nothing about it, but clang fails hard)
+// until that is resolved in G4INCLProjectileRemnant.hh don't include INCLXX
+#if ( __cplusplus < 201703L )
+  #define USE_INCLXX
+#else
+  #undef  USE_INCLXX
+  // testing, this shouldn't trigger anything
+  // #define random_shuffle XYZZY
+#endif
+
 #if G4VERSION_NUMBER < 1000
   #include "Geant4/CHIPS.hh"
   PHYSLISTREG(CHIPS)
@@ -75,13 +87,15 @@ PHYSLISTREG(FTFP_BERT)
 
 #include "Geant4/FTFP_BERT_TRV.hh"
 PHYSLISTREG(FTFP_BERT_TRV)
-  // works to here
-#if G4VERSION_NUMBER > 1000
-  #include "Geant4/FTFP_INCLXX.hh"
-  PHYSLISTREG(FTFP_INCLXX)
 
-  #include "Geant4/FTFP_INCLXX_HP.hh"
-  PHYSLISTREG(FTFP_INCLXX_HP)
+#if G4VERSION_NUMBER > 1000
+  #ifdef USE_INCLXX
+    #include "Geant4/FTFP_INCLXX.hh"
+    PHYSLISTREG(FTFP_INCLXX)
+
+    #include "Geant4/FTFP_INCLXX_HP.hh"
+    PHYSLISTREG(FTFP_INCLXX_HP)
+  #endif
 
   // just including the G4GenericPhysicsList.hh header
   // generates an error about remove_const
@@ -168,11 +182,13 @@ PHYSLISTREG(QGSP_BIC_HP)
 PHYSLISTREG(QGSP_FTFP_BERT)
 
 #if G4VERSION_NUMBER > 1000
-  #include "Geant4/QGSP_INCLXX.hh"
-  PHYSLISTREG(QGSP_INCLXX)
+  #ifdef USE_INCLXX
+    #include "Geant4/QGSP_INCLXX.hh"
+    PHYSLISTREG(QGSP_INCLXX)
 
-  #include "Geant4/QGSP_INCLXX_HP.hh"
-  PHYSLISTREG(QGSP_INCLXX_HP)
+    #include "Geant4/QGSP_INCLXX_HP.hh"
+    PHYSLISTREG(QGSP_INCLXX_HP)
+  #endif
 #endif
 
 // not available in Geant 4.9.6 (generally not used in 4.9.5 either)
