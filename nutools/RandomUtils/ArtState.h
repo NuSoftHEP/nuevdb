@@ -14,7 +14,7 @@
 #include "canvas/Utilities/Exception.h"
 #include "canvas/Persistency/Provenance/EventAuxiliary.h"
 #include "canvas/Persistency/Provenance/Timestamp.h"
-#include "art/Persistency/Provenance/ModuleDescription.h"
+#include "canvas/Persistency/Provenance/ModuleDescription.h"
 #include "art/Framework/Principal/Event.h"
 
 // supporting libraries
@@ -25,9 +25,9 @@
 
 
 namespace rndm {
-  
+
   namespace NuRandomServiceHelper {
-    
+
     /// Describe the current state of art processing, as understood by the NuRandomService.
     class ArtState {
         public:
@@ -42,23 +42,23 @@ namespace rndm {
         inEndJob,              ///< in end job
         inOther                ///< none of the above
       } state_type; ///< type of state of art (what's doing)
-      
+
       using EventInfo_t = art::EventAuxiliary;
-      
-      
+
+
       ArtState(state_type start_state = unDefined)
         : artState(start_state)
         , lastEvent()
         , lastModule()
         , procName()
         {}
-      
+
       // Accept compiler written d'tor, copy c'tor and copy assignment.
-      
+
       //@{
       /// Records the status of ART
       void set_state(state_type astate) { artState = astate; }
-      
+
       /// Records the new status of ART and returns the old one
       state_type transit_to(state_type astate)
         {
@@ -69,10 +69,10 @@ namespace rndm {
             << stateName(old_state) << " to " << stateName();
           return old_state;
         } // transit_to()
-      
+
       /// Resets the status to "something else" (inOther)
       void reset_state() { transit_to(inOther); }
-      
+
       /// Records the specified event ID
       void set_event(art::Event const& evt)
         {
@@ -81,7 +81,7 @@ namespace rndm {
             };
         } // set_event()
       void reset_event() { lastEvent = EventInfo_t(); }
-      
+
       /// Records the specified module description
       void set_module(art::ModuleDescription const& desc)
         {
@@ -89,7 +89,7 @@ namespace rndm {
           set_process_name(desc);
         }
       void reset_module() { lastModule = art::ModuleDescription(); }
-      
+
       void set_process_name(std::string pn) { procName = pn; }
       void set_process_name(art::ModuleDescription const& currentModuleDesc)
         {
@@ -102,50 +102,50 @@ namespace rndm {
           }
           procName = currentModuleDesc.processName();
         } // set_process_name()
-      
+
       //@}
-      
-      
+
+
       //@{
       /// Getters
-      
+
       state_type state() const { return artState; }
-      
+
       std::string stateName() const { return stateName(state()); }
-      
+
       art::EventID const& eventID() const { return lastEvent.id(); }
-      
+
       EventInfo_t const& eventInfo() const { return lastEvent; }
-      
+
       art::ModuleDescription const& moduleDesc() const { return lastModule; }
-      
+
       std::string moduleLabel() const { return lastModule.moduleLabel(); }
-      
+
       std::string processName() const { return procName; }
       //@}
-      
-      
+
+
       EventSeedInputData getEventSeedInputData() const
         {
           EventSeedInputData data;
           data.runNumber = eventID().run();
           data.subRunNumber = eventID().subRun();
           data.eventNumber = eventID().event();
-          
+
           data.time = eventInfo().time().value();
           data.isTimeValid
             = (eventInfo().time() != art::Timestamp::invalidTimestamp());
-          
+
           data.isData = eventInfo().isRealData();
-          
+
           data.processName = processName();
           data.moduleType = moduleDesc().moduleName();
           data.moduleLabel = moduleLabel();
-          
+
           return data;
         } // getEventSeedInputData()
       /// @}
-      
+
       static std::string stateName(state_type state)
         {
           switch (state) {
@@ -163,10 +163,10 @@ namespace rndm {
             << "artext::NuRandomServiceHelper::ArtState::stateName: unknown state #"
             << ((int) state) << "\n";
         } // stateName()
-      
+
         protected:
       state_type artState; ///< current state of the art
-      
+
       EventInfo_t lastEvent;
       art::ModuleDescription lastModule;
       std::string procName;

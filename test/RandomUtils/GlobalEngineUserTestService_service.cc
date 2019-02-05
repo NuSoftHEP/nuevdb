@@ -4,7 +4,7 @@
  * @author  Gianluca Petrillo
  * @date    March 22, 2016
  * @see     GlobalEngineUserTestService.h
- * 
+ *
  */
 
 
@@ -15,8 +15,6 @@
 #include "canvas/Utilities/Exception.h"
 #include "art/Framework/Services/Registry/ActivityRegistry.h"
 #include "art/Framework/Services/Registry/ServiceHandle.h"
-#include "art/Persistency/Provenance/ModuleContext.h"
-#include "art/Persistency/Provenance/ScheduleContext.h"
 
 // supporting libraries
 #include "messagefacility/MessageLogger/MessageLogger.h"
@@ -37,7 +35,7 @@ testing::GlobalEngineUserTestService::GlobalEngineUserTestService
   : instanceNames       (pset.get<std::vector<std::string>>("instances", {}))
   , perEventSeeds       (pset.get<bool>                    ("perEventSeeds", false))
 {
-  
+
   //
   // input parameters check
   //
@@ -47,7 +45,7 @@ testing::GlobalEngineUserTestService::GlobalEngineUserTestService
       << "Using a default engine instance name: '" << instanceNames.back()
       << "'";
   }
-  
+
   //
   // create all our engines (uninteresting temporary seeds are set)
   //
@@ -62,20 +60,20 @@ testing::GlobalEngineUserTestService::GlobalEngineUserTestService
   rndm::NuRandomService& Seeds = *(art::ServiceHandle<rndm::NuRandomService>());
   // NuRandomService::createEngine() can't be called here
   //   because it needs a EngineCreator: good
-  
+
   for (auto& engine: engines) {
-    
+
     // NuRandomService::registerEngine() should instead succeed;
     // rndm::NuRandomService::TRandomSeeder is optionally declared (inline)
     // in NuRandomService.h
     auto seed = Seeds.registerEngine
       (rndm::NuRandomService::TRandomSeeder(engine.get()), engine->GetTitle());
-    
+
     mf::LogInfo("GlobalEngineUserTestService")
       << "Registered my random engine "
       << engine->IsA()->GetName() << "[" << ((void*) engine.get()) << "]"
       << " with seed " << seed;
-    
+
   } // for
 
   //
@@ -86,7 +84,7 @@ testing::GlobalEngineUserTestService::GlobalEngineUserTestService
       << "Check of seeds on construction skipped because policy is per event.";
   }
   else CheckAllSeeds();
-  
+
   //
   // register callbacks
   //
@@ -100,19 +98,19 @@ testing::GlobalEngineUserTestService::GlobalEngineUserTestService
   reg.sPostProcessEvent.watch      (this, &GlobalEngineUserTestService::postProcessEvent       );
   reg.sPreModuleEndJob.watch       (this, &GlobalEngineUserTestService::preModuleEndJob        );
   reg.sPostModuleEndJob.watch      (this, &GlobalEngineUserTestService::postModuleEndJob       );
-  
+
 } // testing::GlobalEngineUserTestService::GlobalEngineUserTestService
-   
+
 
 //------------------------------------------------------------------------------
 
 void testing::GlobalEngineUserTestService::CheckSeed(TRandom const& engine) {
-  
+
   auto& Seeds = *(art::ServiceHandle<rndm::NuRandomService>());
-  
+
   auto expectedSeed = Seeds.getGlobalCurrentSeed(engine.GetTitle());
   auto actualSeed = engine.GetSeed();
-  
+
   if (actualSeed != expectedSeed) {
     mf::LogError("GlobalEngineUserTestService")
       << "Engine " << engine.IsA()->GetName() << "[" << ((void*) &engine)
@@ -151,7 +149,7 @@ void testing::GlobalEngineUserTestService::preModuleConstruction
    }
 } // testing::GlobalEngineUserTestService::preModuleConstruction()
 
-     
+
 void testing::GlobalEngineUserTestService::postModuleConstruction
   (art::ModuleDescription const&)
 {
@@ -162,9 +160,9 @@ void testing::GlobalEngineUserTestService::postModuleConstruction
    }
 } // testing::GlobalEngineUserTestService::postModuleConstruction()
 
-     
+
 void testing::GlobalEngineUserTestService::preModuleBeginRun
-  (art::ModuleContext const&)
+  (art::ModuleDescription const&)
 {
    if (!perEventSeeds) {
      LOG_DEBUG("GlobalEngineUserTestService")
@@ -173,9 +171,9 @@ void testing::GlobalEngineUserTestService::preModuleBeginRun
    }
 } // testing::GlobalEngineUserTestService::preModuleBeginRun()
 
-     
+
 void testing::GlobalEngineUserTestService::postModuleBeginRun
-  (art::ModuleContext const&)
+  (art::ModuleDescription const&)
 {
    if (!perEventSeeds) {
      LOG_DEBUG("GlobalEngineUserTestService")
@@ -184,25 +182,25 @@ void testing::GlobalEngineUserTestService::postModuleBeginRun
    }
 } // testing::GlobalEngineUserTestService::postModuleBeginRun()
 
-     
-void testing::GlobalEngineUserTestService::preProcessEvent(art::Event const&, art::ScheduleContext) {
+
+void testing::GlobalEngineUserTestService::preProcessEvent(art::Event const&) {
    LOG_DEBUG("GlobalEngineUserTestService")
      << "GlobalEngineUserTestService::preProcessEvent()";
    CheckAllSeeds();
 } // testing::GlobalEngineUserTestService::preProcessEvent()
 
-     
+
 void testing::GlobalEngineUserTestService::preModule
-  (art::ModuleContext const&)
+  (art::ModuleDescription const&)
 {
    LOG_DEBUG("GlobalEngineUserTestService")
      << "GlobalEngineUserTestService::preModule()";
    CheckAllSeeds();
 } // testing::GlobalEngineUserTestService::preModule()
 
-     
+
 void testing::GlobalEngineUserTestService::postModule
-  (art::ModuleContext const&)
+  (art::ModuleDescription const&)
 {
    if (!perEventSeeds) {
      LOG_DEBUG("GlobalEngineUserTestService")
@@ -211,14 +209,14 @@ void testing::GlobalEngineUserTestService::postModule
    }
 } // testing::GlobalEngineUserTestService::postModule()
 
-     
-void testing::GlobalEngineUserTestService::postProcessEvent(art::Event const&, art::ScheduleContext) {
+
+void testing::GlobalEngineUserTestService::postProcessEvent(art::Event const&) {
    LOG_DEBUG("GlobalEngineUserTestService")
      << "GlobalEngineUserTestService::postProcessEvent()";
    CheckAllSeeds();
 } // testing::GlobalEngineUserTestService::postProcessEvent()
 
-     
+
 void testing::GlobalEngineUserTestService::preModuleEndJob
   (art::ModuleDescription const&)
 {
@@ -229,7 +227,7 @@ void testing::GlobalEngineUserTestService::preModuleEndJob
    }
 } // testing::GlobalEngineUserTestService::preModuleBeginRun()
 
-     
+
 void testing::GlobalEngineUserTestService::postModuleEndJob
   (art::ModuleDescription const&)
 {
@@ -240,7 +238,7 @@ void testing::GlobalEngineUserTestService::postModuleEndJob
    }
 } // testing::GlobalEngineUserTestService::preModuleBeginRun()
 
-     
+
 //------------------------------------------------------------------------------
 
 DEFINE_ART_SERVICE(testing::GlobalEngineUserTestService)

@@ -39,15 +39,15 @@
 
 
 namespace testing {
-  
+
   /**
    * @brief Test module for NuRandomService
-   * 
+   *
    * The test writes on screen the random seeds it gets.
-   * 
+   *
    * Note that the test does not actually get any random number, unless the
    * *useGenerators* option is turned on.
-   * 
+   *
    * Configuration parameters:
    * - <b>instanceNames</b> (string list): use one random number generator
    *   for each instance name here specified; if not specified, a single
@@ -60,56 +60,56 @@ namespace testing {
    * - <b>perEventSeeds</b> (boolean, default: false): set it to true if the
    *   selected policy gives per-event seeds; in this case, the check of
    *   seed always being the same is skipped
-   * 
+   *
    */
   class SeedTestPolicy: public art::EDAnalyzer {
-    
+
       public:
-    
+
     explicit SeedTestPolicy(fhicl::ParameterSet const& pset);
-    
+
     virtual void analyze(art::Event const& event) override;
-    
+
     virtual void endJob() override;
-    
+
       private:
     using seed_t = testing::NuRandomService::seed_t;
-    
+
     std::vector<std::string> instanceNames;
     std::vector<seed_t> startSeeds; ///< seeds after the constructor
     unsigned int nExpectedErrors; ///< number of expected errors
     bool useGenerators; ///< instanciate and use random number generators
     bool perEventSeeds; ///< whether we expect different seeds on each event
     std::string const moduleLabel; ///< configured module label
-    
+
     unsigned int nErrors = 0; ///< Number of errors detected so far
-    
-    std::unique_ptr<CLHEP::HepRandomEngine> localEngine; ///< self-managed 
-    
+
+    std::unique_ptr<CLHEP::HepRandomEngine> localEngine; ///< self-managed
+
     /// Returns whether the engine associated with the specified index is local
     bool isLocalEngine(size_t iEngine) const;
-    
+
     /// Returns the engine associated with the given instance index
     /// (may throw if none is present)
     CLHEP::HepRandomEngine& getRandomEngine(size_t iEngine);
-  
+
     /// Verifies that the engine with the specified index has the expected seed
     seed_t verifySeed(size_t iEngine);
-    
+
     seed_t obtainSeed(std::string instanceName = "");
-    
+
     /// Returns whether e is an exception we can handle (and, if so, it handles)
     bool handleSeedServiceException(art::Exception& e);
-    
+
   }; // class SeedTestPolicy
-  
+
 } // namespace testing
 
 
 
 //------------------------------------------------------------------------------
 //--- implementation
-//--- 
+//---
 
 testing::SeedTestPolicy::SeedTestPolicy(fhicl::ParameterSet const& pset)
   : art::EDAnalyzer(pset)
@@ -119,7 +119,7 @@ testing::SeedTestPolicy::SeedTestPolicy(fhicl::ParameterSet const& pset)
   , perEventSeeds  (pset.get<bool>                    ("perEventSeeds", false))
   , moduleLabel    (pset.get<std::string>             ("module_label"))
 {
-  
+
   //
   // print some configuration information
   //
@@ -129,16 +129,16 @@ testing::SeedTestPolicy::SeedTestPolicy(fhicl::ParameterSet const& pset)
       << instanceNames.size() <<  " engine instances:";
     for (auto const& instanceName: instanceNames)
       log << " " << instanceName;
-    
+
   } // anonymous block
-  
+
   auto* Seeds = &*(art::ServiceHandle<rndm::NuRandomService>());
-  
+
   // by default, have at least one, default engine instance
   if (instanceNames.empty()) instanceNames.push_back("");
-  
+
   mf::LogInfo log("SeedTestPolicy"); // cumulative log
-  
+
   //
   // register all the engines, and store their seeds
   //
@@ -147,14 +147,14 @@ testing::SeedTestPolicy::SeedTestPolicy(fhicl::ParameterSet const& pset)
     log << "\nSeed for '" << instanceName << "' is: " << seed;
     startSeeds.push_back(seed);
   } // for first loop (declaration)
-  
-  
+
+
   //
   // verify the seed of each instance
   //
   for (size_t iEngine = 0; iEngine < instanceNames.size(); ++iEngine) {
     std::string const& instanceName = instanceNames[iEngine];
-    
+
     // This involved condition tree ensures that SeedMaster is queried
     // for a seed exactly once per instance, no matter what.
     // This is relevant for the error count.
@@ -184,7 +184,7 @@ testing::SeedTestPolicy::SeedTestPolicy(fhicl::ParameterSet const& pset)
         verifySeed(iEngine);
       }
     } // if ... else
-    
+
     // check that the seed returned by the service is still the same
     seed_t const expectedSeed = startSeeds.at(iEngine);
     if (seed != expectedSeed) {
@@ -200,7 +200,7 @@ testing::SeedTestPolicy::SeedTestPolicy(fhicl::ParameterSet const& pset)
   // (it's the one managed by RandomGeneratorService).
   // Registering another should raise an exception
   // (incidentally, if useGenerators is false we are trying to register nullptr)
-  // 
+  //
   bool bBug = false;
   try {
     Seeds->declareEngine(instanceNames.front());
@@ -214,7 +214,7 @@ testing::SeedTestPolicy::SeedTestPolicy(fhicl::ParameterSet const& pset)
       << "Registration of local engine with duplicate label"
          " did not throw an exception";
   }
-  
+
 } // testing::SeedTestPolicy::SeedTestPolicy()
 
 
@@ -224,7 +224,7 @@ void testing::SeedTestPolicy::analyze(art::Event const& event) {
   mf::LogVerbatim("SeedTestPolicy")
     << "SeedTestPolicy::analyze() " << event.id() << " with "
     << instanceNames.size() << " random engines";
-  
+
   if (useGenerators) {
     for (size_t iEngine = 0; iEngine < instanceNames.size(); ++iEngine) {
       //
@@ -233,7 +233,7 @@ void testing::SeedTestPolicy::analyze(art::Event const& event) {
       std::string const& instanceName = instanceNames[iEngine];
       seed_t const startSeed = startSeeds.at(iEngine);
       CLHEP::HepRandomEngine& engine = getRandomEngine(iEngine);
-      
+
       //
       // check seed (if per event, it should be the opposite)
       //
@@ -253,7 +253,7 @@ void testing::SeedTestPolicy::analyze(art::Event const& event) {
             << "', got " << actualSeed << " instead!\n";
         }
       }
-      
+
       //
       // print character statistics
       //
@@ -261,10 +261,10 @@ void testing::SeedTestPolicy::analyze(art::Event const& event) {
         << std::setw(12) << (instanceName.empty()? "<default>": instanceName)
         << ": " << testing::NuRandomService::CreateCharacter(engine)
         << "   (seed: " << actualSeed << ")";
-      
+
     } // for
   } // if use generators
-  
+
 } // testing::SeedTestPolicy::analyze()
 
 
@@ -296,7 +296,7 @@ testing::SeedTestPolicy::seed_t testing::SeedTestPolicy::obtainSeed
   }
   catch(art::Exception& e) {
     if (!testing::NuRandomService::isSeedServiceException(e)) throw;
-    
+
     ++nErrors;
     mf::LogError log("SeedTestPolicy");
     log << "Detected";
@@ -309,7 +309,7 @@ testing::SeedTestPolicy::seed_t testing::SeedTestPolicy::obtainSeed
 
 bool testing::SeedTestPolicy::handleSeedServiceException(art::Exception& e) {
   if (!testing::NuRandomService::isSeedServiceException(e)) return false;
-  
+
   ++nErrors;
   mf::LogError log("SeedTest01");
   log << "Detected";
@@ -332,7 +332,7 @@ CLHEP::HepRandomEngine& testing::SeedTestPolicy::getRandomEngine
   return isLocalEngine(iEngine)
     ? (*localEngine)
     : art::ServiceHandle<art::RandomNumberGenerator>()
-    ->getEngine(art::ScheduleID::first(), moduleLabel, instanceNames.at(iEngine))
+    ->getEngine(instanceNames.at(iEngine))
     ;
 } // testing::SeedTestPolicy::getRandomEngine()
 
@@ -341,13 +341,13 @@ testing::SeedTestPolicy::seed_t testing::SeedTestPolicy::verifySeed
   (size_t iEngine)
 {
   CLHEP::HepRandomEngine const& engine = getRandomEngine(iEngine);
-  
+
   seed_t const actualSeed = testing::NuRandomService::readSeed(engine);
   seed_t const expectedSeed = startSeeds.at(iEngine);
   // if the expected seed is invalid, we are not even sure it was ever set;
   // the engine is in an invalid state and that's it
   if (!rndm::NuRandomService::isSeedValid(expectedSeed)) return actualSeed;
-  
+
   if (actualSeed != expectedSeed) {
     std::string const& instanceName = instanceNames[iEngine];
     throw art::Exception(art::errors::LogicError)
@@ -355,9 +355,9 @@ testing::SeedTestPolicy::seed_t testing::SeedTestPolicy::verifySeed
       << "', got " << actualSeed << " instead!";
   }
   return actualSeed;
-} // testing::SeedTestPolicy::verifySeed()  
-  
-  
+} // testing::SeedTestPolicy::verifySeed()
+
+
 //------------------------------------------------------------------------------
 DEFINE_ART_MODULE(testing::SeedTestPolicy)
 

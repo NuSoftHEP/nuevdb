@@ -10,13 +10,11 @@
 
 // Art include files
 #include "canvas/Utilities/Exception.h"
-#include "art/Framework/Core/detail/EngineCreator.h"
 #include "art/Framework/Principal/Run.h"
 #include "art/Framework/Principal/SubRun.h"
 #include "art/Framework/Services/Registry/ActivityRegistry.h"
 #include "art/Framework/Services/Registry/ServiceHandle.h"
-#include "art/Persistency/Provenance/ModuleContext.h"
-#include "art/Persistency/Provenance/ModuleDescription.h"
+#include "canvas/Persistency/Provenance/ModuleDescription.h"
 #include "canvas/Persistency/Provenance/EventID.h"
 
 // Supporting library include files
@@ -274,9 +272,7 @@ namespace rndm {
     // no check is performed to verify that the current module is the one
     // specified in id.moduleLabel -- but that is required!
     art::ServiceHandle<art::RandomNumberGenerator> rng;
-    CLHEP::HepRandomEngine& engine = rng->getEngine(art::ScheduleID::first(),
-                                                    id.moduleLabel,
-                                                    id.instanceName);
+    CLHEP::HepRandomEngine& engine = rng->getEngine(id.instanceName);
     engine.setSeed(seed, 0); // the 0 is dummy... or so one hopes
   }
 
@@ -333,16 +329,16 @@ namespace rndm {
     state.reset_state();
   } // NuRandomService::postModuleConstruction()
 
-  void NuRandomService::preModuleBeginRun(art::ModuleContext const& mc) {
+  void NuRandomService::preModuleBeginRun(art::ModuleDescription const& md) {
     state.transit_to(NuRandomServiceHelper::ArtState::inModuleBeginRun);
-    state.set_module(mc.moduleDescription());
+    state.set_module(md);
   } // NuRandomService::preModuleBeginRun()
 
-  void NuRandomService::postModuleBeginRun(art::ModuleContext const&) {
+  void NuRandomService::postModuleBeginRun(art::ModuleDescription const&) {
     state.reset_state();
   } // NuRandomService::postModuleBeginRun()
 
-  void NuRandomService::preProcessEvent(art::Event const& evt, art::ScheduleContext) {
+  void NuRandomService::preProcessEvent(art::Event const& evt) {
     state.transit_to(NuRandomServiceHelper::ArtState::inEvent);
     state.set_event(evt);
     seeds.onNewEvent(); // inform the seed master that a new event has come
@@ -352,23 +348,23 @@ namespace rndm {
 
   } // NuRandomService::preProcessEvent()
 
-  void NuRandomService::preModule(art::ModuleContext const& mc) {
+  void NuRandomService::preModule(art::ModuleDescription const& md) {
     state.transit_to(NuRandomServiceHelper::ArtState::inModuleEvent);
-    state.set_module(mc.moduleDescription());
+    state.set_module(md);
 
     // Reseed all the engine of this module... maybe
     // (that is, if the current policy alows it).
     LOG_DEBUG("NuRandomService") << "preModule(): will reseed engines for module '"
-      << mc.moduleLabel() << "'";
-    reseedModule(mc.moduleLabel());
+      << md.moduleLabel() << "'";
+    reseedModule(md.moduleLabel());
   } // NuRandomService::preModule()
 
-  void NuRandomService::postModule(art::ModuleContext const&) {
+  void NuRandomService::postModule(art::ModuleDescription const&) {
     state.reset_module();
     state.reset_state();
   } // NuRandomService::postModule()
 
-  void NuRandomService::postProcessEvent(art::Event const&, art::ScheduleContext) {
+  void NuRandomService::postProcessEvent(art::Event const&) {
     state.reset_event();
     state.reset_state();
   } // NuRandomService::postProcessEvent()

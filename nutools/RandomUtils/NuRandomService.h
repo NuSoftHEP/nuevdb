@@ -44,16 +44,14 @@
 
 // From art and its tool chain.
 #include "fhiclcpp/ParameterSet.h"
-#include "art/Framework/Core/detail/EngineCreator.h"
+#include "art/Framework/Core/EngineCreator.h"
 #include "art/Framework/Services/Optional/RandomNumberGenerator.h"
 #include "art/Framework/Services/Registry/ServiceMacros.h"
-#include "art/Persistency/Provenance/ScheduleContext.h"
 
 // Forward declarations
 namespace art {
   class ActivityRegistry;
   class ModuleDescription;
-  class ModuleContext;
   class Run;
   class SubRun;
 }
@@ -361,7 +359,7 @@ namespace rndm {
    */
   class NuRandomService {
       public:
-    using seed_t = art::detail::EngineCreator::seed_t;
+    using seed_t = art::RandomNumberGenerator::seed_t;
     using engine_t = CLHEP::HepRandomEngine;
 
     using SeedMaster_t = SeedMaster<seed_t>; ///< type of object providing seeds
@@ -975,12 +973,12 @@ namespace rndm {
     // Call backs that will be called by art.
     void preModuleConstruction (art::ModuleDescription const& md);
     void postModuleConstruction(art::ModuleDescription const&);
-    void preModuleBeginRun     (art::ModuleContext const& mc);
-    void postModuleBeginRun    (art::ModuleContext const&);
-    void preProcessEvent       (art::Event const& evt, art::ScheduleContext);
-    void preModule             (art::ModuleContext const& mc);
-    void postModule            (art::ModuleContext const&);
-    void postProcessEvent      (art::Event const&, art::ScheduleContext);
+    void preModuleBeginRun     (art::ModuleDescription const& md);
+    void postModuleBeginRun    (art::ModuleDescription const&);
+    void preProcessEvent       (art::Event const& evt);
+    void preModule             (art::ModuleDescription const& md);
+    void postModule            (art::ModuleDescription const&);
+    void postProcessEvent      (art::Event const&);
     void preModuleEndJob       (art::ModuleDescription const& md);
     void postModuleEndJob      (art::ModuleDescription const&);
     void postEndJob            ();
