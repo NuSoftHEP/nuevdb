@@ -7,5 +7,6 @@ add_subdirectory (MagneticField)
 add_subdirectory (NuBeamWeights)
 add_subdirectory (NuReweight)
 add_subdirectory (ParticleNavigation)
-add_subdirectory (RandomUtils)
+# temporary 2/05/2019
+#add_subdirectory (RandomUtils)
 
