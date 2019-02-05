@@ -1025,7 +1025,9 @@ namespace rndm {
   {
     EngineId id = qualify_engine_label(instance);
     registerEngineAndSeeder(id, RandomNumberGeneratorSeeder);
-    auto const [seed, frozen] = findSeed(id, pset, pnames);
+    auto const pr = findSeed(id, pset, pnames);
+    auto const seed = pr.first;
+    bool const frozen = pr.second;
     mf::LogInfo("NuRandomService")
       << "Seeding " << type << " engine \"" << id.artName()
       << "\" with seed " << seed << ".";
@@ -1042,7 +1044,9 @@ namespace rndm {
   {
     EngineId id = qualify_engine_label();
     registerEngineAndSeeder(id, RandomNumberGeneratorSeeder);
-    auto const [seed, frozen] = findSeed(id, pset, pnames);
+    auto const pr = findSeed(id, pset, pnames);
+    auto const seed = pr.first;
+    bool const frozen = pr.second;
     mf::LogInfo("NuRandomService")
       << "Seeding default-type engine \"" << id.artName()
       << "\" with seed " << seed << ".";

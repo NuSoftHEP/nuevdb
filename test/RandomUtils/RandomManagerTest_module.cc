@@ -157,7 +157,9 @@ namespace testing {
     mf::LogVerbatim("RandomManagerTest") << "RandomManagerTest[" << moduleLabel << "]::analyze "
                                          << event.id();
 
-    for (auto& [instanceName, engine] : engines) {
+    for (auto& pr : engines) {
+      auto const& instanceName = pr.first;
+      auto& engine = pr.second;
       seed_t actualSeed = testing::NuRandomService::readSeed(*engine);
       mf::LogVerbatim("RandomManagerTest")
         << std::setw(12) << (instanceName.empty()? "<default>": instanceName)
