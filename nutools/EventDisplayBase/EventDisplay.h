@@ -9,7 +9,6 @@
 #define EVDB_EVENTDISPLAY_H
 
 #include "art/Framework/Services/Registry/ServiceMacros.h"
-#include "art/Persistency/Provenance/ScheduleContext.h"
 
 namespace fhicl { class ParameterSet; }
 namespace art   { class ActivityRegistry; }
@@ -35,8 +34,8 @@ namespace evdb
     void postBeginJob();
     void postBeginJobWorkers(art::InputSource* inputs,
                              std::vector<art::Worker*> const& workers);
-    void preProcessEvent(art::Event const&, art::ScheduleContext);
-    void postProcessEvent(art::Event const&, art::ScheduleContext);
+    void preProcessEvent(art::Event const&);
+    void postProcessEvent(art::Event const&);
 
   private:
     art::InputSource* fInputSource; ///< Input source of events
