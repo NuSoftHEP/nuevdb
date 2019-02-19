@@ -208,15 +208,21 @@ namespace rwgt {
     //Set Exclusive Final State particle numbers
     genie::Resonance_t gres = (genie::Resonance_t)gtruth.fResNum;
     gxt.SetResonance(gres);
+    gxt.SetDecayMode(gtruth.fDecayMode);
     gxt.SetNPions(gtruth.fNumPiPlus, gtruth.fNumPi0, gtruth.fNumPiMinus);
     gxt.SetNNucleons(gtruth.fNumProton, gtruth.fNumNeutron);
 
-    if(gtruth.fIsCharm) {
-      gxt.SetCharm(0);
+    if (gtruth.fIsCharm) {
+      gxt.SetCharm(gtruth.fCharmHadronPdg);
+    } else {
+      gxt.UnsetCharm();
     }
-     else {
-       gxt.UnsetCharm();
-     }
+
+    if (gtruth.fIsStrange) {
+      gxt.SetStrange(gtruth.fStrangeHadronPdg);
+    } else {
+      gxt.UnsetStrange();
+    }
 
     //Set the GENIE kinematic info
     genie::Kinematics gkin;
@@ -244,6 +250,7 @@ namespace rwgt {
     target123->SetHitNucPdg(targetNucleon);
     target123->SetHitQrkPdg(struckQuark);
     target123->SetHitSeaQrk(gtruth.fIsSeaQuark);
+    target123->SetHitNucPosition(gtruth.fHitNucPos);
 
     if(newEvent.HitNucleonPosition()> 0) {
       genie::GHepParticle * hitnucleon = newEvent.HitNucleon();
