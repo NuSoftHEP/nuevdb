@@ -203,7 +203,7 @@ namespace evdb
       int result;
       result=rename(fEchoPrintTempFile.c_str(),fEchoPrintFile.c_str());
       if (result==0)
-        LOG_DEBUG("EventDisplayBase") << fEchoPrintTempFile
+        MF_LOG_DEBUG("EventDisplayBase") << fEchoPrintTempFile
         << " tempfile successfully renamed to "
         << fEchoPrintFile;
       else

@@ -40,6 +40,9 @@
 #include <fstream>
 #include <sstream>
 
+// Necessary because the GENIE LOG_* macros don't fully qualify Messenger
+using genie::Messenger;
+
 namespace evg {
   class GenieOutput;
 

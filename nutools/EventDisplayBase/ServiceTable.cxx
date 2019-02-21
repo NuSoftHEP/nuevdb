@@ -67,7 +67,7 @@ void ServiceTable::ApplyEdits()
   for (auto& s : fServices) {
     if (s.fParamSet.empty()) continue;
 
-    LOG_DEBUG("ServiceTable") << "Applying edits for "
+    MF_LOG_DEBUG("ServiceTable") << "Applying edits for "
                               << s.fName
                               << "\n"
                               << s.fParamSet;
@@ -83,7 +83,7 @@ void ServiceTable::ApplyEdits()
       s.fCurrentParamSet = pset;
     }
     catch (fhicl::exception const& e) {
-      LOG_ERROR("ServiceTable") << "Error parsing the new configuration:\n"
+      MF_LOG_ERROR("ServiceTable") << "Error parsing the new configuration:\n"
                                 << e
                                 << "\nRe-configuration has been ignored for service: "
                                 << s.fName;

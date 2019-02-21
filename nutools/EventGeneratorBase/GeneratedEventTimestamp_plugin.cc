@@ -169,7 +169,7 @@ namespace evgen {
       
       // no point in doing the exercise if we are already using the system clock
       if (std::is_same<clock_t, system_clock_t>()) {
-        LOG_DEBUG("GeneratedEventTimestamp")
+        MF_LOG_DEBUG("GeneratedEventTimestamp")
           << "Using system clock for timestamp: no offset needed.";
         return static_cast<duration_t>(0);
       }
@@ -185,7 +185,7 @@ namespace evgen {
           < toDuration(5s)
         )
       {
-        LOG_DEBUG("GeneratedEventTimestamp")
+        MF_LOG_DEBUG("GeneratedEventTimestamp")
           << "Offset with system clock is small ("
             << (timeFromEpoch(sys_clock_time) - timeFromEpoch(clock_time))
             << ", " << timeFromEpoch(sys_clock_time)
@@ -226,7 +226,7 @@ namespace evgen {
         
       } // for
       
-      LOG_DEBUG("GeneratedEventTimestamp")
+      MF_LOG_DEBUG("GeneratedEventTimestamp")
         <<   "System clock period: "
           << periodToDuration<typename clock_t::rep, system_clock_period_t>()
         << "\nUser clock period:   "
@@ -302,7 +302,7 @@ evgen::GeneratedEventTimestamp::GeneratedEventTimestamp
   mf::LogInfo("GeneratedEventTimestamp")
     << "Timestamp plugin: timestamp from local clock time in nanoseconds";
   if (fOffsetFromEpoch != 0) {
-    LOG_TRACE("GeneratedEventTimestamp")
+    MF_LOG_TRACE("GeneratedEventTimestamp")
       << "  Time offset from epoch: " << fOffsetFromEpoch << " ns";
   }
   
