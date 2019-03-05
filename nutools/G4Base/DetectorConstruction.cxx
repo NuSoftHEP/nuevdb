@@ -78,7 +78,7 @@ namespace g4b{
           fFieldMgr->SetDetectorField(magField);
           fFieldMgr->CreateChordFinder(magField);
           
-          LOG_INFO("DetectorConstruction")
+          MF_LOG_INFO("DetectorConstruction")
           << "Setting uniform magnetic field to be "
           << magField->GetConstantFieldValue().x() << " "
           << magField->GetConstantFieldValue().y() << " "
@@ -94,7 +94,7 @@ namespace g4b{
           break;
         } // case mag::kConstantBFieldMode
         default: // Complain if the user asks for something not handled
-          LOG_ERROR("DetectorConstruction")
+          MF_LOG_ERROR("DetectorConstruction")
           << "Unknown or illegal Magneticfield "
           << "mode specified: " 
           << fd.fMode

@@ -26,6 +26,7 @@
   // // #include "Messenger/Messenger.h" -- conflict LOG_INFO w/ messagefacility
   #include "GHEP/GHepRecord.h"
 #else
+  #include "GENIE/Framework/Messenger/Messenger.h"
   #include "GENIE/Framework/ParticleData/PDGLibrary.h"
   #include "GENIE/Framework/GHEP/GHepRecord.h"
   #include "GENIE/Framework/Ntuple/NtpMCFormat.h"
@@ -39,6 +40,9 @@
 #include <iomanip>
 #include <fstream>
 #include <sstream>
+
+// Necessary because the GENIE LOG_* macros don't fully qualify Messenger
+using genie::Messenger;
 
 namespace evg {
   class GenieOutput;

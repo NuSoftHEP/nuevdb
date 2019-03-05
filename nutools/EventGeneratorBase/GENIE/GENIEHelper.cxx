@@ -93,6 +93,7 @@
   #include "GENIE/Framework/Conventions/GVersion.h"
   #include "GENIE/Framework/Utils/StringUtils.h"
   #include "GENIE/Framework/Utils/XmlParserUtils.h"
+  #include "GENIE/Framework/Messenger/Messenger.h"
 
   #pragma GCC diagnostic push
   #pragma GCC diagnostic ignored "-Wunused-variable"
@@ -194,6 +195,12 @@
   // nothing doing ... use ifdef to hide any reference that might need header
   #include <cassert>
 #endif
+
+// The GENIE logging macros require the name 'Messenger' to be
+// accessible during the macro expansion.  This is a bug in GENIE, but
+// for now, the easiest way to do this is to bring genie::Messenger
+// into the global namespace by a using declaration.
+using genie::Messenger;
 
 namespace evgb {
 

@@ -289,8 +289,12 @@ void evgb::FillGTruth(const genie::EventRecord* record,
   //true reaction information and byproducts
   //(PRE FSI)
   const genie::XclsTag &exclTag = inter->ExclTag();
-  truth.fIsCharm = exclTag.IsCharmEvent();
-  truth.fResNum = (int)exclTag.Resonance();
+  truth.fIsCharm          = exclTag.IsCharmEvent();
+  truth.fCharmHadronPdg   = exclTag.CharmHadronPdg();
+  truth.fIsStrange        = exclTag.IsStrangeEvent();
+  truth.fStrangeHadronPdg = exclTag.StrangeHadronPdg();
+  truth.fResNum    = (int)exclTag.Resonance();
+  truth.fDecayMode = exclTag.DecayMode();
 
   //note that in principle this information could come from the XclsTag,
   //but that object isn't completely filled for most reactions,
@@ -349,11 +353,13 @@ void evgb::FillGTruth(const genie::EventRecord* record,
   const genie::InitialState &initState  = inter->InitState();
   truth.fProbePDG = initState.ProbePdg();
   truth.fProbeP4 = *initState.GetProbeP4();
+  truth.fTgtP4   = *initState.GetTgtP4();
 
   //Target info
   const genie::Target &tgt = initState.Tgt();
   truth.fIsSeaQuark = tgt.HitSeaQrk();
   truth.fHitNucP4 = tgt.HitNucP4();
+  truth.fHitNucPos = tgt.HitNucPosition();
   truth.ftgtZ = tgt.Z();
   truth.ftgtA = tgt.A();
   truth.ftgtPDG = tgt.Pdg();
@@ -510,14 +516,20 @@ genie::EventRecord* evgb::RetrieveGHEP(const simb::MCTruth& mctruth,
   //Set Exclusive Final State particle numbers
   genie::Resonance_t gres = (genie::Resonance_t)gtruth.fResNum;
   gxt.SetResonance(gres);
+  gxt.SetDecayMode(gtruth.fDecayMode);
   gxt.SetNPions(gtruth.fNumPiPlus, gtruth.fNumPi0, gtruth.fNumPiMinus);
   gxt.SetNNucleons(gtruth.fNumProton, gtruth.fNumNeutron);
 
   if (gtruth.fIsCharm) {
-    gxt.SetCharm(0);
-  }
-  else {
+    gxt.SetCharm(gtruth.fCharmHadronPdg);
+  } else {
     gxt.UnsetCharm();
+  }
+
+  if (gtruth.fIsStrange) {
+    gxt.SetStrange(gtruth.fStrangeHadronPdg);
+  } else {
+    gxt.UnsetStrange();
   }
 
   // Set the GENIE kinematics info
@@ -579,6 +591,7 @@ genie::EventRecord* evgb::RetrieveGHEP(const simb::MCTruth& mctruth,
   // do this here _after_ creating InitialState
   genie::Target* tgtptr = ginitstate.TgtPtr();
   tgtptr->SetHitNucPdg(targetNucleon);
+  tgtptr->SetHitNucPosition(gtruth.fHitNucPos);
   tgtptr->SetHitQrkPdg(struckQuark);
   tgtptr->SetHitSeaQrk(gtruth.fIsSeaQuark);
 
