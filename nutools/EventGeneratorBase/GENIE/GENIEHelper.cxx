@@ -37,6 +37,7 @@
 
 //GENIE includes
 #ifdef GENIE_PRE_R3
+  #include "GENIE/Messenger/Messenger.h"
   #include "GENIE/Conventions/GVersion.h"
   #include "GENIE/Conventions/Units.h"
   #include "GENIE/EVGCore/EventRecord.h"
@@ -90,6 +91,7 @@
 
 #else
   // GENIE R-3 reorganized headers
+  #include "GENIE/Framework/Messenger/Messenger.h"
   #include "GENIE/Framework/Conventions/GVersion.h"
   #include "GENIE/Framework/Utils/StringUtils.h"
   #include "GENIE/Framework/Utils/XmlParserUtils.h"
@@ -266,7 +268,7 @@ namespace evgb {
     , fEnvironment       (pset.get< std::vector<std::string> >("Environment")            )
     , fXSecTable         (pset.get< std::string              >("XSecTable",          "") ) //e.g. "gxspl-FNALsmall.xml"
     , fTuneName          (pset.get< std::string              >("TuneName","${GENIE_XSEC_TUNE}") )
-    , fEventGeneratorList(pset.get< std::string              >("EventGeneratorList", "") ) // "Default"
+    , fEventGeneratorList(pset.get< std::string              >("EventGeneratorList", "Default") )
     , fGXMLPATH          (pset.get< std::string              >("GXMLPATH",           "") )
     , fGMSGLAYOUT        (pset.get< std::string              >("GMSGLAYOUT",         "") ) // [BASIC] or SIMPLE
     , fGENIEMsgThresholds(pset.get< std::string              >("GENIEMsgThresholds", "") ) // : separate list of files
@@ -279,16 +281,41 @@ namespace evgb {
   {
 
     // fEnvironment is (generally) deprecated ... print out any settings
+    // but for some make it fatal because it's no longer supported and
+    // can lead to unexpected behaviour
     if ( fEnvironment.size() > 0 ) {
-      std::ostringstream fenvout;
+      bool fatal = false;
+      std::ostringstream fenvout, fenvfatal;
       fenvout << " fEnviroment.size() = " << fEnvironment.size();
       for (size_t i = 0; i < fEnvironment.size(); i += 2) {
-        fenvout << std::endl << " [" << std::setw(20)
+        fenvout << std::endl << " [" << std::setw(20) << std::left
                 << fEnvironment[i] << "] ==> "
-                << fEnvironment[i+1] << std::endl;
+                << fEnvironment[i+1];
+        // fatal:     GEVGL, GSPLOAD
+        // harmless:  GXMLPATH, GMSGLAYOUT, GMSGCONF, GPRODMODE
+        if ( fEnvironment[i] == "GEVGL"   ||
+             fEnvironment[i] == "GSPLOAD"    ) {
+          fatal = true;
+          std::string altparam = "";
+          if ( fEnvironment[i] == "GEVGL"   ) altparam = "EventGeneratorList";
+          if ( fEnvironment[i] == "GSPLOAD" ) altparam = "XSecTable";
+
+          fenvfatal << std::endl << "use of \"" << fEnvironment[i] << "\""
+                    << " is no longer supported as a Environment fcl parameter pair key,"
+                    << "\n"
+                    << "   please remove it from from the list and use"
+                    << " the appropriate direct fcl parameter \""
+                    << altparam << "\"" << std::endl;
+        }
       }
-      mf::LogInfo("GENIEHelper") << " Use of fEnvironment parameters is deprecated:\n"
-                                 << fenvout.str();
+      mf::LogInfo("GENIEHelper")
+        << " Use of fEnvironment parameters is deprecated:\n"
+        << fenvout.str();
+      if ( fatal ) {
+        mf::LogError("GENIEHelper") << fenvfatal.str();
+        throw cet::exception("GENIEHelper")
+          << " bad use of Environment fcl parameter";
+      }
     }
 
     // for histogram, mono-energetic, functional form fluxes ...
@@ -564,19 +591,45 @@ namespace evgb {
     // get this out of the way
     genie::PDGLibrary::Instance();
 
-    // Determine EventGeneratorList to use
-    FindEventGeneratorList();
+    mf::LogInfo("GENIEHelper") << "GENIE EventGeneratorList using \""
+                               << fEventGeneratorList << "\"";
+
+    evgb::SetEventGeneratorListAndTune(fEventGeneratorList,fTuneName);
 
 #ifdef GENIE_PRE_R3
+    // no tunes ... so can report current setting if different from fcl
 #else
-    // Determine Tune and EventGeneratorList to use
-    // needs to be before creating GMCJDriver for version R-3 and beyond
-    FindTune();
+    genie::RunOpt* grunopt = genie::RunOpt::Instance();
+
+    // RunOpt's SetEventGeneratorList() wasn't introduced until R-3
+    // so above call could not have modified it in RunOpt
+    std::string currentEvtGenListName = grunopt->EventGeneratorList();
+    if ( currentEvtGenListName != fEventGeneratorList ) {
+      mf::LogInfo("GENIEHelper") << " EventGeneratorList name changed from \""
+                                 << fEventGeneratorList << "\" to \""
+                                 << currentEvtGenListName << "\""
+                                 << " by evgb::SetEventGeneratorListAndTune";
+      fEventGeneratorList = currentEvtGenListName;
+    }
+
+    std::string currentTuneName = grunopt->Tune()->Name();
+    if ( currentTuneName != fTuneName ) {
+      mf::LogInfo("GENIEHelper") << " TuneName name changed from \""
+                                 << fTuneName << "\" to \""
+                                 << currentTuneName << "\""
+                                 << " by evgb::SetEventGeneratorListAndTune";
+      fTuneName = currentTuneName;
+    }
 #endif
+
 
     fDriver = new genie::GMCJDriver(); // this needs to be before ConfigGeomScan
     // let the driver know which list
     // (for R-3 this is in _addition_ to setting it in RunOpt)
+    // pre-R-3 one could not set it in RunOpt directly (ie. without parsing
+    //    command line args), thus don't try to fetch it from there.
+    // post-R-3 one *-could-* use
+    //   fDriver->SetEventGeneratorList(RunOpt::Instance()->EventGeneratorList());
     fDriver->SetEventGeneratorList(fEventGeneratorList);
 
     // Figure out which cross section file to use
@@ -2804,83 +2857,6 @@ namespace evgb {
       << " read from: " << fGENIEMsgThresholds;
 
     genie::utils::app_init::MesgThresholds(fGENIEMsgThresholds);
-
-  }
-
-  //---------------------------------------------------------
-  void GENIEHelper::FindTune()
-  {
-    /// Determine Tune ... initialize as necessary
-
-#ifdef GENIE_PRE_R3
-    // Tune isn't relevant pre-R-3
-#else
-    genie::RunOpt* grunopt = genie::RunOpt::Instance();
-    // ctor automatically calls:  grunopt->Init();
-
-    // not sure this is absolutely necessary either
-    grunopt->EnableBareXSecPreCalc(true);
-
-    if ( fTuneName.find('$') == 0 ) {
-      // need to remove ${}'s
-      std::string tuneEnvVar = fTuneName;
-      char rmchars[] = "$(){} ";
-      for (unsigned int i = 0; i < strlen(rmchars); ++i) {
-        // remove moves matching characters in [first,last) to end and
-        //   returns a past-the-end iterator for the new end of the range [funky!]
-        // erase actually trims the string
-        tuneEnvVar.erase( std::remove(tuneEnvVar.begin(), tuneEnvVar.end(), rmchars[i]), tuneEnvVar.end() );
-      }
-
-      const char* tune = std::getenv(tuneEnvVar.c_str());
-      if ( tune ) {
-        mf::LogInfo("GENIEHelper") << "fTuneName started as '" << fTuneName << "' "
-                                   << " (env: " << tuneEnvVar << "), "
-                                   << " converted to " << tune;
-        fTuneName = std::string(tune);
-      } else {
-        mf::LogError("GENIEHelper") << "fTuneName started as '" << fTuneName << "', "
-                                    << " (env: " << tuneEnvVar << "), "
-                                    << " but resolved to a empty string";
-        throw cet::exception("UnresolvedTuneName")
-          << "can't resolve TuneName: " << fTuneName;
-      }
-    }
-
-    // this is in addition to setting it (later) in GMCJDriver
-    grunopt->SetEventGeneratorList(fEventGeneratorList);
-
-    grunopt->SetTuneName(fTuneName);
-    grunopt->BuildTune();
-
-#endif
-    }
-
-
-  //---------------------------------------------------------
-  void GENIEHelper::FindEventGeneratorList()
-  {
-    /// Determine EventGeneratorList
-    //  new location, fcl parameter "EventGeneratorList"
-    //  old location  fEvironment  key="GEVGL"  (if unset by direct pset value)
-    //  if neither then use "Default"
-
-    if ( fEventGeneratorList == "" ) {
-      // find GEVGL in the vector, if it exists
-      for (size_t i = 0; i < fEnvironment.size(); i += 2) {
-        if ( fEnvironment[i].find("GEVGL") == 0 ) {
-          fEventGeneratorList = fEnvironment[i+1];
-          throw cet::exception("UsingGEVGL")
-            << "using Environment fcl parameter GEVGL: " << fEventGeneratorList
-            << ", use fcl parameter EventGeneratorList instead.";
-          break;
-        }
-      }
-    }
-    if ( fEventGeneratorList == "" ) fEventGeneratorList = "Default";
-
-    mf::LogInfo("GENIEHelper") << "GENIE EventGeneratorList using \""
-                               << fEventGeneratorList << "\"";
 
   }
 
