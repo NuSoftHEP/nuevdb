@@ -126,8 +126,6 @@ namespace evgb {
     void SetGXMLPATH();
     void SetGMSGLAYOUT();
     void StartGENIEMessenger(std::string prodmode);
-    void FindTune();
-    void FindEventGeneratorList();
     void ReadXSecTable();
 
     TGeoManager*             fGeoManager;        ///< pointer to ROOT TGeoManager

@@ -10,6 +10,8 @@
 #ifndef EVGB_GENIE2ART_H
 #define EVGB_GENIE2ART_H
 
+#include <string>
+
 /// GENIE neutrino interaction simulation objects
 namespace genie {
   class EventRecord;
@@ -42,6 +44,13 @@ namespace simb {
 class TLorentzVector;
 
 namespace evgb {
+
+
+  // utility function: if s starts w/ $, get env var, otherwise return as is
+  std::string ExpandEnvVar(const std::string& s);
+
+  void SetEventGeneratorListAndTune(const std::string& evtlistname = "",
+                           const std::string& tunename = "${GENIE_XSEC_TUNE}");
 
   // adapted from GENIEHelper
   void FillMCTruth(const genie::EventRecord* grec,
