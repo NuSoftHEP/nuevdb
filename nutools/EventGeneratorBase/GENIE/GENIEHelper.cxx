@@ -1560,7 +1560,7 @@ namespace evgb {
         (dynamic_cast<genie::flux::GAtmoFlux *>(fFluxD)->NFluxNeutrinos())
         * 1.0e4 / (TMath::Pi() * fAtmoRt*fAtmoRt);
 
-      LOG_DEBUG("GENIEHelper")
+      mf::LogInfo("GENIEHelper")
         << "===> Atmo EXPOSURE = " << fTotalExposure << " seconds";
 
     } else {
