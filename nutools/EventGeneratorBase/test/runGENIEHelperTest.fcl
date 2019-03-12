@@ -122,6 +122,20 @@ outputs:
 #services.TFileService.fileName: "test_func_ccqe.hist.root"
 #outputs.out1.fileName:          "test_func_ccqe.artgenie.root"
 
+# test for R-2_12_10
+#physics.producers.generator.EventGeneratorList: "Default+CCMEC+NCMEC"
+# test catching unsupported obsolete feature
+#physics.producers.generator.Environment: [
+#                                           "GEVGL", "Default+CCMEC+NCMEC",
+#                                           "GSPLOAD", "SomeArbitraryFile",
+#                                           "GPRODMODE", "yes"
+#                                         ]
+physics.producers.generator.GlobalTimeOffset:  500.
+physics.producers.generator.SpillTimeConfig:  " evgb::EvtTimeFNALBeam  booster 
+intensity [ +1 2.0 -2 3e0 ] global=1234"
+
+#   NuMI nfilled 99 nperbatch 89 dtbucket 18.8313 dtbucket 18.1234  nosuchkey
+#   	 sigma=2.5 fwhm -1.76625 global 123456 
 
 
 # end-of-fcl

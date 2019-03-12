@@ -25,8 +25,8 @@
 
 namespace evgb {
 
-// define a type for the pointer to a function that returns a 
-//    evgb::EvtTimeShiftI* 
+// define a type for the pointer to a function that returns a
+//    evgb::EvtTimeShiftI*
 // i.e. calls the (typically default) ctor for the class.
 typedef evgb::EvtTimeShiftI* (*EvtTimeShiftICtorFuncPtr_t)(const std::string& );
 
@@ -36,7 +36,7 @@ public:
   static EvtTimeShiftFactory& Instance();
   // no public ctor for singleton, all user access is through Instance()
 
-  evgb::EvtTimeShiftI* GetEvtTimeShift(const std::string& name, 
+  evgb::EvtTimeShiftI* GetEvtTimeShift(const std::string& name,
                                        const std::string& config="") const;
   // instantiate a EvtTimeShift by name (1st arg), pass 2nd arg as config in ctor
 
@@ -49,7 +49,7 @@ public:
   void Print() const;
   // print what we know
 
-  bool RegisterCreator(std::string name, 
+  bool RegisterCreator(std::string name,
                        EvtTimeShiftICtorFuncPtr_t ctorptr, bool* ptr);
   // register a new EvtTimeShiftI type by passing pointer to creator function
 
@@ -63,9 +63,9 @@ private:
   std::map<std::string, bool*> fBoolPtrMap;
 
   mutable std::vector<std::string> listnames;
-  // copy of list of names, used solely due to AvailableFlavorMixers() 
+  // copy of list of names, used solely due to AvailableFlavorMixers()
   // method returning a const reference rather than a vector object.
-  // mutable because AvailableFlavorMixers() is const, but list might 
+  // mutable because AvailableFlavorMixers() is const, but list might
   // need recreation if new entries have been registered.
 
 private:
@@ -88,7 +88,7 @@ private:
          delete EvtTimeShiftFactory::fgTheInstance;
          EvtTimeShiftFactory::fgTheInstance = 0;
   } } };
-  friend struct Cleaner; 
+  friend struct Cleaner;
 
 };
 
@@ -115,12 +115,12 @@ private:
 //
 // The expanded code looks like:
 //   evgb::EvtTimeShiftI* MyTimeShiftClass_ctor_function () { return new MyTimeShiftClass; }
-//   static bool MyTimeShiftClass_creator_registered = 
+//   static bool MyTimeShiftClass_creator_registered =
 //     EvtTimeShiftFactory::Instance().RegisterCreator("MyTimeShiftClass",
 //                                               & MyTimeShiftClass_ctor_function );
 //   namespace myspace {
 //     evgb::EvtTimeShiftI* myAltAltTimeShift_ctor_function () { return new myspace::myAltAltTimeShift; }
-//     static bool myAltTimeShift_creator_registered = 
+//     static bool myAltTimeShift_creator_registered =
 //       EvtTimeShiftFactory::Instance().RegisterCreator("myspace::myAltAltTimeShift",
 //                                                 & myspace::myAltAltTimeShift_ctor_function ); }
 
@@ -129,7 +129,7 @@ private:
   static bool _name ## _creator_registered =                            \
     evgb::EvtTimeShiftFactory::Instance().RegisterCreator(# _name, \
                                         & _name ## _ctor_function,        \
-                                        & _name ## _creator_registered ); 
+                                        & _name ## _creator_registered );
 
 #define TIMESHIFTREG3( _ns, _name, _fqname ) \
 namespace _ns { \

@@ -20,9 +20,9 @@
 namespace evgb {
 
   class EvtTimeFNALBeam : public evgb::EvtTimeShiftI {
-    
+
   public:
-  
+
     EvtTimeFNALBeam(const std::string& config);
     virtual ~EvtTimeFNALBeam();
 
@@ -32,7 +32,7 @@ namespace evgb {
 
     /// each schema must take a string that configures it
     /// it is up to the individual model to parse said string
-    /// and extract parameters 
+    /// and extract parameters
     virtual void      Config(const std::string& config );
 
     /// return time within a 'record' in nanoseconds
