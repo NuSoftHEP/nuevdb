@@ -71,10 +71,10 @@ physics:
 
  producers:
  {
-   generator: @local::geniehelpertest_dune_dk2nu
+#   generator: @local::geniehelpertest_dune_dk2nu
 ### alternative tests
 ### change filenames below (at bottom of file)
-#   generator: @local::geniehelpertest_nova_dk2nu
+   generator: @local::geniehelpertest_nova_dk2nu
 #   generator: @local::geniehelpertest_dune_atmos  # BARTOL
 #   generator: @local::geniehelpertest_dune_atmos_honda_rotfd
 #   generator: @local::geniehelpertest_func
@@ -130,5 +130,11 @@ outputs:
 #                                           "GSPLOAD", "SomeArbitraryFile",
 #                                           "GPRODMODE", "yes"
 #                                         ]
+
+physics.producers.generator.GlobalTimeOffset:  500.
+physics.producers.generator.SpillTimeConfig:  " evgb::EvtTimeFNALBeam  booster
+dtbucket 18.1234 sigma 2.5 intensity [ +1 2.0 -2 3e0 ] global=1234"
+#   NuMI nfilled 99 nperbatch 89 dtbucket 18.8313 dtbucket 18.1234  nosuchkey
+#       sigma=2.5 fwhm -1.76625 global 123456
 
 # end-of-fcl
