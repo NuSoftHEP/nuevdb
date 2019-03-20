@@ -6,8 +6,8 @@ set( EVD_LIBS ${ART_FRAMEWORK_SERVICES_REGISTRY}
               ${ART_FRAMEWORK_CORE}
               art_Persistency_Common
               ${ART_FRAMEWORK_IO_SOURCES}
-              ${ART_FRAMEWORK_IO_ROOT}
-              ${ART_FRAMEWORK_IO_ROOT_ROOTINPUT_SOURCE}
+              ${ART_ROOT_IO}
+              ${ART_ROOT_IO_ROOTINPUT_SOURCE}
               ${ART_FRAMEWORK_PRINCIPAL}
               art_Persistency_Provenance
               art_Utilities

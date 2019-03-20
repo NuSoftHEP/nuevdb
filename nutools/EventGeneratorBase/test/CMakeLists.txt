@@ -6,10 +6,10 @@ art_make( MODULE_LIBRARIES nusimdata_SimulationBase
                         art_Framework_Services_Registry
 # for MixGenieEvents_module
 #                        art_Framework_Principal
-#                        art_Framework_Services_Optional_TFileService_service
+#                        art_root_io_TFileService_service
 #                        art_Framework_IO_ProductMix
-#                        art_Framework_IO_Root
-#                        art_Framework_Services_Optional
+#                        art_root_io
+#                        art_root_io_tfile_support ${ROOT_CORE}
 # end-of-list for MixGenieEvents_module
                         ${MF_MESSAGELOGGER}
                         ${MF_UTILITIES}
