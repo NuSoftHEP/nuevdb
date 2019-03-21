@@ -260,7 +260,7 @@ private:
 };
 
 evg::AddGenieEventsToArt::AddGenieEventsToArt(const Parameters& params)
-  : EDProducer()  // (params)  // but must have EDAnalyzer(params) ...
+  : EDProducer(params)
   , fParams(params)
   , fGlobalTimeOffset(0)
   , fTimeShifter(0)
