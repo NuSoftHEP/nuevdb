@@ -28,6 +28,7 @@
   #include "GHEP/GHepUtils.h"
   #include "PDG/PDGCodes.h"
   #include "PDG/PDGLibrary.h"
+  #include "GENIE/Utils/RunOpt.h"
 
   #include "Interaction/InitialState.h"
   #include "Interaction/Interaction.h"
@@ -53,6 +54,8 @@
   #include "GENIE/Framework/ParticleData/PDGLibrary.h"
   #include "GENIE/Framework/GHEP/GHepUtils.h"
   #include "GENIE/Framework/GHEP/GHepParticle.h"
+  #include "GENIE/Framework/Utils/RunOpt.h"
+  #include "GENIE/Framework/Utils/XSecSplineList.h"
 
   #include "GENIE/Framework/Interaction/InitialState.h"
   #include "GENIE/Framework/Interaction/Interaction.h"
@@ -89,6 +92,86 @@
 #include "dk2nu/genie/GDk2NuFlux.h"
 
 #include "messagefacility/MessageLogger/MessageLogger.h"
+#include "cetlib_except/exception.h"
+
+std::string evgb::ExpandEnvVar(const std::string& s)
+{
+  // utility function:
+  // if input "s" starts w/ $, return corresponding env var value,
+  // otherwise return as is
+
+  if ( s.find('$') != 0 ) return s;
+
+  // need to remove ${}'s
+  std::string sEnvVar = s;
+  char rmchars[] = "$(){} ";
+  for (unsigned int i = 0; i < strlen(rmchars); ++i) {
+    // remove moves matching characters in [first,last) to end and
+    //   returns a past-the-end iterator for the new end of the range [funky!]
+    // erase actually trims the string
+    sEnvVar.erase( std::remove(sEnvVar.begin(), sEnvVar.end(),
+                               rmchars[i]), sEnvVar.end() );
+  }
+  const char* charEnvValue = std::getenv(sEnvVar.c_str());
+  if ( ! charEnvValue ) {
+    // resolved into an empty string ... not what one would expect
+
+    throw cet::exception("UnresolvedEnvVariable")
+      << " can't resolve " << s << " via getenv(\"" << sEnvVar << "\")";
+    return s; // return original (though we won't get here due to throw)
+  }
+  return std::string(charEnvValue);
+
+}
+
+void evgb::SetEventGeneratorListAndTune(const std::string& evtgenlistname,
+                                        const std::string& tunename)
+{
+  // set EventGeneratorList name (if non-blank)
+  // set Tune name (if >= R-3_XX_YY)
+
+#ifdef GENIE_PRE_R3
+  mf::LogInfo("GENIE2ART") << "GENIE_PRE_R3 ignore setting tune name: \""
+                           << tunename << "\"";
+#else
+  // Constructor automatically calls grunopt->Init();
+  genie::RunOpt* grunopt = genie::RunOpt::Instance();
+
+  // SetEventGeneratorList wasn't introduced until R-3
+  std::string expEvtGenListName = evgb::ExpandEnvVar(evtgenlistname);
+  if ( expEvtGenListName != "" ) {
+    grunopt->SetEventGeneratorList(expEvtGenListName);
+  }
+
+  std::string expTuneName = evgb::ExpandEnvVar(tunename);
+  if ( expTuneName != tunename ) {
+    mf::LogInfo("GENIE2ART") << "TuneName started as '" << tunename << "' "
+                             << " converted to " << expTuneName;
+  }
+
+  // If the XSecSplineList returns a non-empty string as the current tune name,
+  // then genie::RunOpt::BuildTune() has already been called.
+  std::string current_tune = genie::XSecSplineList::Instance()->CurrentTune();
+  if ( current_tune.empty() ) {
+    // We need to build the GENIE tune config
+      mf::LogInfo("GENIE2ART") << "Configuring GENIE tune \""
+        << expTuneName << '\"';
+      grunopt->SetTuneName( expTuneName );
+      grunopt->BuildTune();
+      mf::LogInfo("GENIEHelper") << *(grunopt->Tune());
+    }
+    else {
+      // It has already been built, so just check consistency
+      if ( expTuneName != current_tune) {
+        throw cet::exception("TuneNameMismatch") << "Requested GENIE tune \""
+          << expTuneName << "\" does not match previously built tune \""
+          << current_tune << '\"';
+      }
+    }
+#endif
+
+}
+
 
 //---------------------------------------------------------------------------
 //choose a spill time (ns) to shift the vertex times by:
