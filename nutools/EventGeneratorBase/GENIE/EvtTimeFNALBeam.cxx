@@ -7,6 +7,29 @@
 ///          Fermi National Accelerator Laboratory
 ///
 /// \update  2015-06-22 initial version
+/// \update  2019-03-12 updated version w/ configurability for Booster
+///
+///  This routine is based on a "theoretical" description of how
+///  the Fermilab accelerator system works.
+///
+///  For the Booster there are 84 RF "buckets" or 84 "bunches" of protons
+///  in the system at a time;  a "notch" (3) is taken out
+///  leaving 81 filled buckets / bunches === "batch"
+///
+///  NuMI take 2 sets of 6 batches and stacks them.
+///  In actual practice doesn't have stacking so exact with a
+///  1-2 bucket offset, so inter-batch separation isn't as deep
+///  If we ever desire a more data driven time profile we can
+///  get wall monitor time structure histograms from Phil A.
+///
+///  A note about "bucket" or "bunch" width (essentially the same thing)
+///  per Phil A. private conversation (2010-03-25):
+///     0.75 ns sigma for NuMI comes from MINOS Time-of-Flight paper
+///        though it could be currently ~ 1ns
+///     2.0 - 2.5 ns width for Booster is reasonable
+///        it is expected that the Booster width >> NuMI width
+///        due to higher electric fields / deeper buckets
+///
 ////////////////////////////////////////////////////////////////////////
 
 #include "EvtTimeFNALBeam.h"
@@ -92,9 +115,9 @@ namespace evgb {
       } else
       if ( strs[i] == "booster" ) {
         fTimeBetweenBuckets     = 1e9/53.103e6;
-        fBucketTimeSigma        = 0.750;
-        fNBucketsPerBatch       = 84;  // NOvA-era 81+3, MINOS-era 81+5
-        fNFilledBucketsPerBatch = 81;  // 81 for both eras
+        fBucketTimeSigma        = 2.0;
+        fNBucketsPerBatch       = 84;  //
+        fNFilledBucketsPerBatch = 81;  //
         fDisallowedBatchMask    = std::vector<int>(1,0); // don't disallow any
         fGlobalOffset           = 0;
         std::vector<double> bi(1,1.0); // 1 batch
