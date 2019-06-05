@@ -4,7 +4,7 @@
 #  git remote remove origin
 
 #  AFTER EVERYTHING IS WORKING
-# remote add origin ssh://p-nurandom@cdcvs.fnal.gov/cvs/projects/nurandom
+# git remote add origin ssh://p-nugen@cdcvs.fnal.gov/cvs/projects/nugen
 # git remote -v
 # git push -u origin develop
 
