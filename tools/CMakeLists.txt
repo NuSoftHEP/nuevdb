@@ -11,6 +11,7 @@ macro( _nu_install_tools )
 endmacro( _nu_install_tools )
 
 add_subdirectory (refactor)
+add_subdirectory (nutools3)
 
 # This is for users NOT using mrb or cetbuildtools in their build system
 CONFIGURE_FILE ( ${CMAKE_CURRENT_SOURCE_DIR}/setup_cetbuildtools.csh.in
