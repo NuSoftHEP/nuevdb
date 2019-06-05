@@ -20,21 +20,22 @@ art_root_io     v1_00_06
 nusimdata       v1_17_01
 geant4          v4_10_3_p03d
 cry             v1_7m
+libwda		v2_26_0
 cetbuildtools   v7_12_01        -        only_for_build
 end_product_list
 
 
 # -nq- here means there is no qualifier
 # a - here means the dependent product is not required by the parent and will not be setup
-qualifier     nusimdata     art_root_io   cry       geant4    notes
-c2:py3:debug  c2:py3:debug  c2:py3:debug  c2:debug  c2:debug
-c2:py3:prof   c2:py3:prof   c2:py3:prof   c2:prof   c2:prof
-e17:py3:debug e17:py3:debug e17:py3:debug e17:debug e17:debug
-e17:py3:prof  e17:py3:prof  e17:py3:prof  e17:prof  e17:prof
-c2:debug      c2:debug      c2:debug      c2:debug  c2:debug
-c2:prof       c2:prof       c2:prof       c2:prof   c2:prof
-e17:debug     e17:debug     e17:debug     e17:debug e17:debug
-e17:prof      e17:prof      e17:prof      e17:prof  e17:prof
+qualifier     nusimdata     art_root_io   cry       geant4    libwda  notes
+c2:py3:debug  c2:py3:debug  c2:py3:debug  c2:debug  c2:debug  -nq-
+c2:py3:prof   c2:py3:prof   c2:py3:prof   c2:prof   c2:prof   -nq-
+e17:py3:debug e17:py3:debug e17:py3:debug e17:debug e17:debug -nq-
+e17:py3:prof  e17:py3:prof  e17:py3:prof  e17:prof  e17:prof  -nq-
+c2:debug      c2:debug      c2:debug      c2:debug  c2:debug  -nq-
+c2:prof       c2:prof       c2:prof       c2:prof   c2:prof   -nq-
+e17:debug     e17:debug     e17:debug     e17:debug e17:debug -nq-
+e17:prof      e17:prof      e17:prof      e17:prof  e17:prof  -nq-
 end_qualifier_list
 
 # Preserve tabs and formatting in emacs and vi / vim:
