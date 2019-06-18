@@ -18,23 +18,20 @@ bindir      fq_dir      bin
 product         version
 art             v2_13_00
 nusimdata       v1_16_02
-dk2nugenie      v01_08_00a
 geant4          v4_10_4_p02b
 cry             v1_7k
-ifdh_art        v2_07_04
+libwda          v2_26_0
 cetbuildtools   v7_12_01        -        only_for_build
 end_product_list
 
 
 # -nq- here means there is no qualifier
 # a - here means the dependent product is not required by the parent and will not be setup
-qualifier     nusimdata    art          dk2nugenie cry         geant4    ifdh_art           notes
-c2:debug      c2:debug     c2:debug     c2:debug   c2:debug    c2:debug  c2:s85:debug
-c2:prof       c2:prof      c2:prof      c2:prof    c2:prof     c2:prof   c2:s85:prof
-e17:debug     e17:debug    e17:debug    e17:debug  e17:debug   e17:debug e17:s85:debug
-e17:prof      e17:prof     e17:prof     e17:prof   e17:prof    e17:prof  e17:s85:prof
-e15:debug     e15:debug    e15:debug    e15:debug  e15:debug   e15:debug e15:s85:debug
-e15:prof      e15:prof     e15:prof     e15:prof   e15:prof    e15:prof  e15:s85:prof
+qualifier     nusimdata    art          cry         geant4    libwda           notes
+c2:debug      c2:debug     c2:debug     c2:debug    c2:debug  -nq-
+c2:prof       c2:prof      c2:prof      c2:prof     c2:prof   -nq-
+e17:debug     e17:debug    e17:debug    e17:debug   e17:debug -nq-
+e17:prof      e17:prof     e17:prof     e17:prof    e17:prof  -nq-
 end_qualifier_list
 
 # Preserve tabs and formatting in emacs and vi / vim:
