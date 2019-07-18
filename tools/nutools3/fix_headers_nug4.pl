@@ -9,7 +9,7 @@ BEGIN { %header_list = (
 "nutools/ParticleNavigation/ParticleList.h" => "nug4/ParticleNavigation/ParticleList.h",
 "nutools/ParticleNavigation/ParticleHistory.h" => "nug4/ParticleNavigation/ParticleHistory.h",
 "nutools/ParticleNavigation/EveIdCalculator.h" => "nug4/ParticleNavigation/EveIdCalculator.h",
-"nutools/MagneticField/.h" => "nug4/MagneticField/MagneticField.h",
+"nutools/MagneticField/MagneticField.h" => "nug4/MagneticField/MagneticField.h",
 "nutools/G4Base/UserAction.h" => "nug4/G4Base/UserAction.h",
 "nutools/G4Base/ConvertMCTruthToG4.h" => "nug4/G4Base/ConvertMCTruthToG4.h",
 "nutools/G4Base/UserActionManager.h" => "nug4/G4Base/UserActionManager.h",
@@ -17,7 +17,12 @@ BEGIN { %header_list = (
 "nutools/G4Base/PrimaryParticleInformation.h" => "nug4/G4Base/PrimaryParticleInformation.h",
 "nutools/G4Base/ExampleAction.h" => "nug4/G4Base/ExampleAction.h",
 "nutools/G4Base/UserActionFactory.h" => "nug4/G4Base/UserActionFactory.h",
-"nutools/G4Base/G4Helper.h" => "nug4/G4Base/G4Helper.h"
+"nutools/G4Base/G4Helper.h" => "nug4/G4Base/G4Helper.h",
+"nutools/G4Base/G4PhysicsProcessFactorySingleton.hh" => "nug4/G4Base/G4PhysicsProcessFactorySingleton.hh",
+"nutools/G4Base/G4PhysListFactorySingleton.hh" => "nug4/G4Base/G4PhysListFactorySingleton.hh",
+"nutools/G4Base/G4PhysListFactory.hh" => "nug4/G4Base/G4PhysListFactory.hh",
+"nutools/G4Base/G4PhysListRegisterOld.icc" => "nug4/G4Base/G4PhysListRegisterOld.icc",
+"nutools/G4Base/G4PhysicsProcessRegisterOld.icc" => "nug4/G4Base/G4PhysicsProcessRegisterOld.icc"
 		       ); }
 
 foreach my $inc (sort keys %header_list) {
