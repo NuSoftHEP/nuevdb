@@ -42,7 +42,6 @@ find_ups_product( postgresql )
 find_ups_product( nusimdata )
 find_ups_product( cetlib )
 find_ups_product( cetlib_except )
-find_ups_geant4( )
 find_ups_product( cetbuildtools )
 
 message(STATUS "ROOTSYS is ${ROOTSYS}")
@@ -57,8 +56,6 @@ include(BuildPlugins)
 include(CetRootCint)
 
 # include search path
-include_directories ( $ENV{G4INCLUDE} )
-include_directories ( $ENV{XERCES_C_INC} )
 include_directories ( $ENV{CRYHOME}/src )
 
 # included for Mac OSX using XQuartz for X11
