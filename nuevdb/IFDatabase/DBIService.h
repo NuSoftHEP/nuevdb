@@ -12,8 +12,8 @@
 #include "art/Framework/Services/Registry/ServiceHandle.h"
 #include "art/Framework/Services/Registry/ServiceMacros.h"
 #include "fhiclcpp/ParameterSet.h"
-#include "nutools/EventDisplayBase/Reconfigurable.h"
-#include "nutools/IFDatabase/Table.h"
+#include "nuevdb/EventDisplayBase/Reconfigurable.h"
+#include "nuevdb/IFDatabase/Table.h"
 
 
 namespace nutools

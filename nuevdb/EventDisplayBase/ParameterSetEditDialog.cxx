@@ -3,7 +3,7 @@
 /// \brief  Pop-up window for editing parameter sets
 /// \author messier@indiana.edu
 ///
-#include "nutools/EventDisplayBase/ParameterSetEditDialog.h"
+#include "nuevdb/EventDisplayBase/ParameterSetEditDialog.h"
 #include <iostream>
 #include <sstream>
 #include "TROOT.h"
@@ -17,8 +17,8 @@
 #include "TGListBox.h"
 #include "TGDoubleSlider.h"
 #include "fhiclcpp/ParameterSet.h"
-#include "nutools/EventDisplayBase/NavState.h"
-#include "nutools/EventDisplayBase/ServiceTable.h"
+#include "nuevdb/EventDisplayBase/NavState.h"
+#include "nuevdb/EventDisplayBase/ServiceTable.h"
 
 #include "messagefacility/MessageLogger/MessageLogger.h"
 

@@ -8,10 +8,10 @@
 #include <cstdlib>
 #include <wda.h>
 
-#include "nutools/IFDatabase/DataType.h"
-#include "nutools/IFDatabase/Column.h"
-#include "nutools/IFDatabase/ColumnDef.h"
-#include "nutools/IFDatabase/Row.h"
+#include "nuevdb/IFDatabase/DataType.h"
+#include "nuevdb/IFDatabase/Column.h"
+#include "nuevdb/IFDatabase/ColumnDef.h"
+#include "nuevdb/IFDatabase/Row.h"
 
 // Forward declarations for postgres types
 struct pg_conn;

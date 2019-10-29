@@ -5,7 +5,7 @@
 /// \version $Id: RootEnv.cxx,v 1.7 2011-10-31 14:41:40 greenc Exp $
 /// \author  messier@indiana.edu
 ////////////////////////////////////////////////////////////////////////
-#include "nutools/EventDisplayBase/RootEnv.h"
+#include "nuevdb/EventDisplayBase/RootEnv.h"
 
 #include <iostream>
 #include <string>

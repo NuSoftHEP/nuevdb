@@ -7,7 +7,7 @@
 #define EVDB_SERVICETABLE_H
 #include "cetlib/exempt_ptr.h"
 #include "fhiclcpp/ParameterSet.h"
-#include "nutools/EventDisplayBase/Reconfigurable.h"
+#include "nuevdb/EventDisplayBase/Reconfigurable.h"
 
 #include <vector>
 #include <map>

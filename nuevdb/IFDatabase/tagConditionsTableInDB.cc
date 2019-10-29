@@ -6,7 +6,7 @@
 #include <getopt.h>
 #include <string>
 
-#include "nutools/IFDatabase/Table.h"
+#include "nuevdb/IFDatabase/Table.h"
 
 std::string dbHost = "";
 std::string dbName = "";

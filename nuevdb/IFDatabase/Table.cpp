@@ -18,8 +18,8 @@
 #include <boost/algorithm/string/case_conv.hpp>
 #include <boost/date_time/posix_time/posix_time.hpp>
 
-#include <nutools/IFDatabase/Table.h>
-#include <nutools/IFDatabase/Util.h>
+#include <nuevdb/IFDatabase/Table.h>
+#include <nuevdb/IFDatabase/Util.h>
 
 namespace nutools {
   namespace dbi {

@@ -47,7 +47,7 @@ cet_rootcint( ${PACKAGE} )
 art_make_library( SOURCE ${src_files} ${CMAKE_CURRENT_BINARY_DIR}/${PACKAGE}Cint.cc
                   LIBRARIES nusimdata_SimulationBase ${EVD_LIBS} )
 
-set( EVD_SERVICE_LIBS nutools_EventDisplayBase ${EVD_LIBS} )
+set( EVD_SERVICE_LIBS nuevdb_EventDisplayBase ${EVD_LIBS} )
 simple_plugin( EventDisplay service ${EVD_SERVICE_LIBS} )
 simple_plugin( ScanOptions  service ${EVD_SERVICE_LIBS} )
 simple_plugin( Colors       service ${EVD_SERVICE_LIBS} )

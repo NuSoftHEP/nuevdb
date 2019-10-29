@@ -21,25 +21,25 @@ art_make_library( SOURCE ${src_files} #${CMAKE_CURRENT_BINARY_DIR}/${PACKAGE}Cin
 
 art_make_exec( NAME tagConditionsTableInDB
                SOURCE tagConditionsTableInDB.cc
-               LIBRARIES nutools_IFDatabase
+               LIBRARIES nuevdb_IFDatabase
                          ${CURL}
                )
 
 art_make_exec( NAME writeConditionsCSVToDB.cc
                SOURCE writeConditionsCSVToDB.cc
-               LIBRARIES nutools_IFDatabase
+               LIBRARIES nuevdb_IFDatabase
                          ${CURL}
                )
 
 art_make_exec( NAME dumpConditionsToCSV
                SOURCE dumpConditionsToCSV.cc
-               LIBRARIES nutools_IFDatabase
+               LIBRARIES nuevdb_IFDatabase
                          ${CURL}
                )
 
 simple_plugin( DBI "service"
-               nutools_EventDisplayBase
-               nutools_IFDatabase
+               nuevdb_EventDisplayBase
+               nuevdb_IFDatabase
                ${ART_FRAMEWORK_CORE}
                ${ART_FRAMEWORK_PRINCIPAL}
                ${ART_FRAMEWORK_SERVICES_REGISTRY}

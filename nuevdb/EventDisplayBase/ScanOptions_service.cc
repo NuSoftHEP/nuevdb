@@ -7,7 +7,7 @@
 ////////////////////////////////////////////////////////////////////////
 // Framework includes
 
-#include "nutools/EventDisplayBase/ScanOptions.h"
+#include "nuevdb/EventDisplayBase/ScanOptions.h"
 
 #include <iostream>
 

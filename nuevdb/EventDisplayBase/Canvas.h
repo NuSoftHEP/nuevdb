@@ -10,7 +10,7 @@
 
 #include "TQObject.h"
 #include "RQ_OBJECT.h"
-#include "nutools/EventDisplayBase/Printable.h"
+#include "nuevdb/EventDisplayBase/Printable.h"
 
 class TGMainFrame;
 class TGCompositeFrame;
