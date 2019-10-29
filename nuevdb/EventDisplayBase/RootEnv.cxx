@@ -17,7 +17,6 @@
 #include "TApplication.h"
 #include "TRootApplication.h"
 #include "TGClient.h"
-#include "TGX11.h"
 #include "TRint.h"
 #include "TSystem.h"
 #include "TSysEvtHandler.h"
@@ -50,9 +49,7 @@ namespace evdb{
     else {
       gROOT->SetBatch(kFALSE);
       if (gClient==0) {
-	gSystem->Load("libGX11.so");
-	gVirtualX = new TGX11("X11","X11 session");
-	new TGClient(getenv("DISPLAY"));
+        app->InitializeGraphics();
       }
     }
 

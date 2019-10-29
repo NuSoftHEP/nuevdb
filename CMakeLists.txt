@@ -37,6 +37,7 @@ cet_report_compiler_flags()
 
 # these are minimum required versions, not the actual product versions
 find_ups_product( art )
+find_ups_product(art_root_io)
 find_ups_product( libwda )
 find_ups_product( postgresql )
 find_ups_product( nusimdata )
@@ -45,10 +46,6 @@ find_ups_product( cetlib_except )
 find_ups_product( cetbuildtools )
 
 message(STATUS "ROOTSYS is ${ROOTSYS}")
-
-## find_library directives
-# other dependencies
-cet_find_library( CRY NAMES CRY PATHS ENV CRY_LIB NO_DEFAULT_PATH )
 
 # macros
 include(ArtMake)

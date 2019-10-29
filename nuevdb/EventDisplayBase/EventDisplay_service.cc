@@ -12,7 +12,7 @@
 #include "TText.h"
 #include "TCanvas.h"
 // ART includes framework includes
-#include "art/Framework/IO/Root/RootInput.h"
+#include "art_root_io/RootInput.h"
 #include "art/Framework/Services/Registry/ActivityRegistry.h"
 #include "cetlib_except/exception.h"
 // Local includes
@@ -203,7 +203,7 @@ namespace evdb
       int result;
       result=rename(fEchoPrintTempFile.c_str(),fEchoPrintFile.c_str());
       if (result==0)
-        LOG_DEBUG("EventDisplayBase") << fEchoPrintTempFile
+        MF_LOG_DEBUG("EventDisplayBase") << fEchoPrintTempFile
         << " tempfile successfully renamed to "
         << fEchoPrintFile;
       else

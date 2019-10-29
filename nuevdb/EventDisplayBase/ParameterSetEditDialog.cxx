@@ -275,7 +275,7 @@ void ParameterSetEditRow::UnpackParameter(const fhicl::ParameterSet& p,
           //
           // If that fails we are very stuck. Print a message and fail.
           //
-          LOG_ERROR("ParameterSetEditDialog") << "Failed to parse " << key
+          MF_LOG_ERROR("ParameterSetEditDialog") << "Failed to parse " << key
                                               << "\n" << p.to_string();
         }
       }
@@ -322,7 +322,7 @@ bool ParameterSetEditRow::IsLegalGUItag(const std::string& s)
   for(unsigned int i=0; i<gsGUITAG.size(); ++i) {
     if (s==gsGUITAG[i]) return true;
   }
-  LOG_ERROR("ParameterSetEditDialog") << s << " is not a legal GUI tag.";
+  MF_LOG_ERROR("ParameterSetEditDialog") << s << " is not a legal GUI tag.";
   return false;
 }
 
