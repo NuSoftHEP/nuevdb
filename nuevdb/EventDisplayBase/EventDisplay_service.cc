@@ -144,14 +144,14 @@ namespace evdb
 
   //......................................................................
 
-  void EventDisplay::preProcessEvent(art::Event const & evt)
+  void EventDisplay::preProcessEvent(art::Event const & evt, art::ScheduleContext)
   {
     evdb::DisplayWindow::SetRunEventAll(evt.id().run(), evt.id().event());
   }
 
   //......................................................................
 
-  void EventDisplay::postProcessEvent(art::Event const& evt)
+  void EventDisplay::postProcessEvent(art::Event const& evt, art::ScheduleContext)
   {
     // stuff the event into the holder
     evdb::EventHolder *holder = evdb::EventHolder::Instance();
