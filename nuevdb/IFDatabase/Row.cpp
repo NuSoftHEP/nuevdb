@@ -5,7 +5,7 @@
 #include <cctype>
 #include <string>
 
-#include <nutools/IFDatabase/Row.h>
+#include <nuevdb/IFDatabase/Row.h>
 
 namespace nutools {  
   namespace dbi {

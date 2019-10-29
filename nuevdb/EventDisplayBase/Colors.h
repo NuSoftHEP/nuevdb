@@ -13,7 +13,7 @@
 #include "art/Framework/Services/Registry/ServiceHandle.h"
 #include "art/Framework/Services/Registry/ServiceMacros.h"
 #include "fhiclcpp/ParameterSet.h"
-#include "nutools/EventDisplayBase/Reconfigurable.h"
+#include "nuevdb/EventDisplayBase/Reconfigurable.h"
 
 namespace evdb
 {

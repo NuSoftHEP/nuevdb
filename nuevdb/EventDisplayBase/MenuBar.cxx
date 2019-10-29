@@ -9,11 +9,11 @@
 #include "TGLayout.h"
 #include "TGMenu.h"
 
-#include "nutools/EventDisplayBase/MenuBar.h"
-#include "nutools/EventDisplayBase/FileMenu.h"
-#include "nutools/EventDisplayBase/EditMenu.h"
-#include "nutools/EventDisplayBase/WindowMenu.h"
-#include "nutools/EventDisplayBase/HelpMenu.h"
+#include "nuevdb/EventDisplayBase/MenuBar.h"
+#include "nuevdb/EventDisplayBase/FileMenu.h"
+#include "nuevdb/EventDisplayBase/EditMenu.h"
+#include "nuevdb/EventDisplayBase/WindowMenu.h"
+#include "nuevdb/EventDisplayBase/HelpMenu.h"
 
 namespace evdb{
 

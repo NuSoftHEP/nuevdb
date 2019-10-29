@@ -11,8 +11,8 @@
 ////////////////////////////////////////////////////////////////////////
 
 // NuTools includes
-#include "nutools/EventDisplayBase/Canvas.h"
-#include "nutools/EventDisplayBase/Printable.h"
+#include "nuevdb/EventDisplayBase/Canvas.h"
+#include "nuevdb/EventDisplayBase/Printable.h"
 
 // ROOT includes
 #include "TCanvas.h"

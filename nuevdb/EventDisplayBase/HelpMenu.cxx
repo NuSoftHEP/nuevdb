@@ -17,8 +17,8 @@
 #include "TGMenu.h"
 #include "TGLayout.h"
 
-#include "nutools/EventDisplayBase/HelpMenu.h"
-#include "nutools/EventDisplayBase/evdb.h"
+#include "nuevdb/EventDisplayBase/HelpMenu.h"
+#include "nuevdb/EventDisplayBase/evdb.h"
 
 namespace evdb{
 

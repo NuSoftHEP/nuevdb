@@ -6,8 +6,8 @@
 /// \author  messier@indiana.edu
 ////////////////////////////////////////////////////////////////////////
 #include <algorithm>
-#include "nutools/EventDisplayBase/View2D.h"
-#include "nutools/EventDisplayBase/Functors.h"
+#include "nuevdb/EventDisplayBase/View2D.h"
+#include "nuevdb/EventDisplayBase/Functors.h"
 
 #include "TGraph.h"
 #include "TPad.h"

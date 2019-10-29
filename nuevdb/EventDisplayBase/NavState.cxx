@@ -4,7 +4,7 @@
 /// \version $Id: NavState.cxx,v 1.3 2011-09-01 22:17:55 brebel Exp $
 /// \author  messier@indiana.edu
 ///
-#include "nutools/EventDisplayBase/NavState.h"
+#include "nuevdb/EventDisplayBase/NavState.h"
 
 #include "TROOT.h"
 #include "TApplication.h"

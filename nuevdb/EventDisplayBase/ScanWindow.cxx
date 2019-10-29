@@ -18,10 +18,10 @@
 #include "TSystem.h"
 #include "TTimeStamp.h"
 
-#include "nutools/EventDisplayBase/ScanWindow.h"
-#include "nutools/EventDisplayBase/ScanOptions.h"
-#include "nutools/EventDisplayBase/NavState.h"
-#include "nutools/EventDisplayBase/EventHolder.h"
+#include "nuevdb/EventDisplayBase/ScanWindow.h"
+#include "nuevdb/EventDisplayBase/ScanOptions.h"
+#include "nuevdb/EventDisplayBase/NavState.h"
+#include "nuevdb/EventDisplayBase/EventHolder.h"
 #include "nusimdata/SimulationBase/MCTruth.h"
 #include "nusimdata/SimulationBase/MCNeutrino.h"
 

@@ -1,6 +1,6 @@
 #include <algorithm>
-#include "nutools/EventDisplayBase/View3D.h"
-#include "nutools/EventDisplayBase/Functors.h"
+#include "nuevdb/EventDisplayBase/View3D.h"
+#include "nuevdb/EventDisplayBase/Functors.h"
 
 namespace evdb{
 

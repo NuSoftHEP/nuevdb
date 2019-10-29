@@ -5,7 +5,7 @@
 /// \version $Id: EventHolder.cxx,v 1.2 2011-01-19 16:44:59 p-nusoftart Exp $
 ///
 #include <iostream>
-#include "nutools/EventDisplayBase/EventHolder.h"
+#include "nuevdb/EventDisplayBase/EventHolder.h"
 
 namespace evdb{
 

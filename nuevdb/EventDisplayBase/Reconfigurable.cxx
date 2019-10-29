@@ -1,5 +1,5 @@
-#include "nutools/EventDisplayBase/Reconfigurable.h"
-#include "nutools/EventDisplayBase/ServiceTable.h"
+#include "nuevdb/EventDisplayBase/Reconfigurable.h"
+#include "nuevdb/EventDisplayBase/ServiceTable.h"
 
 #include <iostream>
 
