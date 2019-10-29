@@ -1,8 +1,8 @@
 # ======================================================================
-#  nutools main build file
+#  nuevdb main build file
 #
 #  cd .../path/to/build/directory
-#  source .../path/to/nutools/ups/setup_for_development
+#  source .../path/to/nuevdb/ups/setup_for_development
 #  cmake [-DCMAKE_INSTALL_PREFIX=/install/path]
 #        -DCMAKE_BUILD_TYPE=$CETPKG_TYPE
 #        $CETPKG_SOURCE
@@ -15,7 +15,7 @@
 
 cmake_minimum_required(VERSION 3.11)  # use cmake 3.11 or later
 
-project(nutools)
+project(nuevdb)
 
 # cetbuildtools contains our cmake modules
 find_package(cetbuildtools REQUIRED)
@@ -73,8 +73,7 @@ if(APPLE)
 endif()
 
 # source
-add_subdirectory (nutools)
-add_subdirectory (tools)
+add_subdirectory (nuevdb)
 
 # ups - table and config files
 add_subdirectory(ups)
