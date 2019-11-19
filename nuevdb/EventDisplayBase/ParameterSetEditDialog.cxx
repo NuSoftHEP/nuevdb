@@ -66,6 +66,15 @@ namespace {
                                           kCHECK_BOX,
                                           kSLIDER,
                                           kSLIDER_INT};
+  std::string maybe_quoted(std::string element)
+  {
+    // If there are any symbols in the string that have special
+    // meaning in FHiCL, then escape the string with quotes.
+    if (element.find_first_of(":[{}]@") != std::string::npos) {
+      return '"' + element + '"';
+    }
+    return element;
+  }
 }
 
 //======================================================================
@@ -203,7 +212,7 @@ ParameterSetEditRow::UnpackParameter(const fhicl::ParameterSet& p,
   // Try first to extract a single value.
   try {
     auto const v = p.get<std::string>(valkey);
-    value.push_back(v);
+    value.push_back(maybe_quoted(v));
     flag |= kSINGLE_VALUED_PARAM;
     return;
   }
@@ -212,7 +221,11 @@ ParameterSetEditRow::UnpackParameter(const fhicl::ParameterSet& p,
 
   // Could not extract as single value; try extracting multiple values
   try {
-    value = p.get<std::vector<std::string>>(valkey);
+    auto tmp = p.get<std::vector<std::string>>(valkey);
+    for (auto& element : tmp) {
+      element = maybe_quoted(element);
+    }
+    value = move(tmp);
     flag |= kVECTOR_PARAM;
     if (empty(value))
       value.push_back("");
@@ -241,7 +254,7 @@ ParameterSetEditRow::UnpackParameter(const fhicl::ParameterSet& p,
       std::string s{"["};
       auto const m = size(vv[i]);
       for (std::size_t j = 0; j < m; ++j) {
-        s += vv[i][j];
+        s += maybe_quoted(vv[i][j]);
         if (j + 2 < m)
           s += ",";
         else
