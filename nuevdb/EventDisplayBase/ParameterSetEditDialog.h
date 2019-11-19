@@ -142,14 +142,14 @@ namespace evdb {
   public:
     ParameterSetEditFrame* fFrame; ///< The parent frame
   public:
-    TGHorizontalFrame* fMother; ///< Top level frame
-    TGLayoutHints* fRightLH;    ///< Align to right
-    TGLayoutHints* fLeftLH;     ///< Align to left
-    TGTextButton* fLabel;       ///< Label on the left
+    TGHorizontalFrame* fMother;       ///< Top level frame
+    TGLayoutHints* fRightLH{nullptr}; ///< Align to right
+    TGLayoutHints* fLeftLH{nullptr};  ///< Align to left
+    TGTextButton* fLabel{nullptr};    ///< Label on the left
   public:
-    TGTextEntry* fTextEntry;
-    TGListBox* fListBox;
-    TGDoubleSlider* fSlider;
+    TGTextEntry* fTextEntry{nullptr};
+    TGListBox* fListBox{nullptr};
+    TGDoubleSlider* fSlider{nullptr};
     std::vector<TGRadioButton*> fRadioButton;
     std::vector<TGCheckButton*> fCheckButton;
 
