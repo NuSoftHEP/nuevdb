@@ -1,4 +1,3 @@
-
 set( PACKAGE EventDisplayBase )
 FILE( GLOB src_files *.cxx )
 
@@ -11,12 +10,12 @@ set( EVD_LIBS ${ART_FRAMEWORK_SERVICES_REGISTRY}
               ${ART_FRAMEWORK_PRINCIPAL}
               art_Persistency_Provenance
               art_Utilities
-	      canvas
+              canvas
               ${MF_MESSAGELOGGER}
               ${MF_UTILITIES}
               ${FHICLCPP}
               cetlib
-	      cetlib_except
+              cetlib_except
               ${Boost_SYSTEM_LIBRARY}
               ${ROOT_EVE}
               ${ROOT_EG}
