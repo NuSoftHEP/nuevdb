@@ -1,6 +1,6 @@
 # The parent line must be the first non-comment line in the file
 # This line defines the product name and version
-parent nuevdb  v1_01_01
+parent nuevdb  v1_01_02
 defaultqual     e17
 
 # These optional lines define the installed directories where
@@ -17,7 +17,7 @@ bindir      fq_dir      bin
 #
 product         version
 art_root_io     v1_01_04
-nusimdata       v1_20_00
+nusimdata       v1_20_01
 libwda		v2_26_0
 cetbuildtools   v7_14_00        -        only_for_build
 end_product_list
@@ -26,12 +26,20 @@ end_product_list
 # -nq- here means there is no qualifier
 # a - here means the dependent product is not required by the parent and will not be setup
 qualifier     nusimdata     art_root_io   libwda  notes
+c7:py3:debug  c7:py3:debug  c7:py3:debug  -nq-
+c7:py3:prof   c7:py3:prof   c7:py3:prof   -nq-
 c2:py3:debug  c2:py3:debug  c2:py3:debug  -nq-
 c2:py3:prof   c2:py3:prof   c2:py3:prof   -nq-
+e19:py3:debug e19:py3:debug e19:py3:debug -nq-
+e19:py3:prof  e19:py3:prof  e19:py3:prof  -nq-
 e17:py3:debug e17:py3:debug e17:py3:debug -nq-
 e17:py3:prof  e17:py3:prof  e17:py3:prof  -nq-
+c7:debug      c7:debug      c7:debug      -nq-
+c7:prof       c7:prof       c7:prof       -nq-
 c2:debug      c2:debug      c2:debug      -nq-
 c2:prof       c2:prof       c2:prof       -nq-
+e19:debug     e19:debug     e19:debug     -nq-
+e19:prof      e19:prof      e19:prof      -nq-
 e17:debug     e17:debug     e17:debug     -nq-
 e17:prof      e17:prof      e17:prof      -nq-
 end_qualifier_list
