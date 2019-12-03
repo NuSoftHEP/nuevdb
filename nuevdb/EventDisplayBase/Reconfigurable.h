@@ -6,15 +6,15 @@
 #ifndef EVDB_RECONFIGURABLE_H
 #define EVDB_RECONFIGURABLE_H
 
-namespace fhicl { class ParameterSet; }
+#include "fhiclcpp/fwd.h"
 
 namespace evdb {
 
   class Reconfigurable {
   public:
-
     explicit Reconfigurable(fhicl::ParameterSet const& ps);
     void do_reconfigure(fhicl::ParameterSet const& pset) { reconfigure(pset); }
+    virtual ~Reconfigurable() = default;
 
   private:
     virtual void reconfigure(fhicl::ParameterSet const&) = 0;
