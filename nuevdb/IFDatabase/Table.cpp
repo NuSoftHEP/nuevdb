@@ -440,7 +440,7 @@ namespace nutools {
 
     //************************************************************
 
-    void Table::SetRecordTime(float t)
+    void Table::SetRecordTime(double t)
     {
       fRecordTime = t;
       fHasRecordTime = true;
@@ -1704,11 +1704,11 @@ namespace nutools {
 	    continue;
 	  }
 	  else if (i == tvIdx) {
-	    float t1 = strtof(ss,NULL);
+	    double t1 = strtod(ss,NULL);
 	    fRow[ioff+irow].SetVldTime(t1);
 	  }
 	  else if (i == tvEndIdx) {
-	    float t1 = strtof(ss,NULL);
+	    double t1 = strtod(ss,NULL);
 	    fRow[ioff+irow].SetVldTimeEnd(t1);	    
 	  }
 	  else {
@@ -1983,7 +1983,7 @@ namespace nutools {
     {
       nutools::dbi::Row* row;
       uint64_t chan;
-      float tv;
+      double tv;
       fChanRowMap.clear();
 
       for (int i=0; i<this->NRow(); ++i) {
@@ -2025,12 +2025,12 @@ namespace nutools {
 
     //************************************************************
 
-    nutools::dbi::Row* Table::GetVldRow(uint64_t channel, float t)
+    nutools::dbi::Row* Table::GetVldRow(uint64_t channel, double t) 
     {      
       std::vector<nutools::dbi::Row*>& rlist = fChanRowMap[channel];
       if (rlist.empty()) return 0;
       int irow=-1;
-      float tv;
+      double tv;
       // fChanRowMap is time-ordered, so this simplifies things
       unsigned int i=0;
       for ( ; i<rlist.size(); ++i) {
