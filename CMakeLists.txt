@@ -19,10 +19,6 @@ project(nuevdb LANGUAGES CXX)
 # cetbuildtools contains our cmake modules
 find_package(cetbuildtools REQUIRED)
 
-list(APPEND CMAKE_MODULE_PATH
-  $ENV{CANVAS_ROOT_IO_DIR}/Modules
-  $ENV{ART_DIR}/Modules)
-
 include(CetCMakeEnv)
 cet_cmake_env()
 
@@ -37,6 +33,7 @@ cet_report_compiler_flags()
 # these are minimum required versions, not the actual product versions
 find_ups_product( art )
 find_ups_product(art_root_io)
+find_ups_product(canvas_root_io)
 find_ups_product( libwda )
 find_ups_product( postgresql )
 find_ups_product( nusimdata )
