@@ -21,6 +21,7 @@ extern "C" {
 #include "TGWindow.h"
 #include "TGButton.h"
 #include "TGTextEntry.h"
+#include "TVirtualX.h"
 
 #include "nuevdb/EventDisplayBase/ParameterSetEdit.h"
 #include "nuevdb/EventDisplayBase/NavState.h"
