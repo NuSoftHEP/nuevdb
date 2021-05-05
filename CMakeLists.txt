@@ -40,6 +40,7 @@ find_ups_product( nusimdata )
 find_ups_product( cetlib )
 find_ups_product( cetlib_except )
 find_ups_root()
+find_ups_boost()
 
 message(STATUS "ROOTSYS is ${ROOTSYS}")
 
