@@ -8,7 +8,7 @@
 #ifndef EVDB_EVENTDISPLAY_H
 #define EVDB_EVENTDISPLAY_H
 
-#include "art/Framework/Services/Registry/ServiceMacros.h"
+#include "art/Framework/Services/Registry/ServiceDeclarationMacros.h"
 #include "art/Persistency/Provenance/ScheduleContext.h"
 
 namespace fhicl { class ParameterSet; }
