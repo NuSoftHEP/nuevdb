@@ -8,6 +8,7 @@
 // Framework includes
 
 #include "nuevdb/EventDisplayBase/ScanOptions.h"
+#include "art/Framework/Services/Registry/ServiceDefinitionMacros.h"
 
 #include <iostream>
 
