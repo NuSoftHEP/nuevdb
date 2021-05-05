@@ -14,6 +14,7 @@
 // ART includes framework includes
 #include "art_root_io/RootInput.h"
 #include "art/Framework/Services/Registry/ActivityRegistry.h"
+#include "art/Framework/Services/Registry/ServiceDefinitionMacros.h"
 #include "cetlib_except/exception.h"
 // Local includes
 #include "nuevdb/EventDisplayBase/ServiceTable.h"

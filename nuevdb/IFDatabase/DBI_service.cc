@@ -8,6 +8,7 @@
 
 // Framework includes
 #include "messagefacility/MessageLogger/MessageLogger.h"
+#include "art/Framework/Services/Registry/ServiceDefinitionMacros.h"
 
 namespace nutools
 {
