@@ -311,10 +311,8 @@ namespace evdb{
     // do we need to get the truth information?
     if(scanopt->fIncludeMCInfo){
 
-      std::vector< art::Handle< std::vector<simb::MCTruth> > > mclist;
-
       try {
-	evt->getManyByType(mclist);
+	auto const mclist = evt->getMany<std::vector<simb::MCTruth>>();
 	
 	bool listok = (mclist.size()>0);
 	bool isnu   = false;
