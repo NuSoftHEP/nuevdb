@@ -6,7 +6,7 @@
 #include "nuevdb/EventDisplayBase/ServiceTable.h"
 
 #include "fhiclcpp/intermediate_table.h"
-#include "fhiclcpp/make_ParameterSet.h"
+//#include "fhiclcpp/make_ParameterSet.h"
 #include "messagefacility/MessageLogger/MessageLogger.h"
 
 #include "nuevdb/EventDisplayBase/ParameterSetEdit.h"
@@ -77,7 +77,8 @@ void ServiceTable::ApplyEdits()
       //
       // Each of the next 2 lines may throw on error: should check.
       //
-      fhicl::make_ParameterSet(s.fParamSet, pset);
+      //fhicl::make_ParameterSet(s.fParamSet, pset);
+      pset = fhicl::ParameterSet::make(s.fParamSet);
       s.fParamSet.clear();
       s.fService->do_reconfigure(pset);
       s.fCurrentParamSet = pset;
