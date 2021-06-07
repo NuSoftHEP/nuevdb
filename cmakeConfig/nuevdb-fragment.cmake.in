@@ -1,0 +1,4 @@
+find_package( art-root-io REQUIRED )
+find_package( libwda )
+find_package( PostgreSQL REQUIRED)
+find_package( nusimdata REQUIRED)
