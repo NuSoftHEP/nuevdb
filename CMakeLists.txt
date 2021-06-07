@@ -13,10 +13,11 @@
 #  make package (builds distribution tarfile)
 # ======================================================================
 
-cmake_minimum_required(VERSION 3.19 FATAL_ERROR)
-project(nuevdb 1.03.04 LANGUAGES CXX)
+cmake_minimum_required(VERSION 3.18.2 FATAL_ERROR)
+project(nuevdb LANGUAGES CXX)
 
-find_package(cetmodules REQUIRED)
+# cetbuildtools contains our cmake modules
+find_package(cetbuildtools REQUIRED)
 
 include(CetCMakeEnv)
 cet_cmake_env()
@@ -49,7 +50,7 @@ include(BuildPlugins)
 include(CetRootCint)
 
 # include search path
-include_directories ( ${CRYHOME}/src )
+include_directories ( $ENV{CRYHOME}/src )
 
 # included for Mac OSX using XQuartz for X11
 if(APPLE)
@@ -58,10 +59,10 @@ endif()
 
 # source
 add_subdirectory (nuevdb)
-add_subdirectory(cmakeConfig)
+
 # ups - table and config files
-#add_subdirectory(ups)
+add_subdirectory(ups)
 
 # packaging utility
-#include(UseCPack)
+include(UseCPack)
 
