@@ -47,9 +47,9 @@ simple_plugin( DBI "service"
                art_Persistency_Common
                art_Utilities
                canvas
-               ${MF_MESSAGELOGGER}
-               ${MF_UTILITIES}
-               ${FHICLCPP}
+               messagefacility::MFMessageLogger
+               messagefacility::headers
+               fhiclcpp::fhiclcpp fhiclcpp::types
                cetlib
                cetlib_except
              )
