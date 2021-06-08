@@ -34,7 +34,7 @@ find_ups_product( art )
 find_ups_product(art_root_io)
 find_ups_product(canvas_root_io)
 find_ups_product( libwda )
-find_ups_product( postgresql )
+find_package( postgresql )
 find_ups_product( nusimdata )
 find_ups_product( cetlib )
 find_ups_product( cetlib_except )
@@ -60,7 +60,9 @@ endif()
 add_subdirectory (nuevdb)
 
 # ups - table and config files
+if(WANT_UPS)
 add_subdirectory(ups)
+endif()
 
 # packaging utility
 include(UseCPack)
