@@ -11,7 +11,7 @@ set( EVD_LIBS ${ART_FRAMEWORK_SERVICES_REGISTRY}
               art_Persistency_Provenance
               art_Utilities
               canvas
-              messagefacility::MFMessageLogger
+              messagefacility::MF_MessageLogger
               messagefacility::headers
               fhiclcpp::fhiclcpp fhiclcpp::types
               cetlib
