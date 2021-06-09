@@ -1,13 +1,13 @@
 set( PACKAGE EventDisplayBase )
 FILE( GLOB src_files *.cxx )
 
-set( EVD_LIBS ${ART_FRAMEWORK_SERVICES_REGISTRY}
-              ${ART_FRAMEWORK_CORE}
+set( EVD_LIBS art::Framework_Services_Registry
+              art::Framwork_Core
               art_Persistency_Common
-              ${ART_FRAMEWORK_IO_SOURCES}
-              ${ART_ROOT_IO}
-              ${ART_ROOT_IO_ROOTINPUT_SOURCE}
-              ${ART_FRAMEWORK_PRINCIPAL}
+              art::Framework_IO_Sources
+              art_root_io::art_root_io
+              art_root_io::RootInput_source
+              art::Framework_Principal
               art_Persistency_Provenance
               art_Utilities
               canvas

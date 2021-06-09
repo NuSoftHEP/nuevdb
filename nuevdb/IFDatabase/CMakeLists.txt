@@ -44,10 +44,10 @@ art_make_exec( NAME dumpConditionsToCSV
 simple_plugin( DBI "service"
                nuevdb_EventDisplayBase
                nuevdb_IFDatabase
-               ${ART_FRAMEWORK_CORE}
-               ${ART_FRAMEWORK_PRINCIPAL}
-               ${ART_FRAMEWORK_SERVICES_REGISTRY}
-               ${ART_FRAMEWORK_SERVICES_BASIC}
+               art::Framwork_Core
+               art::Framework_Principal
+               art::Framework_Services_Registry
+               art::Framework_Services_Registry art::Framework_Services_FileServiceInterfaces
                art_Persistency_Common
                art_Utilities
                canvas
