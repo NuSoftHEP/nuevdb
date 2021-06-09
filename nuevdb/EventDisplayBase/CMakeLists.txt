@@ -2,7 +2,7 @@ set( PACKAGE EventDisplayBase )
 FILE( GLOB src_files *.cxx )
 
 set( EVD_LIBS art::Framework_Services_Registry
-              art::Framwork_Core
+              art::Framework_Core
               art_Persistency_Common
               art::Framework_IO_Sources
               art_root_io::art_root_io
