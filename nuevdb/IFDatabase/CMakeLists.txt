@@ -2,7 +2,7 @@ set( PACKAGE IFDatabase )
 FILE( GLOB src_files *.cpp )
 
 find_library( WDA     NAMES wda     PATHS ENV LIBWDA_LIB)
-get_filename_component(WDA_LIB     ${WDA}     DIRECTORY)
+get_filename_component(WDA_LIB     "${WDA}"     DIRECTORY)
 include_directories("${WDA_LIB}/../include")
 
 cet_find_library( PQ NAMES pq PATHS ENV POSTGRESQL_LIBRARIES )
@@ -12,7 +12,7 @@ get_filename_component(CURL_LIB     ${CURL}     DIRECTORY)
 include_directories("${CURL_LIB}/../include")
 
 art_make_library( SOURCE ${src_files} #${CMAKE_CURRENT_BINARY_DIR}/${PACKAGE}Cint.cc
-                  LIBRARIES     ${LIBWDA}
+                  LIBRARIES     ${WDA}
                                 ${BOOST_DATE_TIME}
                                 ${BOOST_SYSTEM}
                                 ${BOOST_FILESYSTEM}
