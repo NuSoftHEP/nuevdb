@@ -44,7 +44,7 @@ art_make_exec( NAME dumpConditionsToCSV
 simple_plugin( DBI "service"
                nuevdb_EventDisplayBase
                nuevdb_IFDatabase
-               art::Framwork_Core
+               art::Framework_Core
                art::Framework_Principal
                art::Framework_Services_Registry
                art::Framework_Services_Registry art::Framework_Services_FileServiceInterfaces
