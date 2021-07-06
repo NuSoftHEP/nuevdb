@@ -5,17 +5,15 @@ cet_find_library( LIBWDA NAMES wda PATHS ENV LIBWDA_LIB NO_DEFAULT_PATH )
 cet_find_library( PQ NAMES pq PATHS ENV POSTGRESQL_LIBRARIES NO_DEFAULT_PATH )
 find_library( CURL NAMES curl )
 
-include_directories( $ENV{LIBWDA_FQ_DIR}/include )
-
 art_make_library( SOURCE ${src_files} #${CMAKE_CURRENT_BINARY_DIR}/${PACKAGE}Cint.cc
-                  LIBRARIES     ${LIBWDA}
+                  LIBRARIES     LIBWDA
                                 ${BOOST_DATE_TIME}
                                 ${BOOST_SYSTEM}
                                 ${BOOST_FILESYSTEM}
                                 ${BOOST_THREAD}
                                 ${BOOST_REGEX}
                                 ${XCLIB}
-                                ${PQ}
+                                PQ
                                 ${CURL}
                  )
 
