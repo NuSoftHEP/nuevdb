@@ -1,6 +1,6 @@
 # The parent line must be the first non-comment line in the file
 # This line defines the product name and version
-parent nuevdb  v1_05_02
+parent nuevdb  v1_05_03
 defaultqual     e19
 
 # These optional lines define the installed directories where
@@ -16,8 +16,8 @@ libdir      fq_dir      lib
 bindir      fq_dir      bin
 #
 product         version
-art_root_io     v1_08_01
-nusimdata       v1_24_02
+art_root_io     v1_08_02
+nusimdata       v1_24_03
 libwda		v2_29_1
 cetbuildtools   v8_10_01        -        only_for_build
 end_product_list
