@@ -19,7 +19,7 @@ product         version
 art_root_io     v1_08_02
 nusimdata       v1_24_03
 libwda		v2_29_1
-cetbuildtools   v8_10_01        -        only_for_build
+cetbuildtools   v8_11_01        -        only_for_build
 end_product_list
 
 
