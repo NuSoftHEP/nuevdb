@@ -7,11 +7,11 @@ find_library( CURL NAMES curl )
 
 art_make_library( SOURCE ${src_files} #${CMAKE_CURRENT_BINARY_DIR}/${PACKAGE}Cint.cc
                   LIBRARIES     LIBWDA
-                                ${BOOST_DATE_TIME}
+                                Boost::date_time
                                 ${BOOST_SYSTEM}
-                                ${BOOST_FILESYSTEM}
-                                ${BOOST_THREAD}
-                                ${BOOST_REGEX}
+                                Boost::filesystem
+                                Boost::thread
+                                Boost::regex
                                 ${XCLIB}
                                 PQ
                                 ${CURL}
@@ -38,18 +38,18 @@ art_make_exec( NAME dumpConditionsToCSV
 simple_plugin( DBI "service"
                nuevdb_EventDisplayBase
                nuevdb_IFDatabase
-               ${ART_FRAMEWORK_CORE}
-               ${ART_FRAMEWORK_PRINCIPAL}
-               ${ART_FRAMEWORK_SERVICES_REGISTRY}
+               art::Framework_Core
+               art::Framework_Principal
+               art::Framework_Services_Registry
                ${ART_FRAMEWORK_SERVICES_BASIC}
-               art_Persistency_Common
-               art_Utilities
-               canvas
-               ${MF_MESSAGELOGGER}
+               art::Persistency_Common
+               art::Utilities
+               canvas::canvas
+               messagefacility::MF_MessageLogger
                ${MF_UTILITIES}
-               ${FHICLCPP}
-               cetlib
-               cetlib_except
+               fhiclcpp::fhiclcpp
+               cetlib::cetlib
+               cetlib_except::cetlib_except
              )
 
 install_headers()

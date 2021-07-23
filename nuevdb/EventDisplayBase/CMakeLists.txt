@@ -1,21 +1,21 @@
 set( PACKAGE EventDisplayBase )
 FILE( GLOB src_files *.cxx )
 
-set( EVD_LIBS ${ART_FRAMEWORK_SERVICES_REGISTRY}
-              ${ART_FRAMEWORK_CORE}
-              art_Persistency_Common
-              ${ART_FRAMEWORK_IO_SOURCES}
-              ${ART_ROOT_IO}
-              ${ART_ROOT_IO_ROOTINPUT_SOURCE}
-              ${ART_FRAMEWORK_PRINCIPAL}
-              art_Persistency_Provenance
-              art_Utilities
-              canvas
-              ${MF_MESSAGELOGGER}
+set( EVD_LIBS art::Framework_Services_Registry
+              art::Framework_Core
+              art::Persistency_Common
+              art::Framework_IO_Sources
+              art_root_io::art_root_io
+              art_root_io::RootInput_source
+              art::Framework_Principal
+              art::Persistency_Provenance
+              art::Utilities
+              canvas::canvas
+              messagefacility::MF_MessageLogger
               ${MF_UTILITIES}
-              ${FHICLCPP}
-              cetlib
-              cetlib_except
+              fhiclcpp::fhiclcpp
+              cetlib::cetlib
+              cetlib_except::cetlib_except
               ${Boost_SYSTEM_LIBRARY}
               ${ROOT_EVE}
               ${ROOT_EG}
@@ -25,7 +25,7 @@ set( EVD_LIBS ${ART_FRAMEWORK_SERVICES_REGISTRY}
               ${ROOT_GED}
               ${ROOT_RGL}
               ${ROOT_GUI}
-              ${ROOT_CORE}
+              ROOT::Core
               ${ROOT_CINT}
               ${ROOT_RIO}
               ${ROOT_NET}
