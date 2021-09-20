@@ -12,39 +12,39 @@ set( EVD_LIBS art::Framework_Services_Registry
               art::Utilities
               canvas::canvas
               messagefacility::MF_MessageLogger
-              ${MF_UTILITIES}
+              
               fhiclcpp::fhiclcpp
               cetlib::cetlib
               cetlib_except::cetlib_except
               ${Boost_SYSTEM_LIBRARY}
-              ${ROOT_EVE}
-              ${ROOT_EG}
-              ${ROOT_GX11}
-              ${ROOT_TREEPLAYER}
-              ${ROOT_GEOM}
-              ${ROOT_GED}
-              ${ROOT_RGL}
-              ${ROOT_GUI}
+              ROOT::Eve
+              ROOT::EG
+              ROOT::GX11
+              ROOT::TreePlayer
+              ROOT::Geom
+              ROOT::Ged
+              ROOT::RGL
+              ROOT::Gui
               ROOT::Core
-              ${ROOT_CINT}
-              ${ROOT_RIO}
-              ${ROOT_NET}
-              ${ROOT_HIST}
-              ${ROOT_GRAF}
-              ${ROOT_GRAF3D}
-              ${ROOT_GPAD}
-              ${ROOT_TREE}
-              ${ROOT_RINT}
-              ${ROOT_POSTSCRIPT}
-              ${ROOT_MATRIX}
-              ${ROOT_PHYSICS}
-              ${ROOT_MATHCORE}
-              ${ROOT_THREAD} )
+              
+              ROOT::RIO
+              ROOT::Net
+              ROOT::Hist
+              ROOT::Graf
+              ROOT::Graf3d
+              ROOT::Gpad
+              ROOT::Tree
+              ROOT::Rint
+              ROOT::Postscript
+              ROOT::Matrix
+              ROOT::Physics
+              ROOT::MathCore
+              ROOT::Thread )
 
 cet_rootcint( ${PACKAGE} )
 
 art_make_library( SOURCE ${src_files} ${CMAKE_CURRENT_BINARY_DIR}/${PACKAGE}Cint.cc
-                  LIBRARIES nusimdata_SimulationBase ${EVD_LIBS} )
+                  LIBRARIES nusimdata::SimulationBase ${EVD_LIBS} )
 
 set( EVD_SERVICE_LIBS nuevdb_EventDisplayBase ${EVD_LIBS} )
 simple_plugin( EventDisplay service ${EVD_SERVICE_LIBS} )
