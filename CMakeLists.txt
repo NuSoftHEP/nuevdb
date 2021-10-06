@@ -14,7 +14,7 @@
 # ======================================================================
 
 cmake_minimum_required(VERSION 3.18.2 FATAL_ERROR)
-project(nuevdb LANGUAGES CXX)
+project(nuevdb VERSION 1.05.05 LANGUAGES CXX)
 
 # cetbuildtools contains our cmake modules
 find_package(cetbuildtools REQUIRED)
