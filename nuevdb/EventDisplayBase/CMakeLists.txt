@@ -4,7 +4,11 @@ find_package(ROOT COMPONENTS Eve EG GX11 TreePlayer Geom Ged RGL Gui Core RIO Ne
 
 FILE( GLOB src_files *.cxx )
 
-set( EVD_LIBS art::Framework_Services_Registry
+cet_rootcint( ${PACKAGE} )
+
+art_make_library( SOURCE ${src_files} ${CMAKE_CURRENT_BINARY_DIR}/${PACKAGE}Cint.cc
+                  LIBRARIES nusimdata::SimulationBase
+              art::Framework_Services_Registry
               art::Framework_Core
               art::Persistency_Common
               art::Framework_IO_Sources
@@ -40,11 +44,6 @@ set( EVD_LIBS art::Framework_Services_Registry
               ROOT::Physics
               ROOT::MathCore
               ROOT::Thread )
-
-cet_rootcint( ${PACKAGE} )
-
-art_make_library( SOURCE ${src_files} ${CMAKE_CURRENT_BINARY_DIR}/${PACKAGE}Cint.cc
-                  LIBRARIES nusimdata::SimulationBase ${EVD_LIBS} )
 
 #set( EVD_SERVICE_LIBS nuevdb::EventDisplayBase ${EVD_LIBS} )
 #simple_plugin( EventDisplay service ${EVD_SERVICE_LIBS} )
