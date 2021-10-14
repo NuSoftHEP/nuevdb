@@ -1,19 +1,21 @@
 set( PACKAGE IFDatabase )
 FILE( GLOB src_files *.cpp )
 
-cet_find_library( LIBWDA NAMES wda PATHS ENV LIBWDA_LIB NO_DEFAULT_PATH ) ### MIGRATE-ACTION-RECOMMENDED: use of ENV ... may be UPS-dependent ### MIGRATE-ACTION-RECOMMENDED: use cet_find_package() with target semantics for linking
-cet_find_library( PQ NAMES pq PATHS ENV POSTGRESQL_LIBRARIES NO_DEFAULT_PATH ) ### MIGRATE-ACTION-RECOMMENDED: use of ENV ... may be UPS-dependent ### MIGRATE-ACTION-RECOMMENDED: use cet_find_package() with target semantics for linking
+### MIGRATE-ACTION-RECOMMENDED we are using UPS variables here 
+find_library( LIBWDA NAMES wda PATHS ENV LIBWDA_LIB NO_DEFAULT_PATH )
+include_directories($ENV{LIBWDA_INC})
+
+find_package(PostgreSQL REQUIRED)
 find_library( CURL NAMES curl )
 
 art_make_library( SOURCE ${src_files} #${CMAKE_CURRENT_BINARY_DIR}/${PACKAGE}Cint.cc
                   LIBRARIES     LIBWDA
                                 Boost::date_time
-                                
                                 Boost::filesystem
                                 Boost::thread
                                 Boost::regex
                                 ${XCLIB}
-                                PQ
+                                ${PostgreSQL_LIBRARIES}
                                 ${CURL}
                  )
 
@@ -36,7 +38,7 @@ art_make_exec( NAME dumpConditionsToCSV
                )
 
 simple_plugin( DBI "service"
-               nuevdb_EventDisplayBase
+               nuevdb::EventDisplayBase
                nuevdb_IFDatabase
                art::Framework_Core
                art::Framework_Principal
@@ -46,7 +48,6 @@ simple_plugin( DBI "service"
                art::Utilities
                canvas::canvas
                messagefacility::MF_MessageLogger
-               
                fhiclcpp::fhiclcpp
                cetlib::cetlib
                cetlib_except::cetlib_except
