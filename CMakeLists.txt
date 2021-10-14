@@ -12,12 +12,10 @@
 #  make install
 #  make package (builds distribution tarfile)
 # ======================================================================
+cmake_minimum_required(VERSION 3.19 FATAL_ERROR)
 
-cmake_minimum_required(VERSION 3.18.2 FATAL_ERROR)
+find_package(cetmodules 2.29.06 REQUIRED)
 project(nuevdb VERSION 1.05.05 LANGUAGES CXX)
-
-# cetbuildtools contains our cmake modules
-find_package(cetbuildtools REQUIRED)
 
 include(CetCMakeEnv)
 cet_cmake_env()
@@ -28,17 +26,17 @@ cet_set_compiler_flags(DIAGS CAUTIOUS WERROR
                        EXTRA_FLAGS -pedantic
                        EXTRA_CXX_FLAGS -D_GLIBCXX_USE_NANOSLEEP
                                        -Wno-unused-local-typedefs -Wno-variadic-macros)
-cet_report_compiler_flags()
+cet_report_compiler_flags(REPORT_THRESHOLD VERBOSE)
 
 # these are minimum required versions, not the actual product versions
-find_ups_product( art )
-find_ups_product(art_root_io)
-find_ups_product(canvas_root_io)
-find_ups_product( libwda )
-find_ups_product( postgresql )
-find_ups_product( nusimdata )
-find_ups_product( cetlib )
-find_ups_product( cetlib_except )
+find_ups_product( art ) ### MIGRATE-ACTION-RECOMMENDED: use cet_find_package() with target semantics for linking
+find_ups_product(art_root_io) ### MIGRATE-ACTION-RECOMMENDED: use cet_find_package() with target semantics for linking
+find_ups_product(canvas_root_io) ### MIGRATE-ACTION-RECOMMENDED: use cet_find_package() with target semantics for linking
+find_ups_product( libwda ) ### MIGRATE-ACTION-RECOMMENDED: use cet_find_package() with target semantics for linking
+find_ups_product( postgresql ) ### MIGRATE-ACTION-RECOMMENDED: use cet_find_package() with target semantics for linking
+find_ups_product( nusimdata ) ### MIGRATE-ACTION-RECOMMENDED: use cet_find_package() with target semantics for linking
+find_ups_product( cetlib ) ### MIGRATE-ACTION-RECOMMENDED: use cet_find_package() with target semantics for linking
+find_ups_product( cetlib_except ) ### MIGRATE-ACTION-RECOMMENDED: use cet_find_package() with target semantics for linking
 find_ups_root()
 find_ups_boost()
 
@@ -50,19 +48,18 @@ include(BuildPlugins)
 include(CetRootCint)
 
 # include search path
-include_directories ( $ENV{CRYHOME}/src )
+include_directories ( $ENV{CRYHOME}/src ) ### MIGRATE-ACTION-RECOMMENDED: use target_link_directories() with target semantics
 
 # included for Mac OSX using XQuartz for X11
 if(APPLE)
-  include_directories ( /opt/X11/include )
+  include_directories ( /opt/X11/include ) ### MIGRATE-ACTION-RECOMMENDED: use target_link_directories() with target semantics
 endif()
 
 # source
 add_subdirectory (nuevdb)
 
 # ups - table and config files
-add_subdirectory(ups)
 
 # packaging utility
-include(UseCPack)
 
+cet_cmake_config()
