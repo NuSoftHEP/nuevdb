@@ -1,4 +1,7 @@
 set( PACKAGE EventDisplayBase )
+
+find_package(ROOT COMPONENTS Eve EG GX11 TreePlayer Geom Ged RGL Gui Core RIO Net Hist Graf Graf3d Gpad Tree Rint Postscript Matrix Physics MathCore Thread REQUIRED PUBLIC)
+
 FILE( GLOB src_files *.cxx )
 
 set( EVD_LIBS art::Framework_Services_Registry
@@ -12,11 +15,9 @@ set( EVD_LIBS art::Framework_Services_Registry
               art::Utilities
               canvas::canvas
               messagefacility::MF_MessageLogger
-              
               fhiclcpp::fhiclcpp
               cetlib::cetlib
               cetlib_except::cetlib_except
-              ${Boost_SYSTEM_LIBRARY}
               ROOT::Eve
               ROOT::EG
               ROOT::GX11
@@ -26,7 +27,6 @@ set( EVD_LIBS art::Framework_Services_Registry
               ROOT::RGL
               ROOT::Gui
               ROOT::Core
-              
               ROOT::RIO
               ROOT::Net
               ROOT::Hist
@@ -46,7 +46,7 @@ cet_rootcint( ${PACKAGE} )
 art_make_library( SOURCE ${src_files} ${CMAKE_CURRENT_BINARY_DIR}/${PACKAGE}Cint.cc
                   LIBRARIES nusimdata::SimulationBase ${EVD_LIBS} )
 
-set( EVD_SERVICE_LIBS nuevdb_EventDisplayBase ${EVD_LIBS} )
+set( EVD_SERVICE_LIBS nuevdb::EventDisplayBase ${EVD_LIBS} )
 simple_plugin( EventDisplay service ${EVD_SERVICE_LIBS} )
 simple_plugin( ScanOptions  service ${EVD_SERVICE_LIBS} )
 simple_plugin( Colors       service ${EVD_SERVICE_LIBS} )
