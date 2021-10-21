@@ -1,19 +1,14 @@
 set( PACKAGE IFDatabase )
 FILE( GLOB src_files *.cpp )
 
-### MIGRATE-ACTION-RECOMMENDED we are using UPS variables here 
-find_library( LIBWDA NAMES wda PATHS ENV LIBWDA_LIB NO_DEFAULT_PATH )
-include_directories($ENV{LIBWDA_INC})
-
+find_package(libwda REQUIRED)
 find_package(PostgreSQL REQUIRED)
-#message(STATUS "found PostgreSQL_LIBRARIES ${PostgreSQL_LIBRARIES}")
-#message(STATUS "found PostgreSQL_LIBRARY_DIRS ${PostgreSQL_LIBRARY_DIRS}")
 ### MIGRATE-ACTION-RECOMMENDED we are using UPS variables here because find_package returns a path
 find_library( PQ NAMES pq PATHS ENV POSTGRESQL_LIBRARIES NO_DEFAULT_PATH )
 find_library( CURL NAMES curl )
 
 art_make_library( SOURCE ${src_files} #${CMAKE_CURRENT_BINARY_DIR}/${PACKAGE}Cint.cc
-                  LIBRARIES     LIBWDA
+                  LIBRARIES     wda::wda
                                 Boost::date_time
                                 Boost::filesystem
                                 Boost::thread
