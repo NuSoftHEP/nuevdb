@@ -19,25 +19,25 @@ art_make_library( SOURCE ${src_files} #${CMAKE_CURRENT_BINARY_DIR}/${PACKAGE}Cin
 
 cet_make_exec( NAME tagConditionsTableInDB
                SOURCE tagConditionsTableInDB.cc
-               LIBRARIES nuevdb_IFDatabase
+               LIBRARIES nuevdb::IFDatabase
                          ${CURL}
                )
 
 cet_make_exec( NAME writeConditionsCSVToDB.cc
                SOURCE writeConditionsCSVToDB.cc
-               LIBRARIES nuevdb_IFDatabase
+               LIBRARIES nuevdb::IFDatabase
                          ${CURL}
                )
 
 cet_make_exec( NAME dumpConditionsToCSV
                SOURCE dumpConditionsToCSV.cc
-               LIBRARIES nuevdb_IFDatabase
+               LIBRARIES nuevdb::IFDatabase
                          ${CURL}
                )
 
 cet_build_plugin( DBI art::service
                LIBRARIES nuevdb::EventDisplayBase
-               nuevdb_IFDatabase
+               nuevdb::IFDatabase
                art::Framework_Core
                art::Framework_Principal
                art::Framework_Services_Registry
