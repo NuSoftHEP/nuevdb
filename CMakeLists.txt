@@ -15,7 +15,7 @@
 cmake_minimum_required(VERSION 3.19 FATAL_ERROR)
 
 find_package(cetmodules 2.29.06 REQUIRED)
-project(nuevdb VERSION 1.05.05 LANGUAGES CXX)
+project(nuevdb VERSION 1.06.00 LANGUAGES CXX)
 
 include(CetCMakeEnv)
 cet_cmake_env()
@@ -29,7 +29,7 @@ cet_set_compiler_flags(DIAGS CAUTIOUS WERROR
 cet_report_compiler_flags(REPORT_THRESHOLD VERBOSE)
 
 find_package(art REQUIRED)
-find_package(art_root_io REQUIRED)
+find_package(art_root_io REQUIRED PUBLIC)
 find_package(canvas_root_io REQUIRED)
 find_package(nusimdata REQUIRED)
 find_package(cetlib REQUIRED)
