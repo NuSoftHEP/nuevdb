@@ -10,33 +10,10 @@
 #include "nuevdb/EventDisplayBase/ScanOptions.h"
 #include "art/Framework/Services/Registry/ServiceDefinitionMacros.h"
 
-#include <iostream>
-
-namespace evdb {
-
-  //......................................................................
-  ScanOptions::ScanOptions(fhicl::ParameterSet const& pset, art::ActivityRegistry& reg) 
-  {
-    fIncludeMCInfo     = pset.get< bool                      >("IncludeMCInfo");
-    fScanFileBase      = pset.get< std::string               >("FileNameBase");
-    fCategories        = pset.get< std::vector<std::string>  >("Categories");
-    fFieldLabels       = pset.get< std::vector<std::string>  >("FieldLabels");
-    fFieldTypes        = pset.get< std::vector<std::string>  >("FieldTypes");
-    fFieldsPerCategory = pset.get< std::vector<unsigned int> >("FieldsPerCategory");
-  }
-  
-  //......................................................................
-  ScanOptions::~ScanOptions() 
-  {
-  }
-  
-}
-
 namespace evdb {
 
   DEFINE_ART_SERVICE(ScanOptions)
 
 } // namespace evd
-////////////////////////////////////////////////////////////////////////
 
 ////////////////////////////////////////////////////////////////////////

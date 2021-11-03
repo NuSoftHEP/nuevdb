@@ -1,55 +1,55 @@
-set( PACKAGE IFDatabase )
-FILE( GLOB src_files *.cpp )
 
-cet_find_library( LIBWDA NAMES wda PATHS ENV LIBWDA_LIB NO_DEFAULT_PATH )
-cet_find_library( PQ NAMES pq PATHS ENV POSTGRESQL_LIBRARIES NO_DEFAULT_PATH )
+find_package(libwda REQUIRED PUBLIC)
+find_package(PostgreSQL REQUIRED)
+### MIGRATE-ACTION-RECOMMENDED we are using UPS variables here because find_package returns a path
+find_library( PQ NAMES pq PATHS ENV POSTGRESQL_LIBRARIES NO_DEFAULT_PATH )
 find_library( CURL NAMES curl )
 
-art_make_library( SOURCE ${src_files} #${CMAKE_CURRENT_BINARY_DIR}/${PACKAGE}Cint.cc
-                  LIBRARIES     LIBWDA
+art_make_library( SOURCE Column.cpp  ColumnDef.cpp  Row.cpp  Table.cpp  Util.cpp
+                     #${CMAKE_CURRENT_BINARY_DIR}/IFDatabaseCint.cc
+                  LIBRARIES PRIVATE
                                 Boost::date_time
-                                
                                 Boost::filesystem
                                 Boost::thread
                                 Boost::regex
-                                ${XCLIB}
                                 PQ
                                 ${CURL}
+                 PUBLIC wda::wda
                  )
 
-art_make_exec( NAME tagConditionsTableInDB
+cet_make_exec( NAME tagConditionsTableInDB
                SOURCE tagConditionsTableInDB.cc
-               LIBRARIES nuevdb_IFDatabase
+               LIBRARIES PRIVATE nuevdb::IFDatabase
                          ${CURL}
                )
 
-art_make_exec( NAME writeConditionsCSVToDB.cc
+cet_make_exec( NAME writeConditionsCSVToDB.cc
                SOURCE writeConditionsCSVToDB.cc
-               LIBRARIES nuevdb_IFDatabase
+               LIBRARIES PRIVATE nuevdb::IFDatabase
                          ${CURL}
                )
 
-art_make_exec( NAME dumpConditionsToCSV
+cet_make_exec( NAME dumpConditionsToCSV
                SOURCE dumpConditionsToCSV.cc
-               LIBRARIES nuevdb_IFDatabase
+               LIBRARIES PRIVATE nuevdb::IFDatabase
                          ${CURL}
                )
 
-simple_plugin( DBI "service"
-               nuevdb_EventDisplayBase
-               nuevdb_IFDatabase
+cet_build_plugin( DBI art::service
+               LIBRARIES PRIVATE
+               nuevdb::EventDisplayBase
                art::Framework_Core
                art::Framework_Principal
                art::Framework_Services_Registry
-               ${ART_FRAMEWORK_SERVICES_BASIC}
                art::Persistency_Common
                art::Utilities
                canvas::canvas
                messagefacility::MF_MessageLogger
-               
                fhiclcpp::fhiclcpp
                cetlib::cetlib
                cetlib_except::cetlib_except
+               PUBLIC
+               nuevdb::IFDatabase
              )
 
 install_headers()

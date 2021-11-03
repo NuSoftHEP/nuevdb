@@ -12,12 +12,10 @@
 #  make install
 #  make package (builds distribution tarfile)
 # ======================================================================
+cmake_minimum_required(VERSION 3.19 FATAL_ERROR)
 
-cmake_minimum_required(VERSION 3.18.2 FATAL_ERROR)
-project(nuevdb VERSION 1.05.05 LANGUAGES CXX)
-
-# cetbuildtools contains our cmake modules
-find_package(cetbuildtools REQUIRED)
+find_package(cetmodules 2.29.06 REQUIRED)
+project(nuevdb VERSION 1.06.00 LANGUAGES CXX)
 
 include(CetCMakeEnv)
 cet_cmake_env()
@@ -25,24 +23,18 @@ cet_cmake_env()
 # -D_GLIBCXX_USE_NANOSLEEP is needed to make std::this_thread::sleep_for available. (IFDatabase)
 cet_set_compiler_flags(DIAGS CAUTIOUS WERROR
                        NO_UNDEFINED
-                       EXTRA_FLAGS -pedantic
-                       EXTRA_CXX_FLAGS -D_GLIBCXX_USE_NANOSLEEP
-                                       -Wno-unused-local-typedefs -Wno-variadic-macros)
-cet_report_compiler_flags()
+                       EXTRA_FLAGS -pedantic 
+                                   $<$<COMPILE_LANGUAGE:CXX>:-D_GLIBCXX_USE_NANOSLEEP 
+                                   -Wno-unused-local-typedefs -Wno-variadic-macros>)
+cet_report_compiler_flags(REPORT_THRESHOLD VERBOSE)
 
-# these are minimum required versions, not the actual product versions
-find_ups_product( art )
-find_ups_product(art_root_io)
-find_ups_product(canvas_root_io)
-find_ups_product( libwda )
-find_ups_product( postgresql )
-find_ups_product( nusimdata )
-find_ups_product( cetlib )
-find_ups_product( cetlib_except )
-find_ups_root()
-find_ups_boost()
-
-message(STATUS "ROOTSYS is ${ROOTSYS}")
+find_package(art REQUIRED)
+find_package(art_root_io REQUIRED PUBLIC)
+find_package(canvas_root_io REQUIRED)
+find_package(nusimdata REQUIRED)
+find_package(cetlib REQUIRED)
+find_package(cetlib_except REQUIRED)
+find_package(Boost COMPONENTS date_time filesystem thread regex REQUIRED)
 
 # macros
 include(ArtMake)
@@ -50,19 +42,13 @@ include(BuildPlugins)
 include(CetRootCint)
 
 # include search path
-include_directories ( $ENV{CRYHOME}/src )
-
-# included for Mac OSX using XQuartz for X11
-if(APPLE)
-  include_directories ( /opt/X11/include )
-endif()
+include_directories ( $ENV{CRYHOME}/src ) ### MIGRATE-ACTION-RECOMMENDED: use target_link_directories() with target semantics
 
 # source
 add_subdirectory (nuevdb)
 
 # ups - table and config files
-add_subdirectory(ups)
 
 # packaging utility
-include(UseCPack)
 
+cet_cmake_config()
