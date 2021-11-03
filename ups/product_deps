@@ -310,8 +310,6 @@ end_product_list
 qualifier	nusimdata	art_root_io	libwda	notes
 c7:debug	c7:debug	c7:debug	-nq-
 c7:prof		c7:prof		c7:prof		-nq-
-e19:debug	e19:debug	e19:debug	-nq-
-e19:prof	e19:prof	e19:prof	-nq-
 e20:debug	e20:debug	e20:debug	-nq-
 e20:prof	e20:prof	e20:prof	-nq-
 end_qualifier_list
