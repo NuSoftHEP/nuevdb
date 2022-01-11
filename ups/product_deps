@@ -251,8 +251,8 @@ libdir	fq_dir		lib
 product		version		qual	flags		<table_format=2>
 art_root_io	v1_08_03	-
 libwda		v2_29_1		-
-nusimdata	v1_25_01	-
-cetmodules	v2_29_09	-	only_for_build
+nusimdata	v1_25_02	-
+cetmodules	v2_30_01	-	only_for_build
 end_product_list
 ####################################
 
