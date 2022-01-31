@@ -18,8 +18,18 @@
 #include <boost/algorithm/string/case_conv.hpp>
 #include <boost/date_time/posix_time/posix_time.hpp>
 
+#include "wda.h"
+
 #include <nuevdb/IFDatabase/Table.h>
 #include <nuevdb/IFDatabase/Util.h>
+
+namespace {
+  struct LibwdaSentry {
+    LibwdaSentry() { wda_global_init(); }
+    ~LibwdaSentry() { wda_global_cleanup(); }
+  };
+  LibwdaSentry sentry;
+}
 
 namespace nutools {
   namespace dbi {
