@@ -252,7 +252,7 @@ product		version		qual	flags		<table_format=2>
 art_root_io	v1_08_03	-
 libwda		v2_30_0		-
 nusimdata	v1_25_02	-
-cetmodules	v2_30_01	-	only_for_build
+cetmodules	v2_31_01	-	only_for_build
 end_product_list
 ####################################
 
