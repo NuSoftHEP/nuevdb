@@ -651,14 +651,14 @@ namespace nutools {
       int i = 0;
       std::vector<int> len(0);
       int tlen;
-      int sumlen = 0;
+      //int sumlen = 0; // unused
 
       for ( ; i<this->NCol(); ++i) {
         tlen = this->GetCol(i)->Name().length();
         if ((int)this->GetCol(i)->Type().length() > tlen)
           tlen = this->GetCol(i)->Type().length();
         len.push_back(tlen);
-        sumlen += tlen;
+        //sumlen += tlen; // unused
       }
 
       int nsp = 0;
