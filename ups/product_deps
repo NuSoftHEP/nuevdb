@@ -249,10 +249,10 @@ libdir	fq_dir		lib
 #
 ####################################
 product		version		qual	flags		<table_format=2>
-art_root_io	v1_11_03	-
+art_root_io	v1_13_01	-
 libwda		v2_30_0a		-
-nusimdata	v1_27_02	-
-cetmodules	v3_20_00	-	only_for_build
+nusimdata	v1_28_00	-
+cetmodules	v3_22_02	-	only_for_build
 end_product_list
 ####################################
 
@@ -312,6 +312,8 @@ c14:debug	c14:debug	c14:debug	-nq-
 c14:prof	c14:prof	c14:prof	-nq-
 e26:debug	e26:debug	e26:debug	-nq-
 e26:prof	e26:prof	e26:prof	-nq-
+e28:debug	e28:debug	e28:debug	-nq-
+e28:prof	e28:prof	e28:prof	-nq-
 end_qualifier_list
 ####################################
 
