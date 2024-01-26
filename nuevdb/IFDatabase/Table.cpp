@@ -8,12 +8,9 @@
 #include <ctime>
 #include <cinttypes>
 #include <cstdio>
-//#include <sys/types.h>
-//#include <sys/sysinfo.h>
 
 #include <libpq-fe.h>
 
-//#include <boost/tokenizer.hpp>
 #include <boost/algorithm/string.hpp>
 #include <boost/algorithm/string/case_conv.hpp>
 #include <boost/date_time/posix_time/posix_time.hpp>

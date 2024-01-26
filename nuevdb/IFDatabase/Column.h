@@ -107,7 +107,7 @@ namespace nutools {
 		tstr == "y" || tstr == "yes" || tstr == "1" || tstr == "on") 
 	      fValue[0] = '1';
 	    else 
-	      fValue[1] = '0';
+              fValue[0] = '0';
 	    return true;
 	  }
 	  else {

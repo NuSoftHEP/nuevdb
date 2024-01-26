@@ -1,6 +1,4 @@
-
-find_package(ROOT COMPONENTS Tree Gui REQUIRED PUBLIC)
-##find_package(ROOT COMPONENTS Eve EG GX11 TreePlayer Geom Ged RGL Core RIO Net Hist Graf Graf3d Gpad Rint Postscript Matrix Physics MathCore Thread REQUIRED)
+find_package(ROOT COMPONENTS Tree Gui REQUIRED EXPORT)
 find_package(ROOT COMPONENTS Core Graf Graf3d Rint REQUIRED)
 
 FILE( GLOB src_files *.cxx )
@@ -19,28 +17,10 @@ art_make_library( SOURCE ${src_files} ${CMAKE_CURRENT_BINARY_DIR}/EventDisplayBa
               art::Framework_Principal
               art::Persistency_Provenance
               art::Utilities
-              ##canvas::canvas
               messagefacility::MF_MessageLogger
               fhiclcpp::fhiclcpp
               cetlib::cetlib
               cetlib_except::cetlib_except
-              #ROOT::Eve
-              #ROOT::EG
-              #ROOT::GX11
-              #ROOT::TreePlayer
-              #ROOT::Geom
-              #ROOT::Ged
-              #ROOT::RGL
-              #ROOT::RIO
-              #ROOT::Net
-              #ROOT::Hist
-              #ROOT::Gpad
-              #ROOT::Tree
-              #ROOT::Postscript
-              #ROOT::Matrix
-              #ROOT::Physics
-              #ROOT::MathCore
-              #ROOT::Thread 
               ROOT::Graf
               ROOT::Graf3d
               ROOT::Gui
