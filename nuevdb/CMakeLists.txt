@@ -1,4 +1,2 @@
-
-add_subdirectory (EventDisplayBase)
-add_subdirectory (IFDatabase)
-
+add_subdirectory(EventDisplayBase)
+add_subdirectory(IFDatabase)

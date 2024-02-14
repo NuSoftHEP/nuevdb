@@ -20,32 +20,27 @@ project(nuevdb VERSION 1.09.01 LANGUAGES CXX)
 include(CetCMakeEnv)
 cet_cmake_env()
 
-# -D_GLIBCXX_USE_NANOSLEEP is needed to make std::this_thread::sleep_for available. (IFDatabase)
 cet_set_compiler_flags(DIAGS CAUTIOUS WERROR
                        NO_UNDEFINED
-                       EXTRA_FLAGS -pedantic 
-                                   $<$<COMPILE_LANGUAGE:CXX>:-D_GLIBCXX_USE_NANOSLEEP 
-                                   -Wno-unused-local-typedefs -Wno-variadic-macros>)
+                       EXTRA_FLAGS -pedantic
+                                   -Wno-unused-local-typedefs -Wno-variadic-macros)
 cet_report_compiler_flags(REPORT_THRESHOLD VERBOSE)
 
 find_package(art REQUIRED)
-find_package(art_root_io REQUIRED PUBLIC)
+find_package(art_root_io REQUIRED)
 find_package(canvas_root_io REQUIRED)
 find_package(nusimdata REQUIRED)
 find_package(cetlib REQUIRED)
 find_package(cetlib_except REQUIRED)
-find_package(Boost COMPONENTS date_time filesystem thread regex REQUIRED)
+find_package(Boost COMPONENTS date_time REQUIRED)
 
 # macros
 include(ArtMake)
 include(BuildPlugins)
 include(CetRootCint)
 
-# include search path
-include_directories ( $ENV{CRYHOME}/src ) ### MIGRATE-ACTION-RECOMMENDED: use target_link_directories() with target semantics
-
 # source
-add_subdirectory (nuevdb)
+add_subdirectory(nuevdb)
 
 # ups - table and config files
 
