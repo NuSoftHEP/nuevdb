@@ -26,8 +26,6 @@ cet_set_compiler_flags(DIAGS CAUTIOUS WERROR
                                    -Wno-unused-local-typedefs -Wno-variadic-macros)
 cet_report_compiler_flags(REPORT_THRESHOLD VERBOSE)
 
-find_package(nufinder REQUIRED EXPORT)
-
 find_package(art REQUIRED)
 find_package(art_root_io REQUIRED)
 find_package(canvas_root_io REQUIRED)
