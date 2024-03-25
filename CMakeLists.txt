@@ -15,7 +15,7 @@
 cmake_minimum_required(VERSION 3.19 FATAL_ERROR)
 
 find_package(cetmodules 2.29.06 REQUIRED)
-project(nuevdb VERSION 1.09.05 LANGUAGES CXX)
+project(nuevdb VERSION 1.09.06 LANGUAGES CXX)
 
 include(CetCMakeEnv)
 cet_cmake_env()
@@ -37,7 +37,7 @@ find_package(Boost COMPONENTS date_time REQUIRED)
 # macros
 include(ArtMake)
 include(BuildPlugins)
-include(CetRootCint)
+include(BuildDictionary)
 
 # source
 add_subdirectory(nuevdb)
