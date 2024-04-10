@@ -54,24 +54,16 @@ cet_make_library( SOURCE ${src_files} ${CMAKE_CURRENT_BINARY_DIR}/${CINTED_SOURC
               ROOT::Core
               )
 
-build_dictionary(${PACKAGE} NO_LIBRARY
-                 LIB_TARGET nuevdb_EventDisplayBase
-                 GENERATED_SOURCE_FILENAME ${CINTED_SOURCE}
-                 SOURCE
-                   ButtonBar.h
-                   Canvas.h
-                   DisplayWindow.h
-                   EditMenu.h
-                   FileMenu.h
-                   JobMenu.h
-                   ParameterSetEdit.h
-                   ParameterSetEditDialog.h
-                   Printable.h
-                   PrintDialog.h
-                   ScanWindow.h
-                   WindowMenu.h
-                   LinkDef.h
-)
+########################################################################
+# Temporarily revert to deprecated cet_rootcint() instead of
+# build_dictionary() per https://cdcvs.fnal.gov/redmine/issues/28702
+#
+include(CetRootCint)
+set(_cet_warn_deprecated ${CET_WARN_DEPRECATED})
+unset(CET_WARN_DEPRECATED)
+cet_rootcint(EventDisplayBase LIB_TARGET nuevdb_EventDisplayBase)
+set(CET_WARN_DEPRECATED ${_cet_warn_deprecated})
+########################################################################
 
 cet_build_plugin(EventDisplay art::service
   LIBRARIES PRIVATE nuevdb::EventDisplayBase
