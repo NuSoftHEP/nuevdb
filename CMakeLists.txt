@@ -28,7 +28,6 @@ cet_report_compiler_flags(REPORT_THRESHOLD VERBOSE)
 
 find_package(art REQUIRED)
 find_package(art_root_io REQUIRED)
-find_package(canvas_root_io REQUIRED)
 find_package(nusimdata REQUIRED)
 find_package(cetlib REQUIRED)
 find_package(cetlib_except REQUIRED)
