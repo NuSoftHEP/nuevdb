@@ -6,6 +6,7 @@ art_make_library(SOURCE Column.cpp  ColumnDef.cpp  Row.cpp  Table.cpp  Util.cpp
                         Boost::date_time
                         PostgreSQL::PostgreSQL
                  PUBLIC wda::wda
+                        Boost::headers
                  )
 
 cet_make_exec( NAME tagConditionsTableInDB
