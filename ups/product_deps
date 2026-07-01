@@ -250,7 +250,7 @@ libdir	fq_dir		lib
 ####################################
 product		version		qual	flags		<table_format=2>
 art_root_io	v1_13_06	-
-libwda		v2_30_0a		-
+libwda		v2_30_1		-
 nusimdata	v1_29_03	-
 cetmodules	v3_27_04	-	only_for_build
 end_product_list
