@@ -87,7 +87,7 @@
 #>  define_pythonpath
 ####################################
 parent		nuevdb
-defaultqual	e26
+defaultqual	e28
 ####################################
 
 ####################################
@@ -249,9 +249,9 @@ libdir	fq_dir		lib
 #
 ####################################
 product		version		qual	flags		<table_format=2>
-art_root_io	v1_13_06	-
+art_root_io	v1_14_02	-
 libwda		v2_30_1		-
-nusimdata	v1_29_03	-
+nusimdata	v1_30_00	-
 cetmodules	v3_27_04	-	only_for_build
 end_product_list
 ####################################
@@ -308,10 +308,6 @@ end_product_list
 #
 ####################################
 qualifier	nusimdata	art_root_io	libwda	notes
-c14:debug	c14:debug	c14:debug	-nq-
-c14:prof	c14:prof	c14:prof	-nq-
-e26:debug	e26:debug	e26:debug	-nq-
-e26:prof	e26:prof	e26:prof	-nq-
 e28:debug	e28:debug	e28:debug	-nq-
 e28:prof	e28:prof	e28:prof	-nq-
 end_qualifier_list
