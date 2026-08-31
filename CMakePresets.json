@@ -13,26 +13,6 @@
             "CMAKE_CXX_STANDARD_REQUIRED" : {
                "type" : "BOOL",
                "value" : "ON"
-            },
-            "nuevdb_ADD_ARCH_DIRS_INIT" : {
-               "type" : "INTERNAL",
-               "value" : "LIBRARY_DIR;BIN_DIR"
-            },
-            "nuevdb_ADD_NOARCH_DIRS_INIT" : {
-               "type" : "INTERNAL",
-               "value" : "INCLUDE_DIR"
-            },
-            "nuevdb_BIN_DIR_INIT" : {
-               "type" : "STRING",
-               "value" : "bin"
-            },
-            "nuevdb_INCLUDE_DIR_INIT" : {
-               "type" : "STRING",
-               "value" : "include"
-            },
-            "nuevdb_LIBRARY_DIR_INIT" : {
-               "type" : "STRING",
-               "value" : "lib"
             }
          },
          "description" : "Configuration settings translated from ups/product_deps",
